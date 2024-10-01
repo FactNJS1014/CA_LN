@@ -4,13 +4,19 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        <!-- ===== BOX ICONS ===== -->
 
+        {{-- Include app.css --}}
+        <link rel="stylesheet" href="{{asset('public/css/app.css')}}">
+
+        <!-- ===== BOX ICONS ===== -->
         <link href='{{asset('public/css/boxicons.css')}}' rel='stylesheet'>
+
+        {{-- Bootstrap-icons --}}
+        <link href='{{asset('public/css/icon.css')}}' rel='stylesheet'>
 
         <!-- ===== CSS ===== -->
         <link rel="stylesheet" href="{{asset('public/css/style.css')}}">
-
+        <link rel="shortcut icon" href="{{asset('public/icons/15916.jpg')}}" type="image/x-icon">
         <title>@yield('title')</title>
     </head>
     <body id="body-pd">
@@ -30,35 +36,35 @@
 
 
                     <div class="nav__list">
-                        <a href="#" class="nav__link active">
-                        <i class='bx bx-grid-alt nav__icon' ></i>
-                            <span class="nav__name">Dashboard</span>
+                        <a href="{{route('main')}}" class="nav__link" id="firstpage">
+                        <i class='bi bi-1-square-fill' style="font-size: 19px;"></i>
+                            <span class="nav__name">Sheet Record</span>
                         </a>
 
-                        <a href="#" class="nav__link">
-                            <i class='bx bx-user nav__icon' ></i>
-                            <span class="nav__name">Users</span>
+                        <a href="{{route('second')}}" class="nav__link" id="secondpage">
+                            <i class='bi bi-2-square-fill' style="font-size: 19px;"></i>
+                            <span class="nav__name">Sheet Second</span>
                         </a>
 
-                        <a href="#" class="nav__link">
-                            <i class='bx bx-message-square-detail nav__icon' ></i>
+                        {{-- <a href="#" class="nav__link" id="">
+                            <i class='bi bi-3-square-fill' style="font-size: 19px;"></i>
                             <span class="nav__name">Messages</span>
                         </a>
 
                         <a href="#" class="nav__link">
-                            <i class='bx bx-bookmark nav__icon' ></i>
+                            <i class='bi bi-4-square-fill' style="font-size: 19px;"></i>
                             <span class="nav__name">Favorites</span>
                         </a>
 
                         <a href="#" class="nav__link">
-                            <i class='bx bx-folder nav__icon' ></i>
+                            <i class='bi bi-5-square-fill' style="font-size: 19px;"></i>
                             <span class="nav__name">Data</span>
                         </a>
 
                         <a href="#" class="nav__link">
-                            <i class='bx bx-bar-chart-alt-2 nav__icon' ></i>
+                            <i class='bi bi-6-square-fill' style="font-size: 19px;"></i>
                             <span class="nav__name">Analytics</span>
-                        </a>
+                        </a> --}}
                     </div>
                 </div>
 
@@ -66,9 +72,13 @@
             </nav>
         </div>
 
+
         @yield('content')
+
+
         <!--===== MAIN JS =====-->
         <script src="{{asset('public/js/app.js')}}"></script>
         <script src="{{asset('public/js/main.js')}}"></script>
+        @stack('script')
     </body>
 </html>

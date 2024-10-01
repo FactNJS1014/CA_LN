@@ -1,0 +1,3 @@
+btnclick = () =>{
+    alert("OKay!");
+}
