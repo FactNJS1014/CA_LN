@@ -194,6 +194,7 @@ a {
 
 .card-title{
     background-color: var(--second-color);
+    margin: 0;
 
 }
 
@@ -216,3 +217,5 @@ a {
     font-weight: 700;
     color: #003566;
 }
+
+

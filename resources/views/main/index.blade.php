@@ -6,7 +6,7 @@
             <div class="card-title">
                 <p class="text-header-1">CA- Line Call Sheet</p>
             </div>
-            <div class="card-body">
+            <div class="card-body border border-warning">
                 <form action="">
                     <div class="form-group row">
                         <div class="col col-sm-2">
@@ -81,6 +81,7 @@
                             </div>
                         </div>
                     </div>
+                    <hr>
                 </form>
             </div>
         </div>
