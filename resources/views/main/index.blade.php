@@ -94,6 +94,9 @@
                                 <div class="col col-sm-3">
                                     <label for="lot" id="txt">Lot size:</label>
                                 </div>
+                                <div class="col col-sm-8 ms-3">
+                                    <input type="text" id="lots" name="lots" class="form-control">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -129,7 +132,7 @@
                                         <label class="form-check-label" for="inlineRadio1">Enviroment</label>
                                       </div>
                                 </div>
-                            </div>      
+                            </div>
                      <div class="card-body">
                          <p id="txt">ระดับความรุนแรง:</p>
                             {{-- <div class="container"> --}}
