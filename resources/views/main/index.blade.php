@@ -75,9 +75,6 @@
                                 <div class="col col-sm-3">
                                     <label for="lot" id="txt">Lot size:</label>
                                 </div>
-                                <div class="col col-sm-8 ms-3">
-                                    <input type="text" id="lots" name="lots" class="form-control">
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -85,9 +82,49 @@
             </div>
         </div>
     </div>
-
-
-
+                    <div class="container p-1">
+                        <div class="card">
+                            <div class="card-body bo">
+                                <p id="txt">หัวข้อปํญหาที่เกิด:</p>
+                                <div class="container">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+                                        <label class="form-check-label" for="inlineRadio1">Man</label>
+                                      </div>
+                                      <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+                                        <label class="form-check-label" for="inlineRadio1">Machine</label>
+                                      </div>
+                                      <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+                                        <label class="form-check-label" for="inlineRadio1">Material</label>
+                                      </div>
+                                      <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+                                        <label class="form-check-label" for="inlineRadio1">Method</label>
+                                      </div>
+                                      <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+                                        <label class="form-check-label" for="inlineRadio1">Enviroment</label>
+                                      </div>
+                                </div>
+                            </div>      
+                     <div class="card-body">
+                         <p id="txt">ระดับความรุนแรง:</p>
+                            {{-- <div class="container"> --}}
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+                                        <label class="form-check-label" for="inlineRadio1">Rank A รุนแรงมาก</label>
+                                      </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+                                        <label class="form-check-label" for="inlineRadio1">Rank B รุนแรงปานกลาง</label>
+                                      </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+                                        <label class="form-check-label" for="inlineRadio1">Rank C รุนแรงน้อย</label>
+                            {{-- </div> --}}
+                    </div>
 @endsection
 @push('script')
     <script>
