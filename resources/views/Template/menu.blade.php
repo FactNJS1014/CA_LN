@@ -43,7 +43,7 @@
 
                         <a href="{{route('second')}}" class="nav__link" id="secondpage">
                             <i class='bi bi-2-square-fill' style="font-size: 19px;"></i>
-                            <span class="nav__name">Sheet Second</span>
+                            <span class="nav__name">Check Line Call</span>
                         </a>
 
                         {{-- <a href="#" class="nav__link" id="">
@@ -79,6 +79,7 @@
         <!--===== MAIN JS =====-->
         <script src="{{asset('public/js/app.js')}}"></script>
         <script src="{{asset('public/js/main.js')}}"></script>
+        <script src="{{asset('public/js/moment.js')}}"></script>
         @stack('script')
     </body>
 </html>

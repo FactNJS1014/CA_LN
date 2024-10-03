@@ -3,10 +3,27 @@
 @section('content')
     <div class="container p-2">
         <div class="card">
+            <div class="card-header">
+                <p class="text-topic">**เกิดการ Linecall นาทีที่มากกว่า 10**</p>
+                <table class="table table-bordered" id="dataln">
+                    <thead>
+                        <tr>
+                            <th>TLSLOG_TSKNO</th>
+                            <th>ID LINECALL</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
             <div class="card-title">
                 <p class="text-header-1">CA- Line Call Sheet</p>
             </div>
-            <div class="card-body">
+            <div class="card-body border border-warning">
+
+
                 <form action="">
                     <div class="form-group row">
                         <div class="col col-sm-2">
@@ -33,7 +50,8 @@
                                     <label for="line Prod." id="txt">Line:</label>
                                 </div>
                                 <div class="col col-sm-8">
-                                    <select name="line_rec" id="line_rec" class="form-select"></select>
+                                    <input type="text" id="line_rec" name="line_rec" class="form-control">
+                                    {{-- <select name="line_rec" id="line_rec" class="form-select"></select> --}}
                                 </div>
                             </div>
                         </div>
@@ -66,7 +84,8 @@
                                     <label for="won" id="txt">Won#:</label>
                                 </div>
                                 <div class="col col-sm-8">
-                                    <select name="won" id="won" class="form-select"></select>
+                                    <input type="text" id="won" name="won" class="form-control">
+                                    {{-- <select name="won" id="won" class="form-select"></select> --}}
                                 </div>
                             </div>
                         </div>
@@ -78,7 +97,9 @@
                             </div>
                         </div>
                     </div>
+                    <hr>
                 </form>
+                {{-- <button type="button" onclick="btnfetch()">Show</button> --}}
             </div>
         </div>
     </div>
@@ -128,6 +149,55 @@
 @endsection
 @push('script')
     <script>
-        $('#firstpage').addClass('active');
+        $('#firstpage').addClass('active')
+
+        $.ajax({
+            url: '{{ route('get.tlog') }}',
+            method: 'GET',
+            success: (response) => {
+                let html = '';
+                response.data.map((res)=>{
+
+                    html +='<tr>';
+                    html += '<td>'+ res.TLSLOG_TSKNO +'</td>';
+                    html += '<td>'+ res.TLSLOG_LSNO +'</td>';
+                    html += '<td><button class="btn btnInclude" onclick=\'btnInclude("' + res.TLSLOG_TSKNO + '")\'><i class="bi bi-eye-fill mx-2"></i>เรียกข้อมูล</button></td>';
+                    html += '</tr>'
+
+                })
+                $('#dataln tbody').html(html)
+            },
+            error: (error) => {
+                console.error(error);
+            }
+        })
+            //alert('Success')
+
+
+        btnInclude = (id) => {
+            console.log(id)
+            $.ajax({
+                url: '{{route('get.showtlog')}}',
+                method: 'GET',
+                data: {id: id},
+                success: (response) => {
+                    console.log(response);
+                    response.show.map((show)=>{
+                        $('#line_rec').val(show.TSKH_MCLN)
+                        $('#mdlcd').val(show.TWON_MDLCD)
+                        $('#won').val(show.TSKH_WONO)
+                        $('#lots').val(show.TWON_WONQT)
+                    })
+                },
+                error: (error) => {
+                    console.error(error);
+                }
+            })
+
+        }
+
+        $('#date_record').val(moment().format("YYYY-MM-DD"));
+
     </script>
+
 @endpush
