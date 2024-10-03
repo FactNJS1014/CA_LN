@@ -79,6 +79,7 @@
         <!--===== MAIN JS =====-->
         <script src="{{asset('public/js/app.js')}}"></script>
         <script src="{{asset('public/js/main.js')}}"></script>
+        <script src="{{asset('public/js/moment.js')}}"></script>
         @stack('script')
     </body>
 </html>

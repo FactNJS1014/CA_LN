@@ -218,4 +218,24 @@ a {
     color: #003566;
 }
 
+.text-topic{
+    font-size: 18px !important;
+    font-weight: 600;
+    color: red;
+}
+
+.btnInclude{
+    background-color: #0077b6;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-decoration: none;
+    cursor: pointer;
+    font-weight: 700;
+}
+.btnInclude:hover{
+    color: #0077b6;
+    font-weight: 700;
+}
+
 
