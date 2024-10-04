@@ -1,3 +1,0 @@
-btnclick = () =>{
-    alert("OKay!");
-}

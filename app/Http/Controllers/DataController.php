@@ -75,4 +75,19 @@ class DataController extends Controller
         return response()->json(['show'=> $showinput, 'doc'=>$CA]);
 
     }
+
+    public function getDataFormFirst(){
+        $data_form = DB::table('CA_RECLN_TBL')
+        ->select('CA_LNREC_ID',
+        'CA_ISSUE_DATE',
+        'CA_PROD_LINE',
+        'CA_PROD_WON',
+        'CA_PROD_DTPROB',
+        'CA_DOCS_ID',
+        'CA_PROD_INFMR',
+        'CA_CASEREC_STD')
+        ->where('CA_CASEREC_STD', '=', 0)
+        ->get();
+        return response()->json(['data_form'=> $data_form]);
+    }
 }
