@@ -4,6 +4,8 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+        {{-- csrf token --}}
+        <meta name="csrf-token" content="{{ csrf_token() }}">
 
         {{-- Include app.css --}}
         <link rel="stylesheet" href="{{asset('public/css/app.css')}}">
@@ -43,15 +45,15 @@
 
                         <a href="{{route('second')}}" class="nav__link" id="secondpage">
                             <i class='bi bi-2-square-fill' style="font-size: 19px;"></i>
-                            <span class="nav__name">Check Line Call</span>
+                            <span class="nav__name">Case and Active</span>
                         </a>
 
-                        {{-- <a href="#" class="nav__link" id="">
+                        <a href="#" class="nav__link" id="">
                             <i class='bi bi-3-square-fill' style="font-size: 19px;"></i>
-                            <span class="nav__name">Messages</span>
+                            <span class="nav__name">Check Sheet Linecall</span>
                         </a>
 
-                        <a href="#" class="nav__link">
+                        {{-- <a href="#" class="nav__link">
                             <i class='bi bi-4-square-fill' style="font-size: 19px;"></i>
                             <span class="nav__name">Favorites</span>
                         </a>
