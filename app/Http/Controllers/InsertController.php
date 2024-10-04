@@ -49,12 +49,56 @@ class InsertController extends Controller
             'CA_PROD_RECSTD' => 1,
             'CA_PROD_LSTDT' => $currentDate,
             'CA_PROD_FAXCOMPLETE' => 0,
-            'CA_LNREC_ID' => $CA_ID
+            'CA_LNREC_ID' => $CA_ID,
+            'CA_CASEREC_STD'=> 0
 
         ];
 
         DB::table('CA_RECLN_TBL')->insert($ins_ln);
 
         return response()->json(['insdb' =>  $ins_ln]);
+    }
+
+    public function AddCaseandActive(Request $request){
+        $rec_id = $request->rec_id;
+
+        $ins_case = $request->input('caseactive');
+        parse_str($ins_case,$caac);
+
+        $YM = date('Ym');
+        $CASE = '';
+
+        $findPrevious = DB::table('CA_CASEACTIVE_TBL')
+        ->select('CA_CASE_ID')
+        ->orderBy('CA_CASE_ID', 'DESC')
+        ->get();
+
+        if(empty($findPrevious[0])){
+            $CASE = 'CAAC-' . $YM . '-000001';
+        }else{
+            $CASE = AutogenerateKey('CAAC', $findPrevious[0]->CA_CASE_ID);
+        }
+
+        $case_ins = [
+            'CA_CASE_ID' => $CASE,
+            'CA_LNREC_ID' => $rec_id,
+            'CA_PROD_CASE' => $caac['case_prod'],
+            'CA_PROD_ACTIVE' => $caac['active_prod'],
+            'CA_CASEREC_LSTDT' => date('Y-m-d H:i:s'),
+            'CA_CASEACTIVE_STD' => 1,
+
+        ];
+
+        DB::table('CA_CASEACTIVE_TBL')->insert($case_ins);
+
+        $case_std = [
+            'CA_CASEREC_STD' => 1,
+        ];
+
+        DB::table('CA_RECLN_TBL')
+        ->where('CA_LNREC_ID', $rec_id)
+        ->update($case_std);
+
+        return response()->json(['case_ins' => $case_ins]);
     }
 }
