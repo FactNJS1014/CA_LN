@@ -22,10 +22,15 @@ Route::get('/second', function () {
     return view('main/caseandactive');
 })->name('second');
 
+Route::get('/third', function () {
+    return view('main/showrecord');
+})->name('third');
+
 //Method GET
 Route::get('/fetch/tlog',[DataController::class,'FetchTLSLOG'])->name('get.tlog');
 Route::get('/fetch/show',[DataController::class,'FetchshowTLSLOG'])->name('get.showtlog');
 Route::get('/fetch/datarec',[DataController::class,'getDataFormFirst'])->name('get.datarec');
+Route::get('/show/data',[DataController::class,'ShowRecord'])->name('show.data');
 
 //Method POST
 // Route::post('/fetch/search',[DataController::class,'SearchTLSLOG'])->name('post.searchtlog');

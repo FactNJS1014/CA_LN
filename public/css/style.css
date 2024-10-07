@@ -199,6 +199,7 @@ a {
 .card-title {
     background-color: var(--second-color);
     margin: 0;
+    padding: 5px;
 
 }
 
@@ -303,4 +304,114 @@ textarea{
     font-size: 18px !important;
     font-weight: 600;
     color: #050c9c;
+}
+
+
+.card-text{
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.card-title h5{
+    font-size: 20px;
+    font-weight: 600;
+}
+
+#prbtext{
+    font-size: 18px;
+    font-weight: 600;
+    background-color: #f4e5e1;
+    padding: auto;
+    border-radius: 5px;
+}
+
+.details1{
+    font-size: 17px;
+    font-weight: 600;
+}
+
+#casetext{
+    font-size: 18px;
+    font-weight: 600;
+    background-color: #f4e5e1;
+    padding: auto;
+    border-radius: 5px;
+}
+
+.details2{
+    font-size: 17px;
+    font-weight: 600;
+}
+
+#acttext{
+    font-size: 18px;
+    font-weight: 600;
+    background-color: #adf7b6;
+    padding: auto;
+    border-radius: 5px;
+}
+
+.details3{
+    font-size: 17px;
+    font-weight: 600;
+}
+
+.btnapr{
+    background-color: #058c42;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-decoration: none;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.btnapr:hover{
+    background-color: #d8f3dc;
+    color: #000;
+}
+
+.btnedit{
+    background-color: #faa307;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-decoration: none;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.btnedit:hover{
+    background-color: #fff3b0;
+    color: #000;
+}
+
+.btnrej{
+    background-color: #3C3D37;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-decoration: none;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.btnrej:hover{
+    background-color: #fcb9b2;
+    color: #000;
+}
+
+.btndel{
+    background-color: #bf0603;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-decoration: none;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.btndel:hover{
+    background-color: #FFABAB;
+    color: #000;
 }

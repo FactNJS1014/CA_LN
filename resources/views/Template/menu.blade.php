@@ -48,7 +48,7 @@
                             <span class="nav__name">Case and Active</span>
                         </a>
 
-                        <a href="#" class="nav__link" id="">
+                        <a href="{{route('third')}}" class="nav__link" id="thirdpage">
                             <i class='bi bi-3-square-fill' style="font-size: 19px;"></i>
                             <span class="nav__name">Check Sheet Linecall</span>
                         </a>
@@ -82,6 +82,7 @@
         <script src="{{asset('public/js/app.js')}}"></script>
         <script src="{{asset('public/js/main.js')}}"></script>
         <script src="{{asset('public/js/moment.js')}}"></script>
+        <script src="{{ asset('public/js/datatables.min.js') }}"></script>
         @stack('script')
     </body>
 </html>

@@ -21,13 +21,13 @@ class DataController extends Controller
         $posts = DataWON::join('TLSLOG_TBL', 'TSKH_TBL.TSKH_TSKNO' , '=' , 'TLSLOG_TBL.TLSLOG_TSKNO')
             ->join('TWON_TBL' , 'TSKH_TBL.TSKH_WONO','=','TWON_TBL.TWON_WONO')
             ->select('TSKH_TBL.TSKH_MCLN',
-             'TSKH_TBL.TSKH_WONO',
-             'TWON_TBL.TWON_MDLCD',
-             'TWON_TBL.TWON_WONQT',
-             'TLSLOG_TBL.TLSLOG_TTLMIN',
-             'TLSLOG_TBL.TLSLOG_DETAIL',
-             'TLSLOG_TBL.TLSLOG_TSKNO',
-             'TLSLOG_TBL.TLSLOG_LSNO')
+                'TSKH_TBL.TSKH_WONO',
+                'TWON_TBL.TWON_MDLCD',
+                'TWON_TBL.TWON_WONQT',
+                'TLSLOG_TBL.TLSLOG_TTLMIN',
+                'TLSLOG_TBL.TLSLOG_DETAIL',
+                'TLSLOG_TBL.TLSLOG_TSKNO',
+                'TLSLOG_TBL.TLSLOG_LSNO')
             ->whereDate('TLSLOG_TBL.TLSLOG_ISSDT', '>' , '2024-10-01')
             ->where('TLSLOG_TBL.TLSLOG_LSNO', '=' , 'NG001')
             ->where('TLSLOG_TBL.TLSLOG_TTLMIN', '>' , 10)
@@ -43,15 +43,15 @@ class DataController extends Controller
         $showinput = DataWON::join('TLSLOG_TBL', 'TSKH_TBL.TSKH_TSKNO' , '=' , 'TLSLOG_TBL.TLSLOG_TSKNO')
             ->join('TWON_TBL' , 'TSKH_TBL.TSKH_WONO','=','TWON_TBL.TWON_WONO')
             ->select('TSKH_TBL.TSKH_MCLN',
-             'TSKH_TBL.TSKH_WONO',
-             'TWON_TBL.TWON_MDLCD',
-             'TWON_TBL.TWON_WONQT',
-             'TLSLOG_TBL.TLSLOG_TTLMIN',
-             'TLSLOG_TBL.TLSLOG_DETAIL',
-             'TLSLOG_TBL.TLSLOG_TSKNO',
-             'TLSLOG_TBL.TLSLOG_LSNO',
-             'TLSLOG_TBL.TLSLOG_FTIME',
-             'TLSLOG_TBL.TLSLOG_TTIME',)
+                'TSKH_TBL.TSKH_WONO',
+                'TWON_TBL.TWON_MDLCD',
+                'TWON_TBL.TWON_WONQT',
+                'TLSLOG_TBL.TLSLOG_TTLMIN',
+                'TLSLOG_TBL.TLSLOG_DETAIL',
+                'TLSLOG_TBL.TLSLOG_TSKNO',
+                'TLSLOG_TBL.TLSLOG_LSNO',
+                'TLSLOG_TBL.TLSLOG_FTIME',
+                'TLSLOG_TBL.TLSLOG_TTIME',)
             ->whereDate('TLSLOG_TBL.TLSLOG_ISSDT', '>' , '2024-10-01')
             ->where('TLSLOG_TBL.TLSLOG_LSNO', '=' , 'NG001')
             ->where('TLSLOG_TBL.TLSLOG_TSKNO', '=' , $getid)
@@ -79,15 +79,23 @@ class DataController extends Controller
     public function getDataFormFirst(){
         $data_form = DB::table('CA_RECLN_TBL')
         ->select('CA_LNREC_ID',
-        'CA_ISSUE_DATE',
-        'CA_PROD_LINE',
-        'CA_PROD_WON',
-        'CA_PROD_DTPROB',
-        'CA_DOCS_ID',
-        'CA_PROD_INFMR',
-        'CA_CASEREC_STD')
+            'CA_ISSUE_DATE',
+            'CA_PROD_LINE',
+            'CA_PROD_WON',
+            'CA_PROD_DTPROB',
+            'CA_DOCS_ID',
+            'CA_PROD_INFMR',
+            'CA_CASEREC_STD')
         ->where('CA_CASEREC_STD', '=', 0)
         ->get();
         return response()->json(['data_form'=> $data_form]);
+    }
+
+    public function ShowRecord(){
+        $show_record = DB::table('CA_RECLN_TBL')
+        ->join('CA_CASEACTIVE_TBL', 'CA_RECLN_TBL.CA_LNREC_ID' , '=', 'CA_CASEACTIVE_TBL.CA_LNREC_ID')
+        ->select('CA_RECLN_TBL.*','CA_CASEACTIVE_TBL.CA_PROD_CASE','CA_CASEACTIVE_TBL.CA_PROD_ACTIVE')
+        ->get();
+        return response()->json(['show_record'=> $show_record]);
     }
 }
