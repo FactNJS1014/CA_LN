@@ -5,12 +5,15 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\DataTLSLOG;
 
 class InsertController extends Controller
 {
     public function AddTLSLOG(Request $request){
         $form_ins = $request->input('ca_linecall');
         parse_str($form_ins,$rec);
+
+        //return response()->json($rec);
 
         $YM = date('Ym');
         $CA_ID = '';
@@ -50,7 +53,11 @@ class InsertController extends Controller
             'CA_PROD_LSTDT' => $currentDate,
             'CA_PROD_FAXCOMPLETE' => 0,
             'CA_LNREC_ID' => $CA_ID,
-            'CA_CASEREC_STD'=> 0
+            'CA_CASEREC_STD'=> 0,
+            'CA_PROD_TRACKING' => 0,
+            'TLSLOG_TSKNO' => $rec['tskno'],
+            'TLSLOG_TSKLN' => $rec['tskln'],
+
 
         ];
 
@@ -100,5 +107,73 @@ class InsertController extends Controller
         ->update($case_std);
 
         return response()->json(['case_ins' => $case_ins]);
+    }
+
+    public function UpdateForm(Request $request){
+        $update_id = $request->input('id');
+        $form_update = $request->input('update_form');
+        parse_str($form_update,$update);
+
+        //return response()->json($update);
+
+        $update1 = [
+            'CA_DOCS_ID' => $update['document_id'],
+            'CA_PROD_UPDATE' => $update['date_edit'],
+            'CA_PROD_LINE' => $update['line_rec'],
+            'CA_PROD_PROCS' => $update['prcs_record'],
+            'CA_PROD_MDLCD' => $update['mdlcd'],
+            'CA_PROD_WON' => $update['won'],
+            'CA_PROD_LOTS' => $update['lots'],
+            'CA_PROD_PROBM' => $update['hd_prob'],
+            'CA_PROD_RANK' => $update['rank_rec'],
+            'CA_PROD_TMPBF' => $update['start_time'],
+            'CA_PROD_TMPBL' => $update['end_time'],
+            'CA_PROD_INFMR' => $update['name_info'],
+            'CA_PROD_DTPROB' => $update['desc_prob'],
+            'CA_PROD_QTY' => $update['qty_prod'],
+            'CA_PROD_ACCLOT' => $update['acc_prod'],
+            'CA_PROD_NG' => $update['ng_prod'],
+            'CA_PROD_RATE' => $update['rate_prod'],
+
+
+        ];
+
+        DB::table('CA_RECLN_TBL')
+        ->where('CA_LNREC_ID',$update_id)
+        ->update($update1);
+
+        $update2 = [
+            'CA_PROD_CASE' => $update['case_prod'],
+            'CA_PROD_ACTIVE' => $update['active_prod'],
+        ];
+
+        DB::table('CA_CASEACTIVE_TBL')
+        ->where('CA_LNREC_ID', $update_id)
+        ->update($update2);
+
+        $update3 = [
+            'TLSLOG_DETAIL' => $update['desc_prob']
+        ];
+
+        DB::connection('second_sqlsrv')->table('TLSLOG_TBL')
+        ->where('TLSLOG_TSKNO', $update['tskno'])
+        ->where('TLSLOG_TSKLN', $update['tskln'])
+        ->where('TLSLOG_TTLMIN', '>' , 10)
+        ->update($update3) ;
+
+
+        return response()->json(['updateform' => $update1]);
+    }
+
+    public function DeleteRecord(Request $request){
+        $del_id = $request->id;
+
+        DB::table('CA_CASEACTIVE_TBL')
+        ->where('CA_LNREC_ID', $del_id)
+        ->delete();
+
+        DB::table('CA_RECLN_TBL')
+        ->where('CA_LNREC_ID', $del_id)
+        ->delete();
     }
 }

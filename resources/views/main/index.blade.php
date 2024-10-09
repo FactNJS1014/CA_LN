@@ -27,7 +27,8 @@
 
 
                 <form method="post" class="needs-validation" id="ca_lncall" enctype="multipart/form-data" novalidate>
-
+                    <input type="hidden" name="tskln" id="tskln">
+                    <input type="hidden" name="tskno" id="tskno">
                     <div class="form-group row">
                         <div class="col col-sm-2">
                             <label for="document_id" id="txt">หมายเลขเอกสาร:</label>
@@ -226,7 +227,7 @@
                     html += '<td>'+ res.TLSLOG_LSNO +'</td>';
                     html += '<td>'+ res.TSKH_MCLN +'</td>';
                     html += '<td>'+ res.TLSLOG_TTLMIN +'</td>';
-                    html += '<td><button class="btn btnInclude" onclick=\'btnInclude("' + res.TLSLOG_TSKNO + '")\'><i class="bi bi-eye-fill mx-2"></i>เรียกข้อมูล</button></td>';
+                    html += '<td><button class="btn btnInclude" onclick=\'btnInclude("' + res.TLSLOG_TSKNO + '","'+res.TLSLOG_TSKLN+'")\'><i class="bi bi-eye-fill mx-2"></i>เรียกข้อมูล</button></td>';
                     html += '</tr>'
 
                 })
@@ -239,8 +240,11 @@
             //alert('Success')
 
 
-        btnInclude = (id) => {
+        btnInclude = (id,lno) => {
             console.log(id)
+            let x = $('#tskln').val(lno)
+            let y = $('#tskno').val(id)
+            console.log(x , y)
             $.ajax({
                 url: '{{route('get.showtlog')}}',
                 method: 'GET',
@@ -258,6 +262,7 @@
                     })
 
                     $('#document_id').val(response.doc)
+
                 },
                 error: (error) => {
                     console.error(error);

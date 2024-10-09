@@ -11,6 +11,8 @@ class DataTLSLOG extends Model
     protected $connection = "second_sqlsrv";
     protected $table = "TLSLOG_TBL";
     protected $fillable = [
-        'TLSLOG_TSKNO'
+        'TLSLOG_TSKNO',
+        'TLSLOG_TSKLN',
+        'TLSLOG_DETAIL'
     ];
 }

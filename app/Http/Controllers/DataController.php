@@ -27,7 +27,8 @@ class DataController extends Controller
                 'TLSLOG_TBL.TLSLOG_TTLMIN',
                 'TLSLOG_TBL.TLSLOG_DETAIL',
                 'TLSLOG_TBL.TLSLOG_TSKNO',
-                'TLSLOG_TBL.TLSLOG_LSNO')
+                'TLSLOG_TBL.TLSLOG_LSNO',
+                'TLSLOG_TBL.TLSLOG_TSKLN')
             ->whereDate('TLSLOG_TBL.TLSLOG_ISSDT', '>' , '2024-10-01')
             ->where('TLSLOG_TBL.TLSLOG_LSNO', '=' , 'NG001')
             ->where('TLSLOG_TBL.TLSLOG_TTLMIN', '>' , 10)
@@ -51,7 +52,8 @@ class DataController extends Controller
                 'TLSLOG_TBL.TLSLOG_TSKNO',
                 'TLSLOG_TBL.TLSLOG_LSNO',
                 'TLSLOG_TBL.TLSLOG_FTIME',
-                'TLSLOG_TBL.TLSLOG_TTIME',)
+                'TLSLOG_TBL.TLSLOG_TTIME',
+                'TLSLOG_TBL.TLSLOG_TSKLN')
             ->whereDate('TLSLOG_TBL.TLSLOG_ISSDT', '>' , '2024-10-01')
             ->where('TLSLOG_TBL.TLSLOG_LSNO', '=' , 'NG001')
             ->where('TLSLOG_TBL.TLSLOG_TSKNO', '=' , $getid)
@@ -97,5 +99,16 @@ class DataController extends Controller
         ->select('CA_RECLN_TBL.*','CA_CASEACTIVE_TBL.CA_PROD_CASE','CA_CASEACTIVE_TBL.CA_PROD_ACTIVE')
         ->get();
         return response()->json(['show_record'=> $show_record]);
+    }
+
+    public function ShoweditRecord(Request $request){
+        $id = $request->id;
+
+        $show_edit = DB::table('CA_RECLN_TBL')
+        ->join('CA_CASEACTIVE_TBL', 'CA_RECLN_TBL.CA_LNREC_ID' , '=', 'CA_CASEACTIVE_TBL.CA_LNREC_ID')
+        ->select('CA_RECLN_TBL.*','CA_CASEACTIVE_TBL.CA_PROD_CASE','CA_CASEACTIVE_TBL.CA_PROD_ACTIVE')
+        ->where('CA_RECLN_TBL.CA_LNREC_ID', $id)
+        ->get();
+        return response()->json(['show_edit'=> $show_edit]);
     }
 }
