@@ -355,6 +355,7 @@
                         data: form_update,
                         contentType: false,
                         processData: false,
+                        cache: false,
                         success: function (data) {
                             console.log(data);
                             if(data.updateform){
