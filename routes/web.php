@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DataController;
 use App\Http\Controllers\InsertController;
+use Barryvdh\DomPDF\Facade\Pdf;
+use App\Http\Controllers\PDFController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -43,6 +45,8 @@ Route::get('/delete',[InsertController::class,'DeleteRecord'])->name('delete.dat
 Route::post('/fetch/insertcase',[InsertController::class,'AddCaseandActive'])->name('post.addcase');
 Route::post('/fetch/add',[InsertController::class,'AddTLSLOG'])->name('post.addtlog');
 Route::post('/update/form',[InsertController::class,'UpdateForm'])->name('update.form');
+
+Route::get('/generate-pdf', [PDFController::class, 'generatePDF'])->name('generate.pdf');
 
 ?>
 

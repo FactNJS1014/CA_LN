@@ -19,20 +19,24 @@ class DataController extends Controller
 {
     public function FetchTLSLOG(){
         $posts = DataWON::join('TLSLOG_TBL', 'TSKH_TBL.TSKH_TSKNO' , '=' , 'TLSLOG_TBL.TLSLOG_TSKNO')
-            ->join('TWON_TBL' , 'TSKH_TBL.TSKH_WONO','=','TWON_TBL.TWON_WONO')
-            ->select('TSKH_TBL.TSKH_MCLN',
-                'TSKH_TBL.TSKH_WONO',
-                'TWON_TBL.TWON_MDLCD',
-                'TWON_TBL.TWON_WONQT',
-                'TLSLOG_TBL.TLSLOG_TTLMIN',
-                'TLSLOG_TBL.TLSLOG_DETAIL',
-                'TLSLOG_TBL.TLSLOG_TSKNO',
-                'TLSLOG_TBL.TLSLOG_LSNO',
-                'TLSLOG_TBL.TLSLOG_TSKLN')
-            ->whereDate('TLSLOG_TBL.TLSLOG_ISSDT', '>' , '2024-10-01')
-            ->where('TLSLOG_TBL.TLSLOG_LSNO', '=' , 'NG001')
-            ->where('TLSLOG_TBL.TLSLOG_TTLMIN', '>' , 10)
-            ->get();
+        ->join('TWON_TBL' , 'TSKH_TBL.TSKH_WONO','=','TWON_TBL.TWON_WONO')
+        // ->join('TLSLOG_TBL' ,'MLSTOPIC_TBL.TLSLOG_LSNO','=' ,'TLSLOG_TBL.TLSLOG_LSNO')
+        ->select('TSKH_TBL.TSKH_MCLN',
+            'TSKH_TBL.TSKH_WONO',
+            'TWON_TBL.TWON_MDLCD',
+            'TWON_TBL.TWON_WONQT',
+            'TLSLOG_TBL.TLSLOG_TTLMIN',
+            'TLSLOG_TBL.TLSLOG_DETAIL',
+            'TLSLOG_TBL.TLSLOG_TSKNO',
+            'TLSLOG_TBL.TLSLOG_LSNO',
+            'TLSLOG_TBL.TLSLOG_FTIME',
+            'TLSLOG_TBL.TLSLOG_TTIME',
+            'TLSLOG_TBL.TLSLOG_TSKLN',)
+            // 'MLSTOPIC_TBL.MLSTOPIC_DESC')
+        ->whereDate('TLSLOG_TBL.TLSLOG_ISSDT', '>' , '2024-10-01')
+        ->where('TLSLOG_TBL.TLSLOG_LSNO', '=' , 'NG001')
+        ->where('TLSLOG_TBL.TLSLOG_TTLMIN', '>' , 10)
+        ->get();
 
         return response()->json(['data'=> $posts]);
 
@@ -69,9 +73,9 @@ class DataController extends Controller
         ->get();
 
         if(empty($findPrevious[0])){
-            $CA = 'LCAD-' . $YM . '-000001';
+            $CA = 'Prod-' . $YM . '-000001';
         }else{
-            $CA = AutogenerateKey('LCAD', $findPrevious[0]->CA_DOCS_ID);
+            $CA = AutogenerateKey('Prod', $findPrevious[0]->CA_DOCS_ID);
         }
 
         return response()->json(['show'=> $showinput, 'doc'=>$CA]);
@@ -96,7 +100,7 @@ class DataController extends Controller
     public function ShowRecord(){
         $show_record = DB::table('CA_RECLN_TBL')
         ->join('CA_CASEACTIVE_TBL', 'CA_RECLN_TBL.CA_LNREC_ID' , '=', 'CA_CASEACTIVE_TBL.CA_LNREC_ID')
-        ->select('CA_RECLN_TBL.*','CA_CASEACTIVE_TBL.CA_PROD_CASE','CA_CASEACTIVE_TBL.CA_PROD_ACTIVE')
+        ->select('CA_RECLN_TBL.*','CA_CASEACTIVE_TBL.CA_PROD_CASE','CA_CASEACTIVE_TBL.CA_PROD_ACTIVE','CA_CASEACTIVE_TBL.CA_PROD_NOTE','CA_PROD_IMAGE')
         ->get();
         return response()->json(['show_record'=> $show_record]);
     }
@@ -106,7 +110,7 @@ class DataController extends Controller
 
         $show_edit = DB::table('CA_RECLN_TBL')
         ->join('CA_CASEACTIVE_TBL', 'CA_RECLN_TBL.CA_LNREC_ID' , '=', 'CA_CASEACTIVE_TBL.CA_LNREC_ID')
-        ->select('CA_RECLN_TBL.*','CA_CASEACTIVE_TBL.CA_PROD_CASE','CA_CASEACTIVE_TBL.CA_PROD_ACTIVE')
+        ->select('CA_RECLN_TBL.*','CA_CASEACTIVE_TBL.CA_PROD_CASE','CA_CASEACTIVE_TBL.CA_PROD_ACTIVE','CA_CASEACTIVE_TBL.CA_PROD_NOTE')
         ->where('CA_RECLN_TBL.CA_LNREC_ID', $id)
         ->get();
         return response()->json(['show_edit'=> $show_edit]);

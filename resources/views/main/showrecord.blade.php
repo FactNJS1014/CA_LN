@@ -21,6 +21,7 @@
                 data.map((res) => {
                     // Create a unique ID using the document ID
                     let uniqueTableId = `table-data-${res.CA_DOCS_ID}`;
+                    let imagePath = `{{ asset('public/images_ca/${res.CA_PROD_IMAGE}') }}`;
                     card += `
                         <div class="card mt-3 mb-3">
                             <div class="card-title p-2">
@@ -68,6 +69,8 @@
                                     </tbody>
                                 </table>
 
+
+
                                 <div class="row mt-3">
                                     <p class="col-md-2" id="prbtext">รายละเอียดปัญหา : </p>
                                     <p class="col-md-12 details1"><i class="bi bi-file-text-fill mx-2"></i>${res.CA_PROD_DTPROB}</p>
@@ -79,6 +82,15 @@
                                 <div class="row mt-3">
                                     <p class="col-md-2" id="acttext">การแก้ไขปัญหา : </p>
                                     <p class="col-md-12 details3"><i class="bi bi-pen-fill mx-2"></i>${res.CA_PROD_ACTIVE}</p>
+                                </div>
+                                <div class="row mt-3">
+                                    <p class="col-md-2" id="acttext">หมายเหตุ : </p>
+                                    <p class="col-md-12 details3"><i class="bi bi-pen-fill mx-2"></i>${res.CA_PROD_NOTE}</p>
+                                </div>
+
+                                <div class="text-center mb-3">
+                                     <p class="" id="imgtext">รูปภาพ : </p>
+                                    <img src="${imagePath}" alt="Document Image" class="img-fluid" style="max-height: 200px; max-width: 100%;" />
                                 </div>
                             </div>
                             <div class="card-footer p-2">
@@ -328,6 +340,13 @@
                         </div>
                     </div>
 
+                    <div class="row mt-3">
+                        <label for="case" class="col-sm-2" id="label-form">Note (หมายเหตุ):</label>
+                        <div class="col-sm-6">
+                            <textarea name="note_prod" id="note_prod" rows="4" class="form-control" required></textarea>
+                        </div>
+                    </div>
+
 
             </form>
             `;
@@ -356,7 +375,21 @@
                         contentType: false,
                         processData: false,
                         cache: false,
+                        beforeSend: function() {
+                            // Show a SweetAlert loading spinner
+                            Swal.fire({
+                                title: 'กำลังแก้ไขข้อมูล',
+                                text: 'โปรดรอสักครู่......',
+                                icon: 'info',
+                                allowOutsideClick: false, // Prevent closing on outside click
+                                showConfirmButton: false, // Hide the confirmation button
+                                didOpen: () => {
+                                    Swal.showLoading(); // Show the loading spinner
+                                }
+                            });
+                        },
                         success: function (data) {
+                            Swal.close();
                             console.log(data);
                             if(data.updateform){
                                 Swal.fire({
@@ -405,6 +438,7 @@
                         $('#rate_prod').val(data.CA_PROD_RATE)
                         $('#case_prod').val(data.CA_PROD_CASE)
                         $('#active_prod ').val(data.CA_PROD_ACTIVE)
+                        $('#note_prod ').val(data.CA_PROD_NOTE)
 
                         // Set the radio button value for rank_rec
                         $('input[name="rank_rec"]').filter('[value="' + data.CA_PROD_RANK + '"]').prop('checked', true);

@@ -72,7 +72,11 @@ class InsertController extends Controller
         $ins_case = $request->input('caseactive');
         parse_str($ins_case,$caac);
 
+
         $YM = date('Ym');
+
+
+
         $CASE = '';
 
         $findPrevious = DB::table('CA_CASEACTIVE_TBL')
@@ -93,10 +97,27 @@ class InsertController extends Controller
             'CA_PROD_ACTIVE' => $caac['active_prod'],
             'CA_CASEREC_LSTDT' => date('Y-m-d H:i:s'),
             'CA_CASEACTIVE_STD' => 1,
+            'CA_PROD_NOTE' => $caac['note_prod'],
 
         ];
 
         DB::table('CA_CASEACTIVE_TBL')->insert($case_ins);
+
+        $image_ins = $request->file('image');
+        if($request->hasFile('image')){
+            $extension = $image_ins->getClientOriginalExtension();
+            $filename = 'CAPIC-' . $YM . '-' . rand(00000, 99999) . '.' . $extension;
+            $location = 'public/images_ca/';
+            $image_ins->move($location, $filename);
+
+            $ins_img = [
+                'CA_PROD_IMAGE' => $filename
+            ];
+            DB::table('CA_CASEACTIVE_TBL')
+            ->where('CA_LNREC_ID', $rec_id)
+            ->update($ins_img);
+
+        }
 
         $case_std = [
             'CA_CASEREC_STD' => 1,
@@ -145,6 +166,7 @@ class InsertController extends Controller
         $update2 = [
             'CA_PROD_CASE' => $update['case_prod'],
             'CA_PROD_ACTIVE' => $update['active_prod'],
+            'CA_PROD_NOTE' => $update['note_prod'],
         ];
 
         DB::table('CA_CASEACTIVE_TBL')

@@ -49,6 +49,23 @@
                         </div>
                     </div>
 
+                    <div class="row mt-3">
+                        <label for="case" class="col-sm-2" id="label-form">Note (หมายเหตุ):</label>
+                        <div class="col-sm-6">
+                            <textarea name="note_prod" id="note_prod" rows="4" class="form-control" required></textarea>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <label for="case" class="col-sm-2" id="label-form">เพิ่มรูปภาพ:</label>
+                        <div class="col-sm-6">
+                            <input type="file" id="image_prod" name="image_prod" accept="image/*" onchange="previewImages(event)" required>
+                            <div class="d-flex justify-content-start mt-2">
+                                <div id="imageContainer" class="image-container"></div>
+
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="d-flex justify-content-center">
                         <button type="submit" class="btn btn-success mt-4"><i
                                 class="bi bi-floppy-fill mx-3"></i>บันทึกข้อมูล</button>
@@ -117,9 +134,13 @@
                         } else {
                             event.preventDefault()
                             event.stopPropagation()
+
                             const formCase = new FormData();
                             formCase.append('caseactive', $('#form_caseandactive').serialize());
                             var _token = $('meta[name="csrf-token"]').attr('content');
+                            var imageFile = $('#image_prod')[0].files[0];
+                            //console.log(imageFile)
+                            formCase.append('image', imageFile);
                             formCase.append('_token', _token);
                             formCase.append('rec_id' , id)
 
@@ -130,7 +151,21 @@
                                 processData: false,
                                 contentType: false,
                                 cache: false,
+                                beforeSend: function() {
+                                    // Show a SweetAlert loading spinner
+                                    Swal.fire({
+                                        title: 'กำลังบันทึกข้อมูล',
+                                        text: 'โปรดรอสักครู่......',
+                                        icon: 'info',
+                                        allowOutsideClick: false, // Prevent closing on outside click
+                                        showConfirmButton: false, // Hide the confirmation button
+                                        didOpen: () => {
+                                            Swal.showLoading(); // Show the loading spinner
+                                        }
+                                    });
+                                },
                                 success: function(data) {
+                                    Swal.close();
                                     console.log(data);
                                     if (data.case_ins) {
                                         Swal.fire({
@@ -139,7 +174,8 @@
                                             showConfirmButton: false,
                                             timer: 1000
                                         }).then(function() {
-                                            location.reload();
+                                            var url = "{{route('third')}}"
+                                            window.location = url
                                         })
                                     }
                                 },
@@ -153,6 +189,68 @@
                 })
 
             })
+        }
+
+        function previewImages(event) {
+            var files = event.target.files;
+
+            if (files.length > 3) {
+                alert('You can only upload a maximum of 3 images');
+                document.getElementById('imageInput').value = ''; // Clear the input
+                return;
+            }
+
+            var container = document.getElementById('imageContainer');
+            container.innerHTML = ''; // Clear previous images
+
+            Array.from(files).forEach(file => {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var img = new Image();
+                    img.src = e.target.result;
+                    img.onload = function() {
+                        var canvas = document.createElement('canvas');
+                        var ctx = canvas.getContext('2d');
+                        var maxWidth = 1600; // Set the max width or height for the resized image
+                        var maxHeight = 1600;
+                        var width = img.width;
+                        var height = img.height;
+
+                        if (width > height) {
+                            if (width > maxWidth) {
+                                height *= maxWidth / width;
+                                width = maxWidth;
+                            }
+                        } else {
+                            if (height > maxHeight) {
+                                width *= maxHeight / height;
+                                height = maxHeight;
+                            }
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+                        ctx.imageSmoothingEnabled = true;
+                        ctx.imageSmoothingQuality = 'high';
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        var resizedImg = new Image();
+                        resizedImg.src = canvas.toDataURL();
+                        resizedImg.classList.add('image-preview');
+                        resizedImg.addEventListener('click', function() {
+                            this.classList.toggle('zoomed');
+                        });
+
+                        // Style adjustments
+                        resizedImg.style.width = 'auto'; // Ensure width is auto
+                        resizedImg.style.height = 'auto'; // Ensure height is auto
+                        resizedImg.style.maxWidth = '100%'; // Optional: scale to container width
+
+                        container.appendChild(resizedImg);
+                    }
+                };
+                reader.readAsDataURL(file);
+            });
         }
     </script>
 @endpush
