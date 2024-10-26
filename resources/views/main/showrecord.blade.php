@@ -140,7 +140,32 @@
         });
 
         aprbtn =(id) =>{
-            console.log(id);
+            //console.log(id);
+            //console.log(empno);
+            $.ajax({
+                url: '{{route('ins.appr')}}',
+                method: 'GET',
+                data: {
+                    id: id,
+                    empno: empno,
+                },
+                success: function (response) {
+                    console.log(response);
+                    if(response.capr){
+                        Swal.fire({
+                            icon:'success',
+                            title: 'Send Approve Successfully',
+                            text: 'ส่งตรวจสอบเสร็จสิ้น',
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(()=>{
+                            location.reload();
+                        })
+
+                    }
+
+                },
+            })
         }
 
         editbtn = (id,doc,tskno,tskln) =>{

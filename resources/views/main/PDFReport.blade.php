@@ -94,6 +94,10 @@
             font-size: 20px;
             font-weight: bold;
         }
+        .text-rotate {
+           color: ;
+            
+        }
 
     </style>
 </head>
@@ -142,6 +146,7 @@
             <div class="col">
                 <table>
                     <tr>
+                        <td rowspan="5"><span class="text-rotate">สำหรับแผนกที่ออกเอกสาร</span></td>
                         <td class="label-cell">Model Code</td>
                         <td class="value-cell">{{$item->CA_PROD_MDLCD}}</td>
                     </tr>
@@ -157,8 +162,18 @@
                         <td class="label-cell">NG QTY  <br> NG Rate</td>
                         <td class="value-cell">NG QTY = {{$item->CA_PROD_QTY}} pcs. <br> NG Rate = {{$item->CA_PROD_RATE}} %</td>
                     </tr>
+                    <tr>
+                        <td class="label-cell">รายละเอียดความผิดปกติ</td>
+                        <td class="value-cell">{{$item->CA_PROD_DTPROB}}</td>
+                    </tr>
                 </table>
             </div>
+
+
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
             <div class="col">
                 <table>
                     {{-- <tr>
@@ -183,8 +198,9 @@
                     </tr>
                 </table>
             </div>
-            </div>
+
         </div>
+
     </div>
 
     <div class="container">

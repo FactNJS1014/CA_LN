@@ -143,6 +143,7 @@
                             formCase.append('image', imageFile);
                             formCase.append('_token', _token);
                             formCase.append('rec_id' , id)
+                            formCase.append('empno',empno);
 
                             $.ajax({
                                 url: '{{ route('post.addcase') }}',

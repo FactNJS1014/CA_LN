@@ -14,6 +14,7 @@ class InsertController extends Controller
         parse_str($form_ins,$rec);
 
         //return response()->json($rec);
+        $empno = $request->empno;
 
         $YM = date('Ym');
         $CA_ID = '';
@@ -57,6 +58,7 @@ class InsertController extends Controller
             'CA_PROD_TRACKING' => 0,
             'TLSLOG_TSKNO' => $rec['tskno'],
             'TLSLOG_TSKLN' => $rec['tskln'],
+            'CA_PROD_EMPREC' => $empno
 
 
         ];
@@ -68,6 +70,7 @@ class InsertController extends Controller
 
     public function AddCaseandActive(Request $request){
         $rec_id = $request->rec_id;
+        $empno = $request->empno;
 
         $ins_case = $request->input('caseactive');
         parse_str($ins_case,$caac);
@@ -98,6 +101,7 @@ class InsertController extends Controller
             'CA_CASEREC_LSTDT' => date('Y-m-d H:i:s'),
             'CA_CASEACTIVE_STD' => 1,
             'CA_PROD_NOTE' => $caac['note_prod'],
+            'CA_CASEREC_EMPID' => $empno
 
         ];
 
@@ -189,6 +193,10 @@ class InsertController extends Controller
 
     public function DeleteRecord(Request $request){
         $del_id = $request->id;
+
+        DB::table('CA_HRECAPP_TBL')
+        ->where('CA_LNREC_ID', $del_id)
+        ->delete();
 
         DB::table('CA_CASEACTIVE_TBL')
         ->where('CA_LNREC_ID', $del_id)

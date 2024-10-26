@@ -330,7 +330,7 @@
                         formRecord.append('ca_linecall',$('#ca_lncall').serialize());
                         var _token = $('meta[name="csrf-token"]').attr('content');
                         formRecord.append('_token',_token);
-
+                        formRecord.append('empno', empno)
                         $.ajax({
                             url: '{{route('post.addtlog')}}',
                             type: 'POST',

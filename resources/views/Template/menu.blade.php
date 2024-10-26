@@ -1,3 +1,26 @@
+<?php
+session_start();
+
+if (!empty($_GET['username'])) {
+    $_SESSION['username'] = $_GET['username'];
+    $_SESSION['empno'] = $_GET['empno'];
+    $_SESSION['department'] = $_GET['department'];
+    $_SESSION['USE_PERMISSION'] = $_GET['USE_PERMISSION'];
+    $_SESSION['sec'] = $_GET['sec'];
+    $_SESSION['MSECT_ID'] = $_GET['MSECT_ID'];
+    $per = $_GET['USE_PERMISSION'];
+?>
+<script>
+    window.location.replace("http://web-server/41_calinecall/index.php");
+</script>
+<?php
+}
+if (empty($_SESSION['empno'])) {
+    header('Location: http://web-server/menu.php');
+    exit(0);
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -28,7 +51,7 @@
             </div>
 
 
-                <span class="nav__name">Natdanai Jansomboon</span>
+                <span class="nav__name"><?php echo $_SESSION['username']; ?></span>
 
         </header>
 
@@ -76,7 +99,15 @@
 
 
         @yield('content')
-
+        <script>
+            var empno = '<?= $_SESSION['empno'] ?>';
+            var username = '<?= $_SESSION['username'] ?>';
+            var department = '<?= $_SESSION['department'] ?>';
+            var sec = '<?= $_SESSION['sec'] ?>';
+            var permission = '<?= $_SESSION['USE_PERMISSION'] ?>';
+            var MSECT_ID = '<?= $_SESSION['MSECT_ID'] ?>';
+            var server = '<?= $_SERVER['HTTP_HOST'] ?>';
+        </script>
 
         <!--===== MAIN JS =====-->
         <script src="{{asset('public/js/app.js')}}"></script>
