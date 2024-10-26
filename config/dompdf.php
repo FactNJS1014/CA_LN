@@ -279,6 +279,11 @@ return array(
          */
         "enable_html5_parser" => true,
     ),
+    'css' => [
+        'path' => public_path('css'),
+        'fonts' => true,
+        'bootstrap' => true,
+    ],
 
 
 

@@ -28,12 +28,22 @@ Route::get('/third', function () {
     return view('main/showrecord');
 })->name('third');
 
+Route::get('/Report', function () {
+    return view('main/ReportData');
+})->name('four');
+
+Route::get('/table-data', function () {
+    return view('main/table');
+})->name('table');
+
 //Method GET
 Route::get('/fetch/tlog',[DataController::class,'FetchTLSLOG'])->name('get.tlog');
 Route::get('/fetch/show',[DataController::class,'FetchshowTLSLOG'])->name('get.showtlog');
 Route::get('/fetch/datarec',[DataController::class,'getDataFormFirst'])->name('get.datarec');
 Route::get('/show/data',[DataController::class,'ShowRecord'])->name('show.data');
 Route::get('/show/edit',[DataController::class,'ShoweditRecord'])->name('show.edit');
+Route::get('/show/report',[DataController::class,'ShowReports'])->name('show.report');
+
 
 //Method GET to Delete Data Record
 Route::get('/delete',[InsertController::class,'DeleteRecord'])->name('delete.data');
@@ -46,6 +56,7 @@ Route::post('/fetch/insertcase',[InsertController::class,'AddCaseandActive'])->n
 Route::post('/fetch/add',[InsertController::class,'AddTLSLOG'])->name('post.addtlog');
 Route::post('/update/form',[InsertController::class,'UpdateForm'])->name('update.form');
 
+//Use PDF
 Route::get('/generate-pdf', [PDFController::class, 'generatePDF'])->name('generate.pdf');
 
 ?>

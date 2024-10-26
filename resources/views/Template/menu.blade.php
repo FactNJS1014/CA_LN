@@ -53,12 +53,12 @@
                             <span class="nav__name">Check Sheet Linecall</span>
                         </a>
 
-                        {{-- <a href="#" class="nav__link">
+                        <a href="{{route('four')}}" class="nav__link" id="fourthpage">
                             <i class='bi bi-4-square-fill' style="font-size: 19px;"></i>
-                            <span class="nav__name">Favorites</span>
+                            <span class="nav__name">Reports</span>
                         </a>
 
-                        <a href="#" class="nav__link">
+                        {{-- <a href="#" class="nav__link">
                             <i class='bi bi-5-square-fill' style="font-size: 19px;"></i>
                             <span class="nav__name">Data</span>
                         </a>

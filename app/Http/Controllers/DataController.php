@@ -115,4 +115,12 @@ class DataController extends Controller
         ->get();
         return response()->json(['show_edit'=> $show_edit]);
     }
+
+    public function ShowReports(){
+        $show_report = DB::table('CA_RECLN_TBL')
+        ->join('CA_CASEACTIVE_TBL', 'CA_RECLN_TBL.CA_LNREC_ID' , '=', 'CA_CASEACTIVE_TBL.CA_LNREC_ID')
+        ->select('CA_RECLN_TBL.*','CA_CASEACTIVE_TBL.CA_PROD_CASE','CA_CASEACTIVE_TBL.CA_PROD_ACTIVE','CA_CASEACTIVE_TBL.CA_PROD_NOTE','CA_PROD_IMAGE')
+        ->get();
+        return response()->json(['rep'=> $show_report]);
+    }
 }
