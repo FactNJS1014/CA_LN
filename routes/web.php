@@ -5,6 +5,7 @@ use App\Http\Controllers\DataController;
 use App\Http\Controllers\InsertController;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\PDFController;
+use App\Http\Controllers\ApprController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -58,6 +59,9 @@ Route::post('/update/form',[InsertController::class,'UpdateForm'])->name('update
 
 //Use PDF
 Route::get('/generate-pdf', [PDFController::class, 'generatePDF'])->name('generate.pdf');
+
+//Use Approval
+Route::get('/approve', [ ApprController::class, ''])->name('get.appr');
 
 ?>
 

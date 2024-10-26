@@ -161,10 +161,10 @@
             </div>
             <div class="col">
                 <table>
-                    <tr>
+                    {{-- <tr>
                         <td class="label-cell">ระดับการแจ้งปัญหา</td>
                         <td class="value-cell">ggg</td>
-                    </tr>
+                    </tr> --}}
                     <tr>
                         <td class="label-cell">หัวข้อปัญหาที่เกิด</td>
                         <td class="value-cell">{{$item->CA_PROD_PROBM}}</td>

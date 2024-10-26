@@ -98,7 +98,7 @@
                                     <!-- Buttons on the left -->
                                     <div>
                                         <button type="button" class="btn btnapr" onclick="aprbtn('${res.CA_LNREC_ID}')">
-                                            Confirm Data <i class="bi bi-arrow-right-circle-fill ms-2"></i>
+                                            ยืนยันตรวจสอบ <i class="bi bi-arrow-right-circle-fill ms-2"></i>
                                         </button>
                                         <button type="button" class="btn btnedit" onclick="editbtn('${res.CA_LNREC_ID}','${res.CA_DOCS_ID}','${res.TLSLOG_TSKNO}','${res.TLSLOG_TSKLN}')">
                                             <i class="bi bi-pencil-square mx-2"></i>แก้ไขข้อมูล

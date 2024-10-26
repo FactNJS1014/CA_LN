@@ -59,7 +59,13 @@
             success: function(response) {
                 var blob = new Blob([response], { type: 'application/pdf' });
                 var url = window.URL.createObjectURL(blob);
-                window.open(url, '_blank');
+                // Open the PDF in a new tab
+                var newWindow = window.open('', '_blank');
+                newWindow.document.write('<iframe src="' + url + '" width="100%" height="100%"></iframe>');
+                // Set the new window's URL to include the ID
+                newWindow.history.replaceState(null, '', '/view-pdf/' + id);
+                // Set a generic title for the new tab
+                newWindow.document.title = 'Report PDF';
             },
             error: function(xhr, status, error) {
                 console.error('Error generating PDF:', error);
