@@ -95,8 +95,12 @@
             font-weight: bold;
         }
         .text-rotate {
-           color: ;
-            
+            color: #133E87;
+        }
+        .text-con{
+            font-size: 20px;
+            color: red;
+            font-weight: bold;
         }
 
     </style>
@@ -189,14 +193,12 @@
                         <td class="value-cell">{{$item->CA_PROD_INFMR}}</td>
                     </tr>
 
-
-                </table>
-                <table style="margin-top: 5px;">
                     <tr>
-                        <th class="label-cell" style="text-align: center;">รูปภาพ</th>
+                        <td class="label-cell" style="text-align: center;">รูปภาพ</td>
                         <td class="value-cell"><img src="{{ asset('public/images_ca/' . $item->CA_PROD_IMAGE) }}" alt="Document Image" class="img-fluid" style="max-height: 200px; max-width: 100%;" /></td>
                     </tr>
                 </table>
+
             </div>
 
         </div>
@@ -208,15 +210,16 @@
             <div class="col">
                 <table class="no-collapse">
                     <tr>
-                        <th class="label-cell">สาเหตุการเกิด</th>
+                        <td rowspan="4"><span class="text-rotate">สำหรับแผนกที่รับผิดชอบ</span></td>
+                        <td class="label-cell">สาเหตุการเกิด</td>
                         <td class="value-cell">{{$item->CA_PROD_CASE}}</td>
                     </tr>
                     <tr>
-                        <th class="label-cell">การแก้ไขเบื้องต้น</th>
+                        <td class="label-cell">การแก้ไขเบื้องต้น</td>
                         <td class="value-cell">{{$item->CA_PROD_ACTIVE}}</td>
                     </tr>
                     <tr>
-                        <th class="label-cell">PIC & Action Date</th>
+                        <td class="label-cell">PIC & Action Date</td>
                         <td class="value-cell"></td>
                     </tr>
                     <tr>
@@ -233,6 +236,7 @@
     <div class="container" style="margin-top: 100px;">
         <div class="row">
             <div class="col">
+                <p class="text-con">***ผู้ทำการตรวจสอบ***</p>
                 <table>
                     <tr>
                         <th class="label-cell" style="text-align: center; padding-top: 2px;">Sub-Leader</th>

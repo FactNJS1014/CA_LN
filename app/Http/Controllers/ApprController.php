@@ -67,4 +67,59 @@ class ApprController extends Controller
         ];
         return $empAppIds[$level] ?? '';
     }
+
+
+    public function getAppr(Request $request){
+        $data_id = $request->id;
+        $emp_no = $request->empno;
+
+        $db = DB::table('CA_RECLN_TBL')
+            ->select('CA_PROD_TRACKING')
+            ->get();
+        $appr = DB::table('CA_HRECAPP_TBL')
+            ->select('CA_RECAPP_LV','CA_RECAPP_EMPAPP_ID')
+            ->get();
+
+        $match = [];
+        foreach ($db as $item) {
+            foreach ($appr as $lv){
+                if($item->CA_PROD_TRACKING == $lv->CA_RECAPP_LV){
+                    $match = $lv->CA_RECAPP_LV;
+
+                }
+            }
+        }
+
+        $tracking_up = $match + 1;
+
+        $appr = [
+            'CA_EMPID_APPR' => $emp_no,
+            'CA_RECAPP_STD' => 1
+        ];
+
+        if ($tracking_up >= 3) {
+            $trackupdate = [
+                'CA_PROD_TRACKING' => $tracking_up,
+            ];
+        } else {
+            $trackupdate = [
+                'CA_PROD_TRACKING' => $tracking_up
+            ];
+        }
+
+
+
+        DB::table('CA_HRECAPP_TBL')
+            ->where('CA_RECAPP_EMPAPP_ID',$match)
+            ->where('CA_LNREC_ID',$data_id)
+            ->update($appr);
+
+
+        DB::table('CA_RECLN_TBL')
+            ->where('CA_LNREC_ID',$data_id)
+            ->update($trackupdate);
+
+        return response()->json(['appr' => $appr]);
+
+    }
 }

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\TLSLOGAlert;
 
 /**
  * TODO: Include Models
@@ -17,29 +19,38 @@ use Illuminate\Http\Request;
 
 class DataController extends Controller
 {
-    public function FetchTLSLOG(){
-        $posts = DataWON::join('TLSLOG_TBL', 'TSKH_TBL.TSKH_TSKNO' , '=' , 'TLSLOG_TBL.TLSLOG_TSKNO')
-        ->join('TWON_TBL' , 'TSKH_TBL.TSKH_WONO','=','TWON_TBL.TWON_WONO')
-        // ->join('TLSLOG_TBL' ,'MLSTOPIC_TBL.TLSLOG_LSNO','=' ,'TLSLOG_TBL.TLSLOG_LSNO')
-        ->select('TSKH_TBL.TSKH_MCLN',
-            'TSKH_TBL.TSKH_WONO',
-            'TWON_TBL.TWON_MDLCD',
-            'TWON_TBL.TWON_WONQT',
-            'TLSLOG_TBL.TLSLOG_TTLMIN',
-            'TLSLOG_TBL.TLSLOG_DETAIL',
-            'TLSLOG_TBL.TLSLOG_TSKNO',
-            'TLSLOG_TBL.TLSLOG_LSNO',
-            'TLSLOG_TBL.TLSLOG_FTIME',
-            'TLSLOG_TBL.TLSLOG_TTIME',
-            'TLSLOG_TBL.TLSLOG_TSKLN',)
-            // 'MLSTOPIC_TBL.MLSTOPIC_DESC')
-        ->whereDate('TLSLOG_TBL.TLSLOG_ISSDT', '>' , '2024-10-01')
-        ->where('TLSLOG_TBL.TLSLOG_LSNO', '=' , 'NG001')
-        ->where('TLSLOG_TBL.TLSLOG_TTLMIN', '>' , 10)
-        ->get();
+    public function FetchTLSLOG()
+    {
+        $posts = DataWON::join('TLSLOG_TBL', 'TSKH_TBL.TSKH_TSKNO', '=', 'TLSLOG_TBL.TLSLOG_TSKNO')
+            ->join('TWON_TBL', 'TSKH_TBL.TSKH_WONO', '=', 'TWON_TBL.TWON_WONO')
+            ->select(
+                'TSKH_TBL.TSKH_MCLN',
+                'TSKH_TBL.TSKH_WONO',
+                'TWON_TBL.TWON_MDLCD',
+                'TWON_TBL.TWON_WONQT',
+                'TLSLOG_TBL.TLSLOG_TTLMIN',
+                'TLSLOG_TBL.TLSLOG_DETAIL',
+                'TLSLOG_TBL.TLSLOG_TSKNO',
+                'TLSLOG_TBL.TLSLOG_LSNO',
+                'TLSLOG_TBL.TLSLOG_FTIME',
+                'TLSLOG_TBL.TLSLOG_TTIME',
+                'TLSLOG_TBL.TLSLOG_TSKLN',
+            )
+            ->whereDate('TLSLOG_TBL.TLSLOG_ISSDT', '>', '2024-10-01')
+            ->where('TLSLOG_TBL.TLSLOG_LSNO', '=', 'NG001')
+            ->where('TLSLOG_TBL.TLSLOG_TTLMIN', '>', 10)
+            ->whereDate('TLSLOG_TBL.TLSLOG_ISSDT', '=', now()->toDateString())
+            ->get();
 
-        return response()->json(['data'=> $posts]);
 
+
+        return response()->json(['data' => $posts]);
+
+
+        // Check if any records have TLSLOG_TTLMIN > 10 and send email
+        if ($posts->isNotEmpty()) {
+            Mail::to('j-natdanai@alpine-asia.com')->send(new TLSLOGAlert($posts));
+        }
     }
 
     public function FetchshowTLSLOG(Request $request){
@@ -102,7 +113,22 @@ class DataController extends Controller
         ->join('CA_CASEACTIVE_TBL', 'CA_RECLN_TBL.CA_LNREC_ID' , '=', 'CA_CASEACTIVE_TBL.CA_LNREC_ID')
         ->select('CA_RECLN_TBL.*','CA_CASEACTIVE_TBL.CA_PROD_CASE','CA_CASEACTIVE_TBL.CA_PROD_ACTIVE','CA_CASEACTIVE_TBL.CA_PROD_NOTE','CA_PROD_IMAGE')
         ->get();
-        return response()->json(['show_record'=> $show_record]);
+
+        $level2 = DB::table('CA_HRECAPP_TBL')
+        ->select('CA_RECAPP_LV','CA_RECAPP_EMPAPP_ID')
+        ->whereIn('CA_LNREC_ID',$show_record->pluck('CA_LNREC_ID'))
+        ->get();
+
+        $match = [];
+        foreach ($show_record as $item) {
+            foreach ($level2 as $level){
+                if($item->CA_PROD_TRACKING == $level->CA_RECAPP_LV){
+                    $match[] = $level->CA_RECAPP_EMPAPP_ID;
+                }
+            }
+        }
+
+        return response()->json(['show_record'=> $show_record,'match' => $match]);
     }
 
     public function ShoweditRecord(Request $request){

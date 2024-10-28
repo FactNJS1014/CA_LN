@@ -61,7 +61,7 @@ Route::post('/update/form',[InsertController::class,'UpdateForm'])->name('update
 Route::get('/generate-pdf', [PDFController::class, 'generatePDF'])->name('generate.pdf');
 
 //Use Approval
-Route::get('/approve', [ ApprController::class, 'getAppr'])->name('get.appr');
+Route::get('/approve', [ ApprController::class, 'getAppr'])->name('approve.next');
 Route::get('/insert/approve', [ ApprController::class, 'InsertAppr'])->name('ins.appr');
 
 ?>

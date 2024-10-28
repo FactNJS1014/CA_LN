@@ -12,17 +12,21 @@
         $('#thirdpage').addClass('active');
 
         $.ajax({
-            url: '{{route('show.data')}}',
+            url: '{{ route('show.data') }}',
             type: 'GET',
             success: function(response) {
-                console.log(response);
+                //console.log(response);
                 let card = '';
                 let data = response.show_record;
+
                 data.map((res) => {
-                    // Create a unique ID using the document ID
-                    let uniqueTableId = `table-data-${res.CA_DOCS_ID}`;
-                    let imagePath = `{{ asset('public/images_ca/${res.CA_PROD_IMAGE}') }}`;
-                    card += `
+                    const matchdata = String(response.match)
+                    const matcharray = matchdata.split(',')
+                    console.log(matcharray)
+                    if(matcharray.includes(empno)){
+                        let uniqueTableId = `table-data-${res.CA_DOCS_ID}`;
+                            let imagePath = `{{ asset('public/images_ca/${res.CA_PROD_IMAGE}') }}`;
+                            card += `
                         <div class="card mt-3 mb-3">
                             <div class="card-title p-2">
                                 <h5><i class="bi bi-postcard-fill mx-3"></i>หมายเลขเอกสาร (Document Number) : ${res.CA_DOCS_ID}</h5>
@@ -97,8 +101,8 @@
                                 <div class="d-flex justify-content-between">
                                     <!-- Buttons on the left -->
                                     <div>
-                                        <button type="button" class="btn btnapr" onclick="aprbtn('${res.CA_LNREC_ID}')">
-                                            ยืนยันตรวจสอบ <i class="bi bi-arrow-right-circle-fill ms-2"></i>
+                                        <button type="button" class="btn btnaprlv" onclick="aprlvbtn('${res.CA_LNREC_ID}')">
+                                            อนุมัติ<i class="bi bi-arrow-right-circle-fill ms-2"></i>
                                         </button>
                                         <button type="button" class="btn btnedit" onclick="editbtn('${res.CA_LNREC_ID}','${res.CA_DOCS_ID}','${res.TLSLOG_TSKNO}','${res.TLSLOG_TSKLN}')">
                                             <i class="bi bi-pencil-square mx-2"></i>แก้ไขข้อมูล
@@ -120,6 +124,122 @@
                             </div>
                         </div>
                     `;
+                    }else {
+                        console.log(
+                            "empno not found in matchArray. Card not displayed."
+                        ); // Optional: Log for debugging
+                    }
+
+
+
+                    //Permission ผู้ที่บันทึก
+
+                        if (res.CA_PROD_TRACKING == 0) {
+                            // Create a unique ID using the document ID
+                            let uniqueTableId = `table-data-${res.CA_DOCS_ID}`;
+                            let imagePath = `{{ asset('public/images_ca/${res.CA_PROD_IMAGE}') }}`;
+                            card += `
+                        <div class="card mt-3 mb-3">
+                            <div class="card-title p-2">
+                                <h5><i class="bi bi-postcard-fill mx-3"></i>หมายเลขเอกสาร (Document Number) : ${res.CA_DOCS_ID}</h5>
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-bordered nowrap w-100" id="${uniqueTableId}">
+                                    <thead class="table-info">
+                                        <tr>
+                                            <th scope="col">Issue Date</th>
+                                            <th scope="col">Line</th>
+                                            <th scope="col">Process</th>
+                                            <th scope="col">Model Code</th>
+                                            <th scope="col">Work Order</th>
+                                            <th scope="col">Lot Size</th>
+                                            <th scope="col">Problem Heading</th>
+                                            <th scope="col">Rank</th>
+                                            <th scope="col">Time Start</th>
+                                            <th scope="col">Time End</th>
+                                            <th scope="col">Information Person</th>
+                                            <th scope="col">QTY</th>
+                                            <th scope="col">ACC/LOT</th>
+                                            <th scope="col">NG</th>
+                                            <th scope="col">RATE (%)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>${moment(res.CA_ISSUE_DATE).format('DD-MM-YYYY')}</td>
+                                            <td>${res.CA_PROD_LINE}</td>
+                                            <td>${res.CA_PROD_PROCS}</td>
+                                            <td>${res.CA_PROD_MDLCD}</td>
+                                            <td>${res.CA_PROD_WON}</td>
+                                            <td>${res.CA_PROD_LOTS}</td>
+                                            <td>${res.CA_PROD_PROBM}</td>
+                                            <td>${res.CA_PROD_RANK}</td>
+                                            <td>${res.CA_PROD_TMPBF}</td>
+                                            <td>${res.CA_PROD_TMPBL}</td>
+                                            <td>${res.CA_PROD_INFMR}</td>
+                                            <td>${res.CA_PROD_QTY}</td>
+                                            <td>${res.CA_PROD_ACCLOT}</td>
+                                            <td>${res.CA_PROD_NG}</td>
+                                            <td>${res.CA_PROD_RATE}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+
+
+                                <div class="row mt-3">
+                                    <p class="col-md-2" id="prbtext">รายละเอียดปัญหา : </p>
+                                    <p class="col-md-12 details1"><i class="bi bi-file-text-fill mx-2"></i>${res.CA_PROD_DTPROB}</p>
+                                </div>
+                                <div class="row mt-3">
+                                    <p class="col-md-2" id="casetext">สาเหตุการเกิด : </p>
+                                    <p class="col-md-12 details2"><i class="bi bi-file-text-fill mx-2"></i>${res.CA_PROD_CASE}</p>
+                                </div>
+                                <div class="row mt-3">
+                                    <p class="col-md-2" id="acttext">การแก้ไขปัญหา : </p>
+                                    <p class="col-md-12 details3"><i class="bi bi-pen-fill mx-2"></i>${res.CA_PROD_ACTIVE}</p>
+                                </div>
+                                <div class="row mt-3">
+                                    <p class="col-md-2" id="acttext">หมายเหตุ : </p>
+                                    <p class="col-md-12 details3"><i class="bi bi-pen-fill mx-2"></i>${res.CA_PROD_NOTE}</p>
+                                </div>
+
+                                <div class="text-center mb-3">
+                                     <p class="" id="imgtext">รูปภาพ : </p>
+                                    <img src="${imagePath}" alt="Document Image" class="img-fluid" style="max-height: 200px; max-width: 100%;" />
+                                </div>
+                            </div>
+                            <div class="card-footer p-2">
+                                <div class="d-flex justify-content-between">
+                                    <!-- Buttons on the left -->
+                                    <div>
+                                        <button type="button" class="btn btnaprlv" onclick="aprbtn('${res.CA_LNREC_ID}')">
+                                            ส่งตรวจสอบ<i class="bi bi-arrow-right-circle-fill ms-2"></i>
+                                        </button>
+                                        <button type="button" class="btn btnedit" onclick="editbtn('${res.CA_LNREC_ID}','${res.CA_DOCS_ID}','${res.TLSLOG_TSKNO}','${res.TLSLOG_TSKLN}')">
+                                            <i class="bi bi-pencil-square mx-2"></i>แก้ไขข้อมูล
+                                        </button>
+                                        <button type="button" class="btn btnrej" onclick="rejbtn('${res.CA_LNREC_ID}')">
+                                            <i class="bi bi-arrow-left-circle-fill mx-2"></i>Reject
+                                        </button>
+                                    </div>
+
+                                    <!-- Button on the right -->
+                                    <div>
+                                        <button type="button" class="btn btndel" onclick="delbtn('${res.CA_LNREC_ID}')">
+                                            <i class="bi bi-trash3-fill mx-2"></i>Delete
+                                        </button>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    `;
+
+                    }
+
+
                 });
                 $('#card-show').html(card);
 
@@ -139,26 +259,26 @@
             }
         });
 
-        aprbtn =(id) =>{
+        aprbtn = (id) => {
             //console.log(id);
             //console.log(empno);
             $.ajax({
-                url: '{{route('ins.appr')}}',
+                url: '{{ route('ins.appr') }}',
                 method: 'GET',
                 data: {
                     id: id,
                     empno: empno,
                 },
-                success: function (response) {
+                success: function(response) {
                     console.log(response);
-                    if(response.capr){
+                    if (response.capr) {
                         Swal.fire({
-                            icon:'success',
+                            icon: 'success',
                             title: 'Send Approve Successfully',
                             text: 'ส่งตรวจสอบเสร็จสิ้น',
                             showConfirmButton: false,
                             timer: 1500
-                        }).then(()=>{
+                        }).then(() => {
                             location.reload();
                         })
 
@@ -168,7 +288,7 @@
             })
         }
 
-        editbtn = (id,doc,tskno,tskln) =>{
+        editbtn = (id, doc, tskno, tskln) => {
             console.log(id);
             let form = '';
             form += `
@@ -391,10 +511,10 @@
                     form_update.append('update_form', $('#form_update').serialize());
                     form_update.append('id', id);
                     var _token = $('meta[name="csrf-token"]').attr('content');
-                    form_update.append('_token',_token);
+                    form_update.append('_token', _token);
 
                     $.ajax({
-                        url: '{{route('update.form')}}',
+                        url: '{{ route('update.form') }}',
                         type: 'POST',
                         data: form_update,
                         contentType: false,
@@ -413,16 +533,16 @@
                                 }
                             });
                         },
-                        success: function (data) {
+                        success: function(data) {
                             Swal.close();
                             console.log(data);
-                            if(data.updateform){
+                            if (data.updateform) {
                                 Swal.fire({
                                     title: 'แก้ไขข้อมูลสำเร็จ',
-                                    icon:'success',
+                                    icon: 'success',
                                     showConfirmButton: false,
                                     timer: 1000
-                                }).then(()=>{
+                                }).then(() => {
                                     location.reload();
                                 })
                             }
@@ -437,13 +557,15 @@
             $('#date_edit').val(moment().format('YYYY-MM-DD'))
         }
 
-        btnshw = (id) =>{
+        btnshw = (id) => {
             console.log(id);
             $.ajax({
-                url: '{{route('show.edit')}}',
+                url: '{{ route('show.edit') }}',
                 type: 'GET',
-                data: {id: id},
-                success: function (data) {
+                data: {
+                    id: id
+                },
+                success: function(data) {
                     data.show_edit.map((data) => {
                         console.log(data);
                         $('#line_rec').val(data.CA_PROD_LINE)
@@ -466,8 +588,10 @@
                         $('#note_prod ').val(data.CA_PROD_NOTE)
 
                         // Set the radio button value for rank_rec
-                        $('input[name="rank_rec"]').filter('[value="' + data.CA_PROD_RANK + '"]').prop('checked', true);
-                        $('input[name="hd_prob"]').filter('[value="' + data.CA_PROD_PROBM + '"]').prop('checked', true);
+                        $('input[name="rank_rec"]').filter('[value="' + data.CA_PROD_RANK + '"]')
+                            .prop('checked', true);
+                        $('input[name="hd_prob"]').filter('[value="' + data.CA_PROD_PROBM + '"]')
+                            .prop('checked', true);
 
                     })
                 }
@@ -481,28 +605,53 @@
             $('#rate_prod').val(parseInt(rate)); // Convert the rate to integer
         }
 
-        delbtn = (id) =>{
+        delbtn = (id) => {
             console.log(id)
             $.ajax({
-                url: '{{route('delete.data')}}',
+                url: '{{ route('delete.data') }}',
                 type: 'GET',
-                data: {id: id},
-                success: function (data) {
+                data: {
+                    id: id
+                },
+                success: function(data) {
                     Swal.fire({
                         title: 'ลบข้อมูลสำเร็จ',
-                        icon:'success',
+                        icon: 'success',
                         showConfirmButton: false,
                         timer: 1000
-                    }).then(()=>{
+                    }).then(() => {
                         location.reload();
                     })
                 }
             })
         }
 
+        //click approve to next level
+        aprlvbtn = (id) =>{
+            console.log(id)
+            console.log(empno)
+            $.ajax({
+                url: '{{ route('approve.next') }}',
+                type: 'GET',
+                data: {
+                    id: id,
+                    empno: empno
+                },
+                success: function(data) {
+                    console.log(data);
+                    if(data.appr){
+                        Swal.fire({
+                            title: 'อนุมัติข้อมูลสำเร็จ',
+                            icon:'success',
+                            showConfirmButton: false,
+                            timer: 1000
+                        }).then(() => {
+                            location.reload();
+                        })
+                    }
+                }
 
-
-
-
+            })
+        }
     </script>
 @endpush

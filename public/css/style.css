@@ -494,3 +494,17 @@ textarea{
     font-size: 14pt;
     font-weight: bold;
 }
+
+.btnaprlv{
+    background-color: #058c42;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-decoration: none;
+    cursor: pointer;
+    font-weight: 700;
+}
+.btnaprlv:hover{
+    background-color: #d8f3dc;
+    color: #000;
+}
