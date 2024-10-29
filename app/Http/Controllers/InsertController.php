@@ -183,16 +183,16 @@ class InsertController extends Controller
         $update3 = [
             'TLSLOG_DETAIL' => $update['desc_prob']
         ];
-
+        $YM = date('Ym');
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('images_ca'), $imageName);
+            $filename = 'CAPIC-' . $YM . '-' . rand(00000, 99999) . '.' . 'jpg';
+            $image->move(public_path('images_ca'), $filename);
             
             // Update image name in database
             DB::table('CA_CASEACTIVE_TBL')
                 ->where('CA_LNREC_ID', $update_id)
-                ->update(['CA_PROD_IMAGE' => $imageName]);
+                ->update(['CA_PROD_IMAGE' => $filename]);
         }
 
         

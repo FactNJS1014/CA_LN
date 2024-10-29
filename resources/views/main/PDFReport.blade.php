@@ -249,21 +249,22 @@
                     </tr>
                     <tr>
                         @foreach ($recapp as $app)
+                        @php
+                            $name_status = false;
+                        @endphp
+                        @foreach ($user as $name)
+                        @if ($app->CA_EMPID_APPR == $name->MUSR_ID)
+                            <td class="value-cell" style="text-align: center; color: #347928;">{{$name->MUSR_NAME}}</td>
                             @php
-                                $name_status = false;
+                                $name_status = true;
                             @endphp
-                            @foreach ($user as $name)
-                                @if ($app->CA_EMPID_APPR == $name->MUSR_ID)
-                                    <td class="value-cell" style="height: 40px; padding-top: 10px; text-align: center; color: #347928;">{{$name->MUSR_NAME}}</td>
-                                    @php
-                                        $name_status = true;
-                                    @endphp
-                                @endif
-                            @endforeach
-
+                        @endif
                         @endforeach
-                        {{-- <td class="value-cell" style="height: 60px; padding-top: 20px;"></td>
-                        <td class="value-cell" style="height: 60px; padding-top: 20px;"></td> --}}
+                        {{-- Check if no name was found --}}
+                        @if (!$name_status)
+                            <td class="value-cell" style="text-align: center; color: #347928;">ไม่มีชื่อ</td>
+                        @endif
+                    @endforeach
                     </tr>
                 </table>
             </div>
