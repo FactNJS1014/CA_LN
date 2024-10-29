@@ -104,6 +104,19 @@ return [
             'prefix_indexes' => true,
         ],
 
+        'third_sqlsrv' => [
+            'driver' => 'sqlsrv',
+            'url' => env('DATABASE_URL'),
+            'host' => env('THIRD_DB_HOST', '172.22.64.11'),
+            'port' => env('THIRD_DB_PORT', '1433'),
+            'database' => env('THIRD_DB_DATABASE', 'WEBSERVER'),
+            'username' => env('THIRD_DB_USERNAME', 'sa'),
+            'password' => env('THIRD_DB_PASSWORD', ''),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+        ],
+
     ],
 
     /*

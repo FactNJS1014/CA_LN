@@ -143,7 +143,7 @@
             </div> --}}
         </div>
     </div>
-    @endforeach
+
 
     <div class="container">
         <div class="row">
@@ -220,7 +220,11 @@
                     </tr>
                     <tr>
                         <td class="label-cell">PIC & Action Date</td>
-                        <td class="value-cell"></td>
+                        @foreach ($user as $name)
+                             @if ($item->CA_CASEREC_EMPID == $name->MUSR_ID)
+                                    <td class="value-cell">{{$name->MUSR_NAME}} ,&nbsp;{{ date('d-M-Y', strtotime($item->CA_CASEREC_LSTDT)) }}</td>
+                             @endif
+                        @endforeach
                     </tr>
                     <tr>
                         <th class="label-cell">หมายเหตุ</th>
@@ -244,13 +248,27 @@
                         <th class="label-cell" style="text-align: center; padding-top: 2px;">QA</th>
                     </tr>
                     <tr>
-                        <td class="value-cell" style="height: 60px; padding-top: 20px;"></td>
-                        <td class="value-cell" style="height: 60px; padding-top: 20px;"></td>
-                        <td class="value-cell" style="height: 60px; padding-top: 20px;"></td>
+                        @foreach ($recapp as $app)
+                            @php
+                                $name_status = false;
+                            @endphp
+                            @foreach ($user as $name)
+                                @if ($app->CA_EMPID_APPR == $name->MUSR_ID)
+                                    <td class="value-cell" style="height: 40px; padding-top: 10px; text-align: center; color: #347928;">{{$name->MUSR_NAME}}</td>
+                                    @php
+                                        $name_status = true;
+                                    @endphp
+                                @endif
+                            @endforeach
+
+                        @endforeach
+                        {{-- <td class="value-cell" style="height: 60px; padding-top: 20px;"></td>
+                        <td class="value-cell" style="height: 60px; padding-top: 20px;"></td> --}}
                     </tr>
                 </table>
             </div>
         </div>
+        @endforeach
     </div>
 
     <script src="{{ asset('public/js/app.js') }}"></script>

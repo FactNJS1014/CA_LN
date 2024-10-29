@@ -35,11 +35,11 @@
             let show = '';
             response.rep.map((report) => {
                 show += '<tr>';
-                show += '<td>' + report.CA_DOCS_ID + '</td>';
-                show += '<td>' + moment(report.CA_ISSUE_DATE).format('DD-MM-YYYY') + '</td>';
-                show += '<td>' + report.CA_PROD_MDLCD + '</td>';
-                show += '<td>' + report.CA_PROD_WON + '</td>';
-                show += '<td>' + report.CA_PROD_TMPBF + '-' + report.CA_PROD_TMPBL +'</td>';
+                show += '<td style="color: #001F3F;">' + report.CA_DOCS_ID + '</td>';
+                show += '<td style="color: #001F3F;">' + moment(report.CA_ISSUE_DATE).format('DD-MM-YYYY') + '</td>';
+                show += '<td style="color: #001F3F;">' + report.CA_PROD_MDLCD + '</td>';
+                show += '<td style="color: #001F3F;">' + report.CA_PROD_WON + '</td>';
+                show += '<td style="color: #001F3F;">' + report.CA_PROD_TMPBF + '-' + report.CA_PROD_TMPBL +'</td>';
                 show += '<td><button class="btn btnInclude" onclick=\'btnViewDoc("' + report.CA_LNREC_ID + '")\'><i class="bi bi-file-earmark-richtext-fill mx-2"></i>ดูเอกสาร</button></td>';
                 show += '</tr>';
             })

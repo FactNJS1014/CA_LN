@@ -64,6 +64,9 @@ Route::get('/generate-pdf', [PDFController::class, 'generatePDF'])->name('genera
 Route::get('/approve', [ ApprController::class, 'getAppr'])->name('approve.next');
 Route::get('/insert/approve', [ ApprController::class, 'InsertAppr'])->name('ins.appr');
 
+//Use Reject
+Route::post('/insert/reject', [ ApprController::class, 'InsertReject'])->name('reject.data');
+
 ?>
 
 

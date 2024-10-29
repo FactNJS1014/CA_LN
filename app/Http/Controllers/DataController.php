@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\TLSLOGAlert;
 
 /**
  * TODO: Include Models
@@ -15,6 +13,8 @@ use App\Mail\TLSLOGAlert;
  use App\Models\DataWON;
 
  use Illuminate\Support\Facades\DB;
+ use Illuminate\Support\Facades\Mail;
+ use App\Mail\TLSLOGAlert;
 
 
 class DataController extends Controller
@@ -42,15 +42,12 @@ class DataController extends Controller
             ->whereDate('TLSLOG_TBL.TLSLOG_ISSDT', '=', now()->toDateString())
             ->get();
 
-
-
-        return response()->json(['data' => $posts]);
-
-
         // Check if any records have TLSLOG_TTLMIN > 10 and send email
         if ($posts->isNotEmpty()) {
             Mail::to('j-natdanai@alpine-asia.com')->send(new TLSLOGAlert($posts));
         }
+
+        return response()->json(['data' => $posts]);
     }
 
     public function FetchshowTLSLOG(Request $request){
@@ -121,14 +118,14 @@ class DataController extends Controller
 
         $match = [];
         foreach ($show_record as $item) {
-            foreach ($level2 as $level){
-                if($item->CA_PROD_TRACKING == $level->CA_RECAPP_LV){
-                    $match[] = $level->CA_RECAPP_EMPAPP_ID;
+            foreach($level2 as $lv){
+                if($item->CA_PROD_TRACKING == $lv->CA_RECAPP_LV){
+                    $match = $lv->CA_RECAPP_EMPAPP_ID;
                 }
             }
-        }
 
-        return response()->json(['show_record'=> $show_record,'match' => $match]);
+        }
+        return response()->json(['show_record'=> $show_record , 'match' => $match]);
     }
 
     public function ShoweditRecord(Request $request){

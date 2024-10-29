@@ -96,6 +96,12 @@
                                      <p class="" id="imgtext">รูปภาพ : </p>
                                     <img src="${imagePath}" alt="Document Image" class="img-fluid" style="max-height: 200px; max-width: 100%;" />
                                 </div>
+                                ${res.CA_LNRJ_STD == 1 ?  `
+                                <div class="row mt-3">
+                                    <p class="col-md-3" id="acttext"> Comment จากการถูกส่งกลับ : </p>
+                                    <p class="col-md-12 details3"><i class="bi bi-chat-left-text-fill mx-2"></i>${res.CA_LNRJ_REMARK}</p>
+                                </div>
+                                `: ''}
                             </div>
                             <div class="card-footer p-2">
                                 <div class="d-flex justify-content-between">
@@ -651,6 +657,67 @@
                     }
                 }
 
+            })
+        }
+
+        rejbtn = (id) =>{
+            let frm_rj = '';
+            frm_rj += '<form method="post" id="form_reject">';
+            frm_rj += '@csrf';
+            frm_rj += '<input type="text" class="form-control" name="comment" id="comment">';
+            frm_rj += '</form>';
+            Swal.fire({
+                title: 'กรุณากรอกข้อมูลการเหตุผลที่ไม่อนุมัติ',
+                html: '<div style="text-align: left;" >' + frm_rj + '</div>',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'ส่งกลับ',
+                width: '60%',
+                showCloseButton: true,
+                preConfirm: () => {
+                    let form_reject = new FormData();
+                    form_reject.append('reject_form', $('#form_reject').serialize());
+                    form_reject.append('id', id);
+                    var _token = $('meta[name="csrf-token"]').attr('content');
+                    form_reject.append('_token', _token);
+
+                    $.ajax({
+                        url: '{{ route('reject.data') }}',
+                        type: 'POST',
+                        data: form_reject,
+                        contentType: false,
+                        processData: false,
+                        cache: false,
+                        beforeSend: function() {
+                            // Show a SweetAlert loading spinner
+                            Swal.fire({
+                                title: 'กำลังส่งกลับข้อมูล',
+                                text: 'โปรดรอสักครู่......',
+                                icon: 'info',
+                                allowOutsideClick: false, // Prevent closing on outside click
+                                showConfirmButton: false, // Hide the confirmation button
+                                didOpen: () => {
+                                    Swal.showLoading(); // Show the loading spinner
+                                }
+                            });
+                        },
+                        success: function(data) {
+                            Swal.close();
+                            console.log(data);
+                            if (data.rejectform) {
+                                Swal.fire({
+                                    title: 'ส่งกลับข้อมูลสำเร็จ',
+                                    icon:'success',
+                                    showConfirmButton: false,
+                                    timer: 1000
+                                }).then(() => {
+                                    location.reload();
+                                })
+                            }
+                        }
+                    })
+                }
             })
         }
     </script>
