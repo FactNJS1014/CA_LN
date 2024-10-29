@@ -101,6 +101,10 @@
                                     <p class="col-md-3" id="acttext"> Comment จากการถูกส่งกลับ : </p>
                                     <p class="col-md-12 details3"><i class="bi bi-chat-left-text-fill mx-2"></i>${res.CA_LNRJ_REMARK}</p>
                                 </div>
+                                ` : res.CA_PROD_TRACKING === 2 ? `
+                                <div class="row mt-3">                                    
+                                    <p class="col-md-12 details3"><i class="bi bi-chat-left-text-fill mx-2"></i>มีการแก้ไขแล้ว</p>
+                                </div>
                                 `: ''}
                             </div>
                             <div class="card-footer p-2">
@@ -120,6 +124,7 @@
 
                                     <!-- Button on the right -->
                                     <div>
+                                       
                                         <button type="button" class="btn btndel" onclick="delbtn('${res.CA_LNREC_ID}')">
                                             <i class="bi bi-trash3-fill mx-2"></i>Delete
                                         </button>
@@ -140,7 +145,7 @@
 
                     //Permission ผู้ที่บันทึก
 
-                        if (res.CA_PROD_TRACKING == 0) {
+                        if (empno == res.CA_PROD_EMPREC && res.CA_PROD_TRACKING == 0) {
                             // Create a unique ID using the document ID
                             let uniqueTableId = `table-data-${res.CA_DOCS_ID}`;
                             let imagePath = `{{ asset('public/images_ca/${res.CA_PROD_IMAGE}') }}`;
@@ -232,6 +237,11 @@
 
                                     <!-- Button on the right -->
                                     <div>
+                                          ${res.CA_LNRJ_STD == 1 ?  `
+                                         <button type="button" class="btn btnedit" onclick="editofrejbtn('${res.CA_LNREC_ID}','${res.CA_DOCS_ID}','${res.TLSLOG_TSKNO}','${res.TLSLOG_TSKLN}')">
+                                            <i class="bi bi-pencil-square mx-2"></i>แก้ไขข้อมูล from reject
+                                        </button>
+                                          `: ''}
                                         <button type="button" class="btn btndel" onclick="delbtn('${res.CA_LNREC_ID}')">
                                             <i class="bi bi-trash3-fill mx-2"></i>Delete
                                         </button>
@@ -498,6 +508,8 @@
                         </div>
                     </div>
 
+                    
+
 
             </form>
             `;
@@ -518,7 +530,8 @@
                     form_update.append('id', id);
                     var _token = $('meta[name="csrf-token"]').attr('content');
                     form_update.append('_token', _token);
-
+                    var imageFile = $('#image')[0].files[0];
+                    form_update.append('image', imageFile);
                     $.ajax({
                         url: '{{ route('update.form') }}',
                         type: 'POST',
@@ -598,12 +611,14 @@
                             .prop('checked', true);
                         $('input[name="hd_prob"]').filter('[value="' + data.CA_PROD_PROBM + '"]')
                             .prop('checked', true);
+                        
+                        
 
                     })
                 }
             })
         }
-
+        
         function calRateNG() {
             let ng = parseInt($('#ng_prod').val()) || 0;
             let acc = parseInt($('#acc_prod').val()) || 0;

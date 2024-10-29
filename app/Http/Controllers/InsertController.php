@@ -171,7 +171,10 @@ class InsertController extends Controller
             'CA_PROD_CASE' => $update['case_prod'],
             'CA_PROD_ACTIVE' => $update['active_prod'],
             'CA_PROD_NOTE' => $update['note_prod'],
+            'CA_PROD_IMAGE' => $update['image'],
         ];
+
+
 
         DB::table('CA_CASEACTIVE_TBL')
         ->where('CA_LNREC_ID', $update_id)
@@ -180,6 +183,9 @@ class InsertController extends Controller
         $update3 = [
             'TLSLOG_DETAIL' => $update['desc_prob']
         ];
+
+        
+
 
         DB::connection('second_sqlsrv')->table('TLSLOG_TBL')
         ->where('TLSLOG_TSKNO', $update['tskno'])
