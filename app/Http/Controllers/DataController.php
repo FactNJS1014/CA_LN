@@ -36,16 +36,16 @@ class DataController extends Controller
                 'TLSLOG_TBL.TLSLOG_TTIME',
                 'TLSLOG_TBL.TLSLOG_TSKLN',
             )
-            ->whereDate('TLSLOG_TBL.TLSLOG_ISSDT', '>', '2024-10-01')
+            ->whereDate('TLSLOG_TBL.TLSLOG_ISSDT', '>', '2024-10-20')
             ->where('TLSLOG_TBL.TLSLOG_LSNO', '=', 'NG001')
             ->where('TLSLOG_TBL.TLSLOG_TTLMIN', '>', 10)
-            ->whereDate('TLSLOG_TBL.TLSLOG_ISSDT', '=', now()->toDateString())
+            // ->whereDate('TLSLOG_TBL.TLSLOG_ISSDT', '=', now()->toDateString())
             ->get();
 
-        // Check if any records have TLSLOG_TTLMIN > 10 and send email
-        if ($posts->isNotEmpty()) {
-            Mail::to('j-natdanai@alpine-asia.com')->send(new TLSLOGAlert($posts));
-        }
+        // // Check if any records have TLSLOG_TTLMIN > 10 and send email
+        // if ($posts->TLSLOG_TTLMIN > 10) {
+        //     Mail::to('j-natdanai@alpine-asia.com')->send(new TLSLOGAlert($posts));
+        // }
 
         return response()->json(['data' => $posts]);
     }

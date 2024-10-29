@@ -245,6 +245,7 @@
                                         <button type="button" class="btn btndel" onclick="delbtn('${res.CA_LNREC_ID}')">
                                             <i class="bi bi-trash3-fill mx-2"></i>Delete
                                         </button>
+                                      
                                     </div>
                                 </div>
 
@@ -508,6 +509,14 @@
                         </div>
                     </div>
 
+                    <div class="row mt-3">
+                        <label for="case" class="col-sm-2" id="label-form">เปลี่ยนรูปภาพ:</label>
+                        <div class="col-sm-6">
+                            <input type="file" id="image_prod" name="image_prod" accept="image/*">
+                           
+                        </div>
+                    </div>
+
                     
 
 
@@ -530,7 +539,7 @@
                     form_update.append('id', id);
                     var _token = $('meta[name="csrf-token"]').attr('content');
                     form_update.append('_token', _token);
-                    var imageFile = $('#image')[0].files[0];
+                    var imageFile = $('#image_prod')[0].files[0];
                     form_update.append('image', imageFile);
                     $.ajax({
                         url: '{{ route('update.form') }}',
@@ -612,6 +621,8 @@
                         $('input[name="hd_prob"]').filter('[value="' + data.CA_PROD_PROBM + '"]')
                             .prop('checked', true);
                         
+                        let imagePath = `{{ asset('public/images_ca/${data.CA_PROD_IMAGE}') }}`;
+                        $('#current_image img').attr('src', imagePath);
                         
 
                     })
@@ -735,5 +746,7 @@
                 }
             })
         }
+
+        
     </script>
 @endpush

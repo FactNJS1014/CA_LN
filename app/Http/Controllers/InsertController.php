@@ -171,7 +171,7 @@ class InsertController extends Controller
             'CA_PROD_CASE' => $update['case_prod'],
             'CA_PROD_ACTIVE' => $update['active_prod'],
             'CA_PROD_NOTE' => $update['note_prod'],
-            'CA_PROD_IMAGE' => $update['image'],
+            
         ];
 
 
@@ -183,6 +183,17 @@ class InsertController extends Controller
         $update3 = [
             'TLSLOG_DETAIL' => $update['desc_prob']
         ];
+
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('images_ca'), $imageName);
+            
+            // Update image name in database
+            DB::table('CA_CASEACTIVE_TBL')
+                ->where('CA_LNREC_ID', $update_id)
+                ->update(['CA_PROD_IMAGE' => $imageName]);
+        }
 
         
 
@@ -211,5 +222,19 @@ class InsertController extends Controller
         DB::table('CA_RECLN_TBL')
         ->where('CA_LNREC_ID', $del_id)
         ->delete();
+    }
+
+    public function DeleteImage(Request $request){
+        $del_id = $request->id;
+        $image = DB::table('CA_CASEACTIVE_TBL')
+            ->where('CA_LNREC_ID', $del_id)
+            ->value('CA_PROD_IMAGE');
+
+        // Delete the image file if it exists
+        if ($image && file_exists(public_path('images_ca/' . $image))) {
+            unlink(public_path('images_ca/' . $image));
+        }
+
+      
     }
 }

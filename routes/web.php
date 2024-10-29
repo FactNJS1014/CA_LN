@@ -48,6 +48,7 @@ Route::get('/show/report',[DataController::class,'ShowReports'])->name('show.rep
 
 //Method GET to Delete Data Record
 Route::get('/delete',[InsertController::class,'DeleteRecord'])->name('delete.data');
+Route::get('/delete/img',[InsertController::class,'DeleteImage'])->name('delete.img');
 
 //Method POST
 // Route::post('/fetch/search',[DataController::class,'SearchTLSLOG'])->name('post.searchtlog');
