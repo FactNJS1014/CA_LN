@@ -39,7 +39,7 @@ class DataController extends Controller
             ->whereDate('TLSLOG_TBL.TLSLOG_ISSDT', '>', '2024-10-20')
             ->where('TLSLOG_TBL.TLSLOG_LSNO', '=', 'NG001')
             ->where('TLSLOG_TBL.TLSLOG_TTLMIN', '>', 10)
-            // ->whereDate('TLSLOG_TBL.TLSLOG_ISSDT', '=', now()->toDateString())
+            //->whereDate('TLSLOG_TBL.TLSLOG_ISSDT', '=', now()->toDateString())
             ->get();
 
         // // Check if any records have TLSLOG_TTLMIN > 10 and send email

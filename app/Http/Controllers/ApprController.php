@@ -72,25 +72,25 @@ class ApprController extends Controller
     public function getAppr(Request $request) {
         $data_id = $request->id;
         $emp_no = $request->empno;
-    
+
         // Get current tracking level for specific record
         $currentTracking = DB::table('CA_RECLN_TBL')
             ->where('CA_LNREC_ID', $data_id)
             ->value('CA_PROD_TRACKING');
-    
+
         // Get approval record for current level
         $currentApproval = DB::table('CA_HRECAPP_TBL')
             ->where('CA_LNREC_ID', $data_id)
             ->where('CA_RECAPP_LV', $currentTracking)
             ->first();
-    
+
         if (!$currentApproval) {
             return response()->json(['error' => 'Approval record not found'], 404);
         }
-    
+
         // Increment tracking level
         $tracking_up = $currentTracking + 1;
-        
+
         // Update approval status
         DB::table('CA_HRECAPP_TBL')
             ->where('CA_LNREC_ID', $data_id)
@@ -99,7 +99,7 @@ class ApprController extends Controller
                 'CA_EMPID_APPR' => $emp_no,
                 'CA_RECAPP_STD' => 1
             ]);
-    
+
         // ถ้า tracking_up เป็น 3 ให้อัพเดทสถานะเป็น 1 และไม่เพิ่ม tracking level
         if ($tracking_up > 3) {
             DB::table('CA_HRECAPP_TBL')
@@ -116,7 +116,7 @@ class ApprController extends Controller
                 ->where('CA_LNREC_ID', $data_id)
                 ->update(['CA_PROD_TRACKING' => $tracking_up]);
         }
-    
+
         return response()->json(['appr' => [
             'CA_EMPID_APPR' => $emp_no,
             'CA_RECAPP_STD' => 1
@@ -138,13 +138,17 @@ class ApprController extends Controller
             ->get();
 
         // Find matching level
-        $match = [];
+        $match = null;
         foreach ($level1 as $lv1) {
             foreach ($level2 as $lv2) {
                 if ($lv1->CA_PROD_TRACKING == $lv2->CA_RECAPP_LV) {
                     $match = $lv2->CA_RECAPP_LV;
                 }
             }
+        }
+
+        if ($match === null) {
+            return response()->json(['error' => 'No matching level found'], 404);
         }
 
         $turn_tracking = $match - 1;
@@ -160,7 +164,7 @@ class ApprController extends Controller
             ->where('CA_LNREC_ID', $data_id)
             ->update($update_comment);
 
-        // Update approval status
+        // Update approval status for the previous level
         $update_std_rj = [
             'CA_RECAPP_STD' => 0
         ];

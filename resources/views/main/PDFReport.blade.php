@@ -103,6 +103,13 @@
             font-weight: bold;
         }
 
+        .text-con2{
+            font-size: 20px;
+            color: red;
+            font-weight: bold;
+            margin-top: 69px;
+        }
+
     </style>
 </head>
 
@@ -146,11 +153,12 @@
 
 
     <div class="container">
+        <p class="text-con">***สำหรับแผนกที่ออกเอกสาร***</p>
         <div class="row">
             <div class="col">
                 <table>
                     <tr>
-                        <td rowspan="5"><span class="text-rotate">สำหรับแผนกที่ออกเอกสาร</span></td>
+                        {{-- <td rowspan="5"><span class="text-rotate">สำหรับแผนกที่ออกเอกสาร</span></td> --}}
                         <td class="label-cell">Model Code</td>
                         <td class="value-cell">{{$item->CA_PROD_MDLCD}}</td>
                     </tr>
@@ -163,8 +171,8 @@
                         <td class="value-cell">{{$item->CA_PROD_TMPBF}} - {{$item->CA_PROD_TMPBL}}</td>
                     </tr>
                     <tr>
-                        <td class="label-cell">NG QTY  <br> NG Rate</td>
-                        <td class="value-cell">NG QTY = {{$item->CA_PROD_QTY}} pcs. <br> NG Rate = {{$item->CA_PROD_RATE}} %</td>
+                        <td class="label-cell">NG QTY & NG Rate</td>
+                        <td class="value-cell">NG QTY = {{$item->CA_PROD_QTY}} pcs. & NG Rate = {{$item->CA_PROD_RATE}} %</td>
                     </tr>
                     <tr>
                         <td class="label-cell">รายละเอียดความผิดปกติ</td>
@@ -206,11 +214,12 @@
     </div>
 
     <div class="container">
+        <p class="text-con2">***สำหรับแผนกที่รับผิดชอบ***</p>
         <div class="row">
             <div class="col">
                 <table class="no-collapse">
                     <tr>
-                        <td rowspan="4"><span class="text-rotate">สำหรับแผนกที่รับผิดชอบ</span></td>
+                        {{-- <td rowspan="4"><span class="text-rotate">สำหรับแผนกที่รับผิดชอบ</span></td> --}}
                         <td class="label-cell">สาเหตุการเกิด</td>
                         <td class="value-cell">{{$item->CA_PROD_CASE}}</td>
                     </tr>
@@ -243,9 +252,9 @@
                 <p class="text-con">***ผู้ทำการตรวจสอบ***</p>
                 <table>
                     <tr>
-                        <th class="label-cell" style="text-align: center; padding-top: 2px;">Sub-Leader</th>
-                        <th class="label-cell" style="text-align: center; padding-top: 2px;">Supervisor</th>
-                        <th class="label-cell" style="text-align: center; padding-top: 2px;">QA</th>
+                        <th class="label-cell" style="text-align: center; padding-top: 2px;">Production</th>
+                        <th class="label-cell" style="text-align: center; padding-top: 2px;">PE</th>
+                        <th class="label-cell" style="text-align: center; padding-top: 2px;">QC / QA</th>
                     </tr>
                     <tr>
                         @foreach ($recapp as $app)
