@@ -171,7 +171,7 @@ class InsertController extends Controller
             'CA_PROD_CASE' => $update['case_prod'],
             'CA_PROD_ACTIVE' => $update['active_prod'],
             'CA_PROD_NOTE' => $update['note_prod'],
-            
+
         ];
 
 
@@ -186,16 +186,19 @@ class InsertController extends Controller
         $YM = date('Ym');
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $filename = 'CAPIC-' . $YM . '-' . rand(00000, 99999) . '.' . 'jpg';
-            $image->move(public_path('images_ca'), $filename);
-            
-            // Update image name in database
+            $extension = $image->getClientOriginalExtension();
+            $location = 'public/images_ca/';
+            $filename = 'CAPIC-' . $YM . '-' . rand(00000, 99999) . '.' . $extension;
+            $image->move($location,$filename);
+
+
+
+            // อัปเดตชื่อภาพในฐานข้อมูล
             DB::table('CA_CASEACTIVE_TBL')
                 ->where('CA_LNREC_ID', $update_id)
                 ->update(['CA_PROD_IMAGE' => $filename]);
         }
 
-        
 
 
         DB::connection('second_sqlsrv')->table('TLSLOG_TBL')
@@ -224,17 +227,5 @@ class InsertController extends Controller
         ->delete();
     }
 
-    public function DeleteImage(Request $request){
-        $del_id = $request->id;
-        $image = DB::table('CA_CASEACTIVE_TBL')
-            ->where('CA_LNREC_ID', $del_id)
-            ->value('CA_PROD_IMAGE');
 
-        // Delete the image file if it exists
-        if ($image && file_exists(public_path('images_ca/' . $image))) {
-            unlink(public_path('images_ca/' . $image));
-        }
-
-      
-    }
 }
