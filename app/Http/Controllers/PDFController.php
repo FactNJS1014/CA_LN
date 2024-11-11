@@ -26,6 +26,8 @@ class PDFController extends Controller
 
         $user = DB::connection('third_sqlsrv')->table('MUSR_TBL')->get();
 
+
+
         $pdf = Pdf::loadView('main/PDFReport', compact('report','recapp','user'));
         return $pdf->stream('report.pdf');
     }

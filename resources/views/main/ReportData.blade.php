@@ -59,9 +59,8 @@
             success: function(response) {
                 var blob = new Blob([response], { type: 'application/pdf' });
                 var url = window.URL.createObjectURL(blob);
-                // Open the PDF in a new tab
-                var newWindow = window.open('', '_blank');
-                newWindow.document.write('<iframe src="' + url + '" width="100%" height="100%"></iframe>');
+                // Open the PDF in a new tab by setting the URL directly
+                var newWindow = window.open(url, '_blank');
                 // Set the new window's URL to include the ID
                 newWindow.history.replaceState(null, '', '/view-pdf/' + id);
                 // Set a generic title for the new tab

@@ -15,274 +15,245 @@
             url: '{{ route('show.data') }}',
             type: 'GET',
             success: function(response) {
-                console.log(response);
+                //console.log(response);
                 let card = '';
-                let data = response.match;
-                let LNREC_ID = [];
-                let APP_LV = [];
-                let empArr = [];
+                let data = response.show_record;
 
-                response.show_record.map((_sr) => {
-                    let splitEmpId = _sr.CA_RECAPP_EMPAPP_ID.split(',')
-                    // console.log(splitEmpId)
-                    if (splitEmpId.includes(empno)) {
-                        // console.log('yes')
-                        // console.log(_sr)
-                        LNREC_ID.push(_sr.CA_LNREC_ID)
-                        APP_LV.push(_sr.CA_RECAPP_LV)
-                    }
-                    splitEmpId.map((_emp) => {
-                        // console.log(_emp)
-                        if (!empArr.includes(_emp)) {
-                            empArr.push(_emp)
-                        }
-                    })
-
-
-                })
-                // console.log(LNREC_ID)
-                console.log(empArr)
-
-
-                data.map((res, indexRes) => {
-                    console.log(res.CA_PROD_TRACKING)
-                    console.log(APP_LV[indexRes])
-
-                    // const matchdata = String(response.match)
-                    // const matcharray = matchdata.split(',')
-                    // console.log(matcharray)
-                    // if(matcharray.includes(empno)){
-                    if (res.CA_PROD_TRACKING == APP_LV[indexRes]) {
+                data.map((res) => {
+                    const matchdata = String(response.match)
+                    const matcharray = matchdata.split(',')
+                    console.log(matcharray)
+                    if(matcharray.includes(empno)){
                         let uniqueTableId = `table-data-${res.CA_DOCS_ID}`;
-                        let imagePath = `{{ asset('public/images_ca/${res.CA_PROD_IMAGE}') }}`;
-                        card += `
-                    <div class="card mt-3 mb-3">
-                        <div class="card-title p-2">
-                            <h5><i class="bi bi-postcard-fill mx-3"></i>หมายเลขเอกสาร (Document Number) : ${res.CA_DOCS_ID}</h5>
-                        </div>
-                        <div class="card-body">
-                            <table class="table table-bordered nowrap w-100" id="${uniqueTableId}">
-                                <thead class="table-info">
-                                    <tr>
-                                        <th scope="col">Issue Date</th>
-                                        <th scope="col">Line</th>
-                                        <th scope="col">Process</th>
-                                        <th scope="col">Model Code</th>
-                                        <th scope="col">Work Order</th>
-                                        <th scope="col">Lot Size</th>
-                                        <th scope="col">Problem Heading</th>
-                                        <th scope="col">Rank</th>
-                                        <th scope="col">Time Start</th>
-                                        <th scope="col">Time End</th>
-                                        <th scope="col">Information Person</th>
-                                        <th scope="col">QTY</th>
-                                        <th scope="col">ACC/LOT</th>
-                                        <th scope="col">NG</th>
-                                        <th scope="col">RATE (%)</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>${moment(res.CA_ISSUE_DATE).format('DD-MM-YYYY')}</td>
-                                        <td>${res.CA_PROD_LINE}</td>
-                                        <td>${res.CA_PROD_PROCS}</td>
-                                        <td>${res.CA_PROD_MDLCD}</td>
-                                        <td>${res.CA_PROD_WON}</td>
-                                        <td>${res.CA_PROD_LOTS}</td>
-                                        <td>${res.CA_PROD_PROBM}</td>
-                                        <td>${res.CA_PROD_RANK}</td>
-                                        <td>${res.CA_PROD_TMPBF}</td>
-                                        <td>${res.CA_PROD_TMPBL}</td>
-                                        <td>${res.CA_PROD_INFMR}</td>
-                                        <td>${res.CA_PROD_QTY}</td>
-                                        <td>${res.CA_PROD_ACCLOT}</td>
-                                        <td>${res.CA_PROD_NG}</td>
-                                        <td>${res.CA_PROD_RATE}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            let imagePath = `{{ asset('public/images_ca/${res.CA_PROD_IMAGE}') }}`;
+                            card += `
+                        <div class="card mt-3 mb-3">
+                            <div class="card-title p-2">
+                                <h5><i class="bi bi-postcard-fill mx-3"></i>หมายเลขเอกสาร (Document Number) : ${res.CA_DOCS_ID}</h5>
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-bordered nowrap w-100" id="${uniqueTableId}">
+                                    <thead class="table-info">
+                                        <tr>
+                                            <th scope="col">Issue Date</th>
+                                            <th scope="col">Line</th>
+                                            <th scope="col">Process</th>
+                                            <th scope="col">Model Code</th>
+                                            <th scope="col">Work Order</th>
+                                            <th scope="col">Lot Size</th>
+                                            <th scope="col">Problem Heading</th>
+                                            <th scope="col">Rank</th>
+                                            <th scope="col">Time Start</th>
+                                            <th scope="col">Time End</th>
+                                            <th scope="col">Information Person</th>
+                                            <th scope="col">QTY</th>
+                                            <th scope="col">ACC/LOT</th>
+                                            <th scope="col">NG</th>
+                                            <th scope="col">RATE (%)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>${moment(res.CA_ISSUE_DATE).format('DD-MM-YYYY')}</td>
+                                            <td>${res.CA_PROD_LINE}</td>
+                                            <td>${res.CA_PROD_PROCS}</td>
+                                            <td>${res.CA_PROD_MDLCD}</td>
+                                            <td>${res.CA_PROD_WON}</td>
+                                            <td>${res.CA_PROD_LOTS}</td>
+                                            <td>${res.CA_PROD_PROBM}</td>
+                                            <td>${res.CA_PROD_RANK}</td>
+                                            <td>${res.CA_PROD_TMPBF}</td>
+                                            <td>${res.CA_PROD_TMPBL}</td>
+                                            <td>${res.CA_PROD_INFMR}</td>
+                                            <td>${res.CA_PROD_QTY}</td>
+                                            <td>${res.CA_PROD_ACCLOT}</td>
+                                            <td>${res.CA_PROD_NG}</td>
+                                            <td>${res.CA_PROD_RATE}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
 
 
 
-                            <div class="row mt-3">
-                                <p class="col-md-2" id="prbtext">รายละเอียดปัญหา : </p>
-                                <p class="col-md-12 details1"><i class="bi bi-file-text-fill mx-2"></i>${res.CA_PROD_DTPROB}</p>
-                            </div>
-                            <div class="row mt-3">
-                                <p class="col-md-2" id="casetext">สาเหตุการเกิด : </p>
-                                <p class="col-md-12 details2"><i class="bi bi-file-text-fill mx-2"></i>${res.CA_PROD_CASE}</p>
-                            </div>
-                            <div class="row mt-3">
-                                <p class="col-md-2" id="acttext">การแก้ไขปัญหา : </p>
-                                <p class="col-md-12 details3"><i class="bi bi-pen-fill mx-2"></i>${res.CA_PROD_ACTIVE}</p>
-                            </div>
-                            <div class="row mt-3">
-                                <p class="col-md-2" id="acttext">หมายเหตุ : </p>
-                                <p class="col-md-12 details3"><i class="bi bi-pen-fill mx-2"></i>${res.CA_PROD_NOTE}</p>
-                            </div>
-
-                            <div class="text-center mb-3">
-                                 <p class="" id="imgtext">รูปภาพ : </p>
-                                <img src="${imagePath}" alt="Document Image" class="img-fluid" style="max-height: 200px; max-width: 100%;" />
-                            </div>
-                            ${res.CA_LNRJ_STD == 1 ?  `
-                                        <div class="row mt-3">
-                                            <p class="col-md-3" id="acttext"> Comment จากการถูกส่งกลับ : </p>
-                                            <p class="col-md-12 details3"><i class="bi bi-chat-left-text-fill mx-2"></i>${res.CA_LNRJ_REMARK}</p>
-                                        </div>
-                                        ` : res.CA_PROD_TRACKING === 2 ? `
-                                        <div class="row mt-3">
-                                            <p class="col-md-12 details3"><i class="bi bi-chat-left-text-fill mx-2"></i>มีการแก้ไขแล้ว</p>
-                                        </div>
-                                        `: ''}
-                        </div>
-                        <div class="card-footer p-2">
-                            <div class="d-flex justify-content-between">
-                                <!-- Buttons on the left -->
-                                <div>
-                                    <button type="button" class="btn btnaprlv" onclick="aprlvbtn('${res.CA_LNREC_ID}','${res.TLSLOG_TSKNO}','${res.TLSLOG_TSKLN}')">
-                                        อนุมัติ<i class="bi bi-arrow-right-circle-fill ms-2"></i>
-                                    </button>
-                                    <button type="button" class="btn btnedit" onclick="editbtn('${res.CA_LNREC_ID}','${res.CA_DOCS_ID}','${res.TLSLOG_TSKNO}','${res.TLSLOG_TSKLN}')">
-                                        <i class="bi bi-pencil-square mx-2"></i>แก้ไขข้อมูล
-                                    </button>
-                                    <button type="button" class="btn btnrej" onclick="rejbtn('${res.CA_LNREC_ID}')">
-                                        <i class="bi bi-arrow-left-circle-fill mx-2"></i>Reject
-                                    </button>
+                                <div class="row mt-3">
+                                    <p class="col-md-2" id="prbtext">รายละเอียดปัญหา : </p>
+                                    <p class="col-md-12 details1"><i class="bi bi-file-text-fill mx-2"></i>${res.CA_PROD_DTPROB}</p>
+                                </div>
+                                <div class="row mt-3">
+                                    <p class="col-md-2" id="casetext">สาเหตุการเกิด : </p>
+                                    <p class="col-md-12 details2"><i class="bi bi-file-text-fill mx-2"></i>${res.CA_PROD_CASE}</p>
+                                </div>
+                                <div class="row mt-3">
+                                    <p class="col-md-2" id="acttext">การแก้ไขปัญหา : </p>
+                                    <p class="col-md-12 details3"><i class="bi bi-pen-fill mx-2"></i>${res.CA_PROD_ACTIVE}</p>
+                                </div>
+                                <div class="row mt-3">
+                                    <p class="col-md-2" id="acttext">หมายเหตุ : </p>
+                                    <p class="col-md-12 details3"><i class="bi bi-pen-fill mx-2"></i>${res.CA_PROD_NOTE}</p>
                                 </div>
 
-                                <!-- Button on the right -->
-                                <div>
-
-                                    <button type="button" class="btn btndel" onclick="delbtn('${res.CA_LNREC_ID}')">
-                                        <i class="bi bi-trash3-fill mx-2"></i>Delete
-                                    </button>
+                                <div class="text-center mb-3">
+                                     <p class="" id="imgtext">รูปภาพ : </p>
+                                    <img src="${imagePath}" alt="Document Image" class="img-fluid" style="max-height: 200px; max-width: 100%;" />
                                 </div>
+                                ${res.CA_LNRJ_STD == 1 ?  `
+                                <div class="row mt-3">
+                                    <p class="col-md-3" id="acttext"> Comment จากการถูกส่งกลับ : </p>
+                                    <p class="col-md-12 details3"><i class="bi bi-chat-left-text-fill mx-2"></i>${res.CA_LNRJ_REMARK}</p>
+                                </div>
+                                ` : res.CA_PROD_TRACKING === 2 ? `
+                                <div class="row mt-3">
+                                    <p class="col-md-12 details3"><i class="bi bi-chat-left-text-fill mx-2"></i>มีการแก้ไขแล้ว</p>
+                                </div>
+                                `: ''}
                             </div>
+                            <div class="card-footer p-2">
+                                <div class="d-flex justify-content-between">
+                                    <!-- Buttons on the left -->
+                                    <div>
+                                        <button type="button" class="btn btnaprlv" onclick="aprlvbtn('${res.CA_LNREC_ID}')">
+                                            อนุมัติ<i class="bi bi-arrow-right-circle-fill ms-2"></i>
+                                        </button>
+                                        <button type="button" class="btn btnedit" onclick="editbtn('${res.CA_LNREC_ID}','${res.CA_DOCS_ID}','${res.TLSLOG_TSKNO}','${res.TLSLOG_TSKLN}')">
+                                            <i class="bi bi-pencil-square mx-2"></i>แก้ไขข้อมูล
+                                        </button>
+                                        <button type="button" class="btn btnrej" onclick="rejbtn('${res.CA_LNREC_ID}')">
+                                            <i class="bi bi-arrow-left-circle-fill mx-2"></i>Reject
+                                        </button>
+                                    </div>
+
+                                    <!-- Button on the right -->
+                                    <div>
+
+                                        <button type="button" class="btn btndel" onclick="delbtn('${res.CA_LNREC_ID}')">
+                                            <i class="bi bi-trash3-fill mx-2"></i>Delete
+                                        </button>
+                                    </div>
+                                </div>
 
 
+                            </div>
                         </div>
-                    </div>
-                `;
-                    } else {
+                    `;
+                    }else {
                         console.log(
                             "empno not found in matchArray. Card not displayed."
                         ); // Optional: Log for debugging
+                    }
 
 
 
-                        // Permission ผู้ที่บันทึก
+                    //Permission ผู้ที่บันทึก
 
-                        if (res.CA_PROD_TRACKING == 0 && !empArr.includes(empno)) {
+                    if (res.CA_PROD_TRACKING == 0) {
                             // Create a unique ID using the document ID
                             let uniqueTableId = `table-data-${res.CA_DOCS_ID}`;
                             let imagePath = `{{ asset('public/images_ca/${res.CA_PROD_IMAGE}') }}`;
                             card += `
-                    <div class="card mt-3 mb-3">
-                        <div class="card-title p-2">
-                            <h5><i class="bi bi-postcard-fill mx-3"></i>หมายเลขเอกสาร (Document Number) : ${res.CA_DOCS_ID}</h5>
-                        </div>
-                        <div class="card-body">
-                            <table class="table table-bordered nowrap w-100" id="${uniqueTableId}">
-                                <thead class="table-info">
-                                    <tr>
-                                        <th scope="col">Issue Date</th>
-                                        <th scope="col">Line</th>
-                                        <th scope="col">Process</th>
-                                        <th scope="col">Model Code</th>
-                                        <th scope="col">Work Order</th>
-                                        <th scope="col">Lot Size</th>
-                                        <th scope="col">Problem Heading</th>
-                                        <th scope="col">Rank</th>
-                                        <th scope="col">Time Start</th>
-                                        <th scope="col">Time End</th>
-                                        <th scope="col">Information Person</th>
-                                        <th scope="col">QTY</th>
-                                        <th scope="col">ACC/LOT</th>
-                                        <th scope="col">NG</th>
-                                        <th scope="col">RATE (%)</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>${moment(res.CA_ISSUE_DATE).format('DD-MM-YYYY')}</td>
-                                        <td>${res.CA_PROD_LINE}</td>
-                                        <td>${res.CA_PROD_PROCS}</td>
-                                        <td>${res.CA_PROD_MDLCD}</td>
-                                        <td>${res.CA_PROD_WON}</td>
-                                        <td>${res.CA_PROD_LOTS}</td>
-                                        <td>${res.CA_PROD_PROBM}</td>
-                                        <td>${res.CA_PROD_RANK}</td>
-                                        <td>${res.CA_PROD_TMPBF}</td>
-                                        <td>${res.CA_PROD_TMPBL}</td>
-                                        <td>${res.CA_PROD_INFMR}</td>
-                                        <td>${res.CA_PROD_QTY}</td>
-                                        <td>${res.CA_PROD_ACCLOT}</td>
-                                        <td>${res.CA_PROD_NG}</td>
-                                        <td>${res.CA_PROD_RATE}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <div class="card mt-3 mb-3">
+                            <div class="card-title p-2">
+                                <h5><i class="bi bi-postcard-fill mx-3"></i>หมายเลขเอกสาร (Document Number) : ${res.CA_DOCS_ID}</h5>
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-bordered nowrap w-100" id="${uniqueTableId}">
+                                    <thead class="table-info">
+                                        <tr>
+                                            <th scope="col">Issue Date</th>
+                                            <th scope="col">Line</th>
+                                            <th scope="col">Process</th>
+                                            <th scope="col">Model Code</th>
+                                            <th scope="col">Work Order</th>
+                                            <th scope="col">Lot Size</th>
+                                            <th scope="col">Problem Heading</th>
+                                            <th scope="col">Rank</th>
+                                            <th scope="col">Time Start</th>
+                                            <th scope="col">Time End</th>
+                                            <th scope="col">Information Person</th>
+                                            <th scope="col">QTY</th>
+                                            <th scope="col">ACC/LOT</th>
+                                            <th scope="col">NG</th>
+                                            <th scope="col">RATE (%)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>${moment(res.CA_ISSUE_DATE).format('DD-MM-YYYY')}</td>
+                                            <td>${res.CA_PROD_LINE}</td>
+                                            <td>${res.CA_PROD_PROCS}</td>
+                                            <td>${res.CA_PROD_MDLCD}</td>
+                                            <td>${res.CA_PROD_WON}</td>
+                                            <td>${res.CA_PROD_LOTS}</td>
+                                            <td>${res.CA_PROD_PROBM}</td>
+                                            <td>${res.CA_PROD_RANK}</td>
+                                            <td>${res.CA_PROD_TMPBF}</td>
+                                            <td>${res.CA_PROD_TMPBL}</td>
+                                            <td>${res.CA_PROD_INFMR}</td>
+                                            <td>${res.CA_PROD_QTY}</td>
+                                            <td>${res.CA_PROD_ACCLOT}</td>
+                                            <td>${res.CA_PROD_NG}</td>
+                                            <td>${res.CA_PROD_RATE}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
 
 
 
-                            <div class="row mt-3">
-                                <p class="col-md-2" id="prbtext">รายละเอียดปัญหา : </p>
-                                <p class="col-md-12 details1"><i class="bi bi-file-text-fill mx-2"></i>${res.CA_PROD_DTPROB}</p>
-                            </div>
-                            <div class="row mt-3">
-                                <p class="col-md-2" id="casetext">สาเหตุการเกิด : </p>
-                                <p class="col-md-12 details2"><i class="bi bi-file-text-fill mx-2"></i>${res.CA_PROD_CASE}</p>
-                            </div>
-                            <div class="row mt-3">
-                                <p class="col-md-2" id="acttext">การแก้ไขปัญหา : </p>
-                                <p class="col-md-12 details3"><i class="bi bi-pen-fill mx-2"></i>${res.CA_PROD_ACTIVE}</p>
-                            </div>
-                            <div class="row mt-3">
-                                <p class="col-md-2" id="acttext">หมายเหตุ : </p>
-                                <p class="col-md-12 details3"><i class="bi bi-pen-fill mx-2"></i>${res.CA_PROD_NOTE}</p>
-                            </div>
-
-                            <div class="text-center mb-3">
-                                 <p class="" id="imgtext">รูปภาพ : </p>
-                                <img src="${imagePath}" alt="Document Image" class="img-fluid" style="max-height: 200px; max-width: 100%;" />
-                            </div>
-                        </div>
-                        <div class="card-footer p-2">
-                            <div class="d-flex justify-content-between">
-                                <!-- Buttons on the left -->
-                                <div>
-                                    <button type="button" class="btn btnaprlv" onclick="aprbtn('${res.CA_LNREC_ID}')">
-                                        ส่งตรวจสอบ<i class="bi bi-arrow-right-circle-fill ms-2"></i>
-                                    </button>
-                                    <button type="button" class="btn btnedit" onclick="editbtn('${res.CA_LNREC_ID}','${res.CA_DOCS_ID}','${res.TLSLOG_TSKNO}','${res.TLSLOG_TSKLN}')">
-                                        <i class="bi bi-pencil-square mx-2"></i>แก้ไขข้อมูล
-                                    </button>
-                                    <button type="button" class="btn btnrej" onclick="rejbtn('${res.CA_LNREC_ID}')">
-                                        <i class="bi bi-arrow-left-circle-fill mx-2"></i>Reject
-                                    </button>
+                                <div class="row mt-3">
+                                    <p class="col-md-2" id="prbtext">รายละเอียดปัญหา : </p>
+                                    <p class="col-md-12 details1"><i class="bi bi-file-text-fill mx-2"></i>${res.CA_PROD_DTPROB}</p>
+                                </div>
+                                <div class="row mt-3">
+                                    <p class="col-md-2" id="casetext">สาเหตุการเกิด : </p>
+                                    <p class="col-md-12 details2"><i class="bi bi-file-text-fill mx-2"></i>${res.CA_PROD_CASE}</p>
+                                </div>
+                                <div class="row mt-3">
+                                    <p class="col-md-2" id="acttext">การแก้ไขปัญหา : </p>
+                                    <p class="col-md-12 details3"><i class="bi bi-pen-fill mx-2"></i>${res.CA_PROD_ACTIVE}</p>
+                                </div>
+                                <div class="row mt-3">
+                                    <p class="col-md-2" id="acttext">หมายเหตุ : </p>
+                                    <p class="col-md-12 details3"><i class="bi bi-pen-fill mx-2"></i>${res.CA_PROD_NOTE}</p>
                                 </div>
 
-                                <!-- Button on the right -->
-                                <div>
-                                      ${res.CA_LNRJ_STD == 1 ?  `
-                                                 <button type="button" class="btn btneditofrej" onclick="editofrejbtn('${res.CA_LNREC_ID}','${res.CA_DOCS_ID}','${res.TLSLOG_TSKNO}','${res.TLSLOG_TSKLN}')">
-                                                    <i class="bi bi-pencil-square mx-2"></i>แก้ไขข้อมูล from reject
-                                                </button>
-                                                  `: ''}
-                                    <button type="button" class="btn btndel" onclick="delbtn('${res.CA_LNREC_ID}')">
-                                        <i class="bi bi-trash3-fill mx-2"></i>Delete
-                                    </button>
-
+                                <div class="text-center mb-3">
+                                     <p class="" id="imgtext">รูปภาพ : </p>
+                                    <img src="${imagePath}" alt="Document Image" class="img-fluid" style="max-height: 200px; max-width: 100%;" />
                                 </div>
                             </div>
+                            <div class="card-footer p-2">
+                                <div class="d-flex justify-content-between">
+                                    <!-- Buttons on the left -->
+                                    <div>
+                                        <button type="button" class="btn btnaprlv" onclick="aprbtn('${res.CA_LNREC_ID}')">
+                                            ส่งตรวจสอบ<i class="bi bi-arrow-right-circle-fill ms-2"></i>
+                                        </button>
+                                        <button type="button" class="btn btnedit" onclick="editbtn('${res.CA_LNREC_ID}','${res.CA_DOCS_ID}','${res.TLSLOG_TSKNO}','${res.TLSLOG_TSKLN}')">
+                                            <i class="bi bi-pencil-square mx-2"></i>แก้ไขข้อมูล
+                                        </button>
+                                        <button type="button" class="btn btnrej" onclick="rejbtn('${res.CA_LNREC_ID}')">
+                                            <i class="bi bi-arrow-left-circle-fill mx-2"></i>Reject
+                                        </button>
+                                    </div>
+
+                                    <!-- Button on the right -->
+                                    <div>
+                                          ${res.CA_LNRJ_STD == 1 ?  `
+                                         <button type="button" class="btn btnedit" onclick="editofrejbtn('${res.CA_LNREC_ID}','${res.CA_DOCS_ID}','${res.TLSLOG_TSKNO}','${res.TLSLOG_TSKLN}')">
+                                            <i class="bi bi-pencil-square mx-2"></i>แก้ไขข้อมูล from reject
+                                        </button>
+                                          `: ''}
+                                        <button type="button" class="btn btndel" onclick="delbtn('${res.CA_LNREC_ID}')">
+                                            <i class="bi bi-trash3-fill mx-2"></i>Delete
+                                        </button>
+
+                                    </div>
+                                </div>
 
 
+                            </div>
                         </div>
-                    </div>
-                `;
+                    `;
 
-                        }
                     }
 
 
@@ -688,7 +659,7 @@
         }
 
         //click approve to next level
-        aprlvbtn = (id,tkno,tkln) => {
+        aprlvbtn = (id) =>{
             console.log(id)
             console.log(empno)
             $.ajax({
@@ -696,16 +667,14 @@
                 type: 'GET',
                 data: {
                     id: id,
-                    empno: empno,
-                    tkno: tkno,
-                    tkln: tkln
+                    empno: empno
                 },
                 success: function(data) {
                     console.log(data);
-                    if (data.appr) {
+                    if(data.appr){
                         Swal.fire({
                             title: 'อนุมัติข้อมูลสำเร็จ',
-                            icon: 'success',
+                            icon:'success',
                             showConfirmButton: false,
                             timer: 1000
                         }).then(() => {
@@ -717,7 +686,7 @@
             })
         }
 
-        rejbtn = (id) => {
+        rejbtn = (id) =>{
             let frm_rj = '';
             frm_rj += '<form method="post" id="form_reject">';
             frm_rj += '@csrf';
@@ -765,7 +734,7 @@
                             if (data.rejectform) {
                                 Swal.fire({
                                     title: 'ส่งกลับข้อมูลสำเร็จ',
-                                    icon: 'success',
+                                    icon:'success',
                                     showConfirmButton: false,
                                     timer: 1000
                                 }).then(() => {
@@ -782,7 +751,7 @@
             console.log(id);
             let form = '';
             form += `
-            <form method="POST" id="form_update_rj" enctype="multipart/form-data">
+            <form method="POST" id="form_update" enctype="multipart/form-data">
 
                 <input type="hidden" name="recrn_id" value = "${id}" id="rec_id">
                 <input type="hidden" name="tskno" id="tsk_no" value="${tskno}">
@@ -1008,14 +977,14 @@
                     // let form = $('#form_update').serialize();
                     // console.log(form);
                     let form_update = new FormData();
-                    form_update.append('update_form', $('#form_update_rj').serialize());
+                    form_update.append('update_form', $('#form_update').serialize());
                     form_update.append('id', id);
                     var _token = $('meta[name="csrf-token"]').attr('content');
                     form_update.append('_token', _token);
                     var imageFile = $('#image_prod')[0].files[0];
                     form_update.append('image', imageFile);
                     $.ajax({
-                        url: '{{ route('update.reject') }}',
+                        url: '{{ route('update.form') }}',
                         type: 'POST',
                         data: form_update,
                         contentType: false,
@@ -1057,5 +1026,7 @@
 
             $('#date_edit').val(moment().format('YYYY-MM-DD'))
         }
+
+
     </script>
 @endpush

@@ -44,6 +44,7 @@ Route::get('/fetch/datarec',[DataController::class,'getDataFormFirst'])->name('g
 Route::get('/show/data',[DataController::class,'ShowRecord'])->name('show.data');
 Route::get('/show/edit',[DataController::class,'ShoweditRecord'])->name('show.edit');
 Route::get('/show/report',[DataController::class,'ShowReports'])->name('show.report');
+Route::get('/show/data5',[DataController::class,'ShowData']);
 
 
 //Method GET to Delete Data Record
@@ -57,6 +58,7 @@ Route::get('/delete/img',[InsertController::class,'DeleteImage'])->name('delete.
 Route::post('/fetch/insertcase',[InsertController::class,'AddCaseandActive'])->name('post.addcase');
 Route::post('/fetch/add',[InsertController::class,'AddTLSLOG'])->name('post.addtlog');
 Route::post('/update/form',[InsertController::class,'UpdateForm'])->name('update.form');
+Route::post('/update/reject',[InsertController::class,'UpdateforReject'])->name('update.reject');
 
 //Use PDF
 Route::get('/generate-pdf', [PDFController::class, 'generatePDF'])->name('generate.pdf');
@@ -67,6 +69,12 @@ Route::get('/insert/approve', [ ApprController::class, 'InsertAppr'])->name('ins
 
 //Use Reject
 Route::post('/insert/reject', [ ApprController::class, 'InsertReject'])->name('reject.data');
+
+//Send Mail Notification
+Route::get('/send-email', [DataController::class, 'SendEmail'])->name('send.email');
+
+//Send Mail to Input Case and Active
+Route::get('/send-email-input', [DataController::class, 'SendMailToInput'])->name('send.input');
 
 ?>
 

@@ -227,5 +227,82 @@ class InsertController extends Controller
         ->delete();
     }
 
+    public function UpdateforReject(Request $request){
+        $update_id = $request->input('id');
+        $form_update = $request->input('update_form');
+        parse_str($form_update,$update);
+
+        //return response()->json($update);
+
+        $update2 = [
+            'CA_DOCS_ID' => $update['document_id'],
+            'CA_PROD_UPDATE' => $update['date_edit'],
+            'CA_PROD_LINE' => $update['line_rec'],
+            'CA_PROD_PROCS' => $update['prcs_record'],
+            'CA_PROD_MDLCD' => $update['mdlcd'],
+            'CA_PROD_WON' => $update['won'],
+            'CA_PROD_LOTS' => $update['lots'],
+            'CA_PROD_PROBM' => $update['hd_prob'],
+            'CA_PROD_RANK' => $update['rank_rec'],
+            'CA_PROD_TMPBF' => $update['start_time'],
+            'CA_PROD_TMPBL' => $update['end_time'],
+            'CA_PROD_INFMR' => $update['name_info'],
+            'CA_PROD_DTPROB' => $update['desc_prob'],
+            'CA_PROD_QTY' => $update['qty_prod'],
+            'CA_PROD_ACCLOT' => $update['acc_prod'],
+            'CA_PROD_NG' => $update['ng_prod'],
+            'CA_PROD_RATE' => $update['rate_prod'],
+            'CA_LNRJ_STD' => 2
+
+        ];
+
+        DB::table('CA_RECLN_TBL')
+        ->where('CA_LNREC_ID',$update_id)
+        ->update($update2);
+
+        $update_rj = [
+            'CA_PROD_CASE' => $update['case_prod'],
+            'CA_PROD_ACTIVE' => $update['active_prod'],
+            'CA_PROD_NOTE' => $update['note_prod'],
+
+        ];
+
+
+
+        DB::table('CA_CASEACTIVE_TBL')
+        ->where('CA_LNREC_ID', $update_id)
+        ->update($update_rj);
+
+        $update3 = [
+            'TLSLOG_DETAIL' => $update['desc_prob']
+        ];
+        $YM = date('Ym');
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $extension = $image->getClientOriginalExtension();
+            $location = 'public/images_ca/';
+            $filename = 'CAPIC-' . $YM . '-' . rand(00000, 99999) . '.' . $extension;
+            $image->move($location,$filename);
+
+
+
+            // อัปเดตชื่อภาพในฐานข้อมูล
+            DB::table('CA_CASEACTIVE_TBL')
+                ->where('CA_LNREC_ID', $update_id)
+                ->update(['CA_PROD_IMAGE' => $filename]);
+        }
+
+
+
+        DB::connection('second_sqlsrv')->table('TLSLOG_TBL')
+        ->where('TLSLOG_TSKNO', $update['tskno'])
+        ->where('TLSLOG_TSKLN', $update['tskln'])
+        ->where('TLSLOG_TTLMIN', '>' , 10)
+        ->update($update3) ;
+
+
+        return response()->json(['updateform' => $update2]);
+    }
+
 
 }

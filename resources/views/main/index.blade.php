@@ -27,6 +27,7 @@
             <div class="card-body border border-warning">
                 <div class="sidebar" id="slidebar">
                     <form method="post" class="needs-validation" id="ca_lncall" enctype="multipart/form-data" novalidate>
+                        @csrf
                         <input type="hidden" name="tskln" id="tskln">
                         <input type="hidden" name="tskno" id="tskno">
                         <div class="form-group row">
@@ -362,9 +363,22 @@
                                         showConfirmButton: false,
                                         timer: 1000
                                     }).then(function(){
-                                        var url = "{{route('second')}}"
-                                        window.location = url
-                                    })
+                                        console.log(empno)
+                                        $.ajax({
+                                            url: '{{ route('send.input') }}',
+                                            method: 'GET',
+                                            data: {
+                                                empno: empno
+                                            },
+                                            success: (response) => {
+                                                console.log(response);
+                                            },
+                                            error: (error) => {
+                                                console.error("Error:", error);
+                                            }
+                                        });
+                                    });
+
                                 }
                             },
 
@@ -377,6 +391,20 @@
             })
 
         })
+
+        SendMail()
+        function SendMail() {
+            $.ajax({
+                url: '{{route('send.email')}}',
+                method: 'GET',
+                success: (response) => {
+                    console.log(response.send);
+                },
+                error: (error) => {
+                    console.error(error);
+                }
+            })
+        }
 
     </script>
 

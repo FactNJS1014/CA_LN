@@ -7,18 +7,18 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class TLSLOGAlert extends Mailable
+class LinkToInput extends Mailable
 {
     use Queueable, SerializesModels;
-    public $posts;
+    public $linkToInput;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($posts)
+    public function __construct($linkToInput)
     {
-        $this->posts = $posts;
+        $this->linkToInput = $linkToInput;
     }
 
     /**
@@ -28,9 +28,9 @@ class TLSLOGAlert extends Mailable
      */
     public function build()
     {
-        return $this->from('CA_Production@aoth.in.th')
-        ->subject('Line Call At CA Production')
-        ->view('Mails.mailAlert')
-        ->with('data' , $this->posts);
+        $link_input = $this->linkToInput['link'];
+        return $this->from('Production_CA@aoth.in.th')
+        ->subject('Line Call-CA')
+        ->markdown('Mails.mailLink',['linkin' => $link_input]);
     }
 }

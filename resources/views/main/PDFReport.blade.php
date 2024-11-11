@@ -203,7 +203,11 @@
 
                     <tr>
                         <td class="label-cell" style="text-align: center;">รูปภาพ</td>
-                        <td class="value-cell"><img src="{{ asset('public/images_ca/' . $item->CA_PROD_IMAGE) }}" alt="Document Image" class="img-fluid" style="max-height: 200px; max-width: 100%;" /></td>
+                        <td class="value-cell">
+                            <img src="{{ asset('public/images_ca/' . $item->CA_PROD_IMAGE) }}" alt="Document Image" class="img-fluid" style="max-height: 200px; max-width: 100%;" accept="image/png,image/jpg,image/webp" />
+
+                        </td>
+
                     </tr>
                 </table>
 

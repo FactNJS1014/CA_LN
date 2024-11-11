@@ -508,3 +508,17 @@ textarea{
     background-color: #d8f3dc;
     color: #000;
 }
+
+.btneditofrej{
+    background-color: #FF4545;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-decoration: none;
+    cursor: pointer;
+    font-weight: 700;
+}
+.btneditofrej:hover{
+    background-color: #fff;
+    color: #FF4545;
+}

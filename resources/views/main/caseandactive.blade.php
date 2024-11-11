@@ -56,9 +56,9 @@
                         </div>
                     </div>
                     <div class="row mt-3">
-                        <label for="case" class="col-sm-2" id="label-form">เพิ่มรูปภาพ:</label>
+                        <label for="case" class="col-sm-2" id="label-form">เพิ่มรูปภาพ (ต้องเป็นไฟล์ .jpg เท่านั้น):</label>
                         <div class="col-sm-6">
-                            <input type="file" id="image_prod" name="image_prod" accept="image/*" onchange="previewImages(event)" required>
+                            <input type="file" id="image_prod" name="image_prod" accept="image/png,image/jpg" onchange="previewImages(event)" required>
                             <div class="d-flex justify-content-start mt-2">
                                 <div id="imageContainer" class="image-container"></div>
 

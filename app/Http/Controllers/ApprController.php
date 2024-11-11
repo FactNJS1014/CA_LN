@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Facades\Mail;
+use App\Mail\LinkToAppr;
 class ApprController extends Controller
 {
-    public function InsertAppr(Request $request){
+    public function InsertAppr(Request $request)
+    {
         $data_id = $request->id;
         $currentDate = date('d-m-Y H:i:s');
         $YM = date('Ym');
@@ -25,30 +27,49 @@ class ApprController extends Controller
             $capr = AutogenerateKey('CAPR', $baseCapr);
             $baseCapr = $capr; // Update baseCapr for the next iteration
 
-            $ins_appr[] = [
+            $record = [
                 'CA_RECAPP_ID' => $capr,
                 'CA_LNREC_ID' => $data_id,
                 'CA_RECAPP_LV' => $i,
-                'CA_RECAPP_SEC'=> $this->getSectionForLevel($i),
+                'CA_RECAPP_SEC' => $this->getSectionForLevel($i),
                 'CA_RECAPP_EMPAPP_ID' => $this->getEmpAppIdForLevel($i),
                 'CA_RECAPP_LSTDT' => $currentDate
             ];
+
+            // Check if record exists
+            $existingRecord = DB::table('CA_HRECAPP_TBL')
+                ->where('CA_LNREC_ID', $data_id)
+                ->where('CA_RECAPP_LV', $i)
+                ->first();
+
+            if ($existingRecord) {
+                // Update existing record
+                DB::table('CA_HRECAPP_TBL')
+                    ->where('CA_LNREC_ID', $data_id)
+                    ->where('CA_RECAPP_LV', $i)
+                    ->update($record);
+            } else {
+                // Insert new record
+                $ins_appr[] = $record;
+            }
         }
 
-        DB::table('CA_HRECAPP_TBL')->insert($ins_appr);
+        // Insert any new records into the table
+        if (!empty($ins_appr)) {
+            DB::table('CA_HRECAPP_TBL')->insert($ins_appr);
+        }
 
         $tracking = [
-            'CA_PROD_TRACKING'=> 1
+            'CA_PROD_TRACKING' => 1
         ];
 
         DB::table('CA_RECLN_TBL')
-        ->where('CA_LNREC_ID',$data_id)
-        ->update($tracking);
+            ->where('CA_LNREC_ID', $data_id)
+            ->update($tracking);
 
-        return response()->json(['capr' => $ins_appr[0]['CA_RECAPP_ID']]);
-
-
+        return response()->json(['capr' => $ins_appr[0]['CA_RECAPP_ID'] ?? $capr]);
     }
+
 
     private function getSectionForLevel($level) {
         $sections = [
@@ -117,6 +138,50 @@ class ApprController extends Controller
                 ->update(['CA_PROD_TRACKING' => $tracking_up]);
         }
 
+        $person = DB::table('VUSER_DEPT')
+        ->select(
+            'MUSR_ID',
+            'MUSR_NAME',
+            'DEPT_S_NAME',
+            'DEPT_SEC',
+            'MSECT_ID',
+            'USE_PERMISSION'
+        )
+        ->where('MUSR_ID',$emp_no)
+        ->get();
+
+        $empno = $person[0]->MUSR_ID;
+        $empname = $person[0]->MUSR_NAME;
+        $dept = $person[0]->DEPT_S_NAME;
+        $dept_sec = $person[0]->DEPT_SEC;
+        $sec_id = $person[0]->MSECT_ID;
+        $per = $person[0]->USE_PERMISSION;
+        if (isset($empname, $empno, $dept, $per, $dept_sec, $sec_id)) {
+            $web_link = url("http://web-server/41_calinecall/index.php/third?username={$empname}&empno={$empno}&department={$dept}&USE_PERMISSION={$per}&sec={$dept_sec}&MSECT_ID={$sec_id}");
+        } else {
+            // จัดการกรณีที่ค่าตัวแปรไม่ถูกต้อง
+            return response()->json(['error' => 'Missing required parameters'], 400);
+        }
+        $linktoAppr = [
+            'link' => $web_link,
+        ];
+
+        Switch($tracking_up){
+            case "1":
+                //return response()->json([$empno,$empname,$dept,$dept_sec,$sec_id,$web_link]);
+                Mail::to('j-natdanai@alpine-asia.com')->send(new LinkToAppr($linktoAppr));
+
+                break;
+            case "2":
+                Mail::to('j-natdanai@alpine-asia.com')->send(new LinkToAppr($linktoAppr));
+                break;
+            case "3":
+                Mail::to('j-natdanai@alpine-asia.com')->send(new LinkToAppr($linktoAppr));
+                break;
+            default:
+            return response()->json(['error' => 'No loop Master Approve'], 400);
+        }
+
         return response()->json(['appr' => [
             'CA_EMPID_APPR' => $emp_no,
             'CA_RECAPP_STD' => 1
@@ -131,6 +196,7 @@ class ApprController extends Controller
         // Get tracking levels
         $level1 = DB::table('CA_RECLN_TBL')
             ->select('CA_PROD_TRACKING')
+            //->where('CA_PROD_FAXCOMPLETE', '=', 0)
             ->get();
 
         $level2 = DB::table('CA_HRECAPP_TBL')
