@@ -41,10 +41,11 @@ class DataController extends Controller
                 'TLSLOG_TBL.TLSLOG_TTIME',
                 'TLSLOG_TBL.TLSLOG_TSKLN',
             )
-            ->whereDate('TLSLOG_TBL.TLSLOG_ISSDT', '>', '2024-11-07')
+            ->whereDate('TLSLOG_TBL.TLSLOG_ISSDT', '>', '2024-11-11')
             ->where('TLSLOG_TBL.TLSLOG_LSNO', '=', 'NG001')
             ->where('TLSLOG_TBL.TLSLOG_TTLMIN', '>', 10)
-            // ->whereDate('TLSLOG_TBL.TLSLOG_ISSDT', '=', now()->toDateString())
+            //->whereDate('TLSLOG_TBL.TLSLOG_ISSDT', '=', now()->toDateString())
+            ->where('TLSLOG_TBL.TLSLOG_COMPLETE' , null)
             ->get();
 
 
@@ -126,7 +127,7 @@ class DataController extends Controller
             'CA_HRECAPP_TBL.CA_EMPID_APPR',
             'CA_HRECAPP_TBL.CA_RECAPP_STD'
             )
-        ->where('CA_RECLN_TBL.CA_PROD_FAXCOMPLETE','=',0)
+        ->where('CA_RECLN_TBL.CA_PROD_FAXCOMPLETE',0)
         ->get();
 
 
@@ -169,69 +170,109 @@ class DataController extends Controller
         ->get();
         return response()->json(['rep'=> $show_report]);
     }
+     // // Step 1: Get data from the first database (primary connection)
+        // $caReclnData = DB::table('CA_RECLN_TBL')
+        //                  ->select('CA_RECLN_TBL.*')
+        //                  ->get()
+        //                  ->keyBy('TLSLOG_TSKNO'); // Assuming TLSLOG_TSKNO is the join key
+
+        // // Step 2: Get data from the second database (second_sqlsrv connection)
+        // $tlslogData = DB::connection('second_sqlsrv')
+        //                 ->table('TLSLOG_TBL')
+        //                 ->select('TLSLOG_TBL.TLSLOG_TSKNO')
+        //                 ->get()
+        //                 ->keyBy('TLSLOG_TSKNO'); // Use keyBy for easy lookup
+
+        // // Step 3: Merge the data based on TLSLOG_TSKNO
+        // $mergedData = $caReclnData->map(function ($record) use ($tlslogData) {
+        //     // Check if the TLSLOG_TSKNO exists in the second dataset
+        //     if (isset($tlslogData[$record->TLSLOG_TSKNO])) {
+        //         // Add the TLSLOG_TSKNO to the record from the second database
+        //         $record->TLSLOG_TSKNO = $tlslogData[$record->TLSLOG_TSKNO]->TLSLOG_TSKNO;
+        //     } else {
+        //         // If no match found, set TLSLOG_TSKNO to null or handle as needed
+        //         $record->TLSLOG_TSKNO = null;
+        //     }
+        //     return $record;
+        // });
 
     public function ShowData()
     {
+
         // Step 1: Get data from the first database (primary connection)
         $caReclnData = DB::table('CA_RECLN_TBL')
                          ->select('CA_RECLN_TBL.*')
                          ->get()
-                         ->keyBy('TLSLOG_TSKNO'); // Assuming TLSLOG_TSKNO is the join key
+                         ->keyBy('TLSLOG_TSKNO','TLSLOG_TSKLN'); // Assuming TLSLOG_TSKNO is the join key
 
         // Step 2: Get data from the second database (second_sqlsrv connection)
         $tlslogData = DB::connection('second_sqlsrv')
                         ->table('TLSLOG_TBL')
                         ->select('TLSLOG_TBL.TLSLOG_TSKNO')
                         ->get()
-                        ->keyBy('TLSLOG_TSKNO'); // Use keyBy for easy lookup
+                        ->keyBy('TLSLOG_TSKNO','TLSLOG_TSKLN'); // Use keyBy for easy lookup
 
         // Step 3: Merge the data based on TLSLOG_TSKNO
         $mergedData = $caReclnData->map(function ($record) use ($tlslogData) {
             // Check if the TLSLOG_TSKNO exists in the second dataset
-            if (isset($tlslogData[$record->TLSLOG_TSKNO])) {
+            if (isset($tlslogData[$record->TLSLOG_TSKNO])&& isset($tlslogData[$record->TLSLOG_TSKLN])) {
                 // Add the TLSLOG_TSKNO to the record from the second database
                 $record->TLSLOG_TSKNO = $tlslogData[$record->TLSLOG_TSKNO]->TLSLOG_TSKNO;
+                $record->TLSLOG_TSKLN = $tlslogData[$record->TLSLOG_TSKLN]->TLSLOG_TSKLN;
             } else {
                 // If no match found, set TLSLOG_TSKNO to null or handle as needed
                 $record->TLSLOG_TSKNO = null;
+                $record->TLSLOG_TSKLN = null;
             }
             return $record;
         });
 
+
         return response()->json($mergedData); // Return the merged data as JSON
     }
 
-    // public function SendEmail(){
-    //     $currentTime = Carbon::now();
+    public function SendEmail(){
+        $currentTime = Carbon::now();
 
-    //     $posts = DataWON::join('TLSLOG_TBL', 'TSKH_TBL.TSKH_TSKNO', '=', 'TLSLOG_TBL.TLSLOG_TSKNO')
-    //         ->join('TWON_TBL', 'TSKH_TBL.TSKH_WONO', '=', 'TWON_TBL.TWON_WONO')
-    //         ->select(
-    //             'TSKH_TBL.TSKH_MCLN',
-    //             'TSKH_TBL.TSKH_WONO',
-    //             'TWON_TBL.TWON_MDLCD',
-    //             'TWON_TBL.TWON_WONQT',
-    //             'TLSLOG_TBL.TLSLOG_TTLMIN',
-    //             'TLSLOG_TBL.TLSLOG_DETAIL',
-    //             'TLSLOG_TBL.TLSLOG_TSKNO',
-    //             'TLSLOG_TBL.TLSLOG_LSNO',
-    //             'TLSLOG_TBL.TLSLOG_FTIME',
-    //             'TLSLOG_TBL.TLSLOG_TTIME',
-    //             'TLSLOG_TBL.TLSLOG_TSKLN',
-    //         )
-    //         ->whereDate('TLSLOG_TBL.TLSLOG_ISSDT', '>', '2024-11-06')
-    //         ->where('TLSLOG_TBL.TLSLOG_LSNO', '=', 'NG001')
-    //         ->where('TLSLOG_TBL.TLSLOG_TTLMIN', '>', 10)
-    //         // ->whereDate('TLSLOG_TBL.TLSLOG_ISSDT', '=', now()->toDateString())
-    //         // ->where('TLSLOG_TBL.TLSLOG_FTIME' , '>=' , $currentTime)
-    //         ->get();
+        $posts = DataWON::join('TLSLOG_TBL', 'TSKH_TBL.TSKH_TSKNO', '=', 'TLSLOG_TBL.TLSLOG_TSKNO')
+            ->join('TWON_TBL', 'TSKH_TBL.TSKH_WONO', '=', 'TWON_TBL.TWON_WONO')
+            ->select(
+                'TSKH_TBL.TSKH_MCLN',
+                'TSKH_TBL.TSKH_WONO',
+                'TWON_TBL.TWON_MDLCD',
+                'TWON_TBL.TWON_WONQT',
+                'TLSLOG_TBL.TLSLOG_TTLMIN',
+                'TLSLOG_TBL.TLSLOG_DETAIL',
+                'TLSLOG_TBL.TLSLOG_TSKNO',
+                'TLSLOG_TBL.TLSLOG_LSNO',
+                'TLSLOG_TBL.TLSLOG_FTIME',
+                'TLSLOG_TBL.TLSLOG_TTIME',
+                'TLSLOG_TBL.TLSLOG_TSKLN',
+            )
+            //->whereDate('TLSLOG_TBL.TLSLOG_ISSDT', '>', '2024-11-06')
+            ->where('TLSLOG_TBL.TLSLOG_LSNO', '=', 'NG001')
+            ->where('TLSLOG_TBL.TLSLOG_TTLMIN', '>', 10)
+            ->whereDate('TLSLOG_TBL.TLSLOG_ISSDT', '=', now()->toDateString())
+            ->where('TLSLOG_TBL.TLSLOG_SNDM' , null)
+            // ->where('TLSLOG_TBL.TLSLOG_FTIME' , '>=' , $currentTime)
+            ->get();
 
-    //     if ($posts->isNotEmpty()) {
-    //         Mail::to('j-natdanai@alpine-asia.com')->send(new TLSLOGAlert($posts));
-    //     }
+        if ($posts->isNotEmpty()) {
+            Mail::to('j-natdanai@alpine-asia.com')->send(new TLSLOGAlert($posts));
+        }
 
-    //     return response()->json(['send' => $posts]);
-    // }
+        $ins_std_mail = [
+            'TLSLOG_SNDM' => 1
+        ];
+
+        DB::connection('second_sqlsrv')->table('TLSLOG_TBL')
+        ->where('TLSLOG_LSNO', '=', 'NG001')
+        ->where('TLSLOG_TTLMIN', '>', 10)
+        ->whereDate('TLSLOG_ISSDT', '=', now()->toDateString())
+        ->update($ins_std_mail);
+
+        return response()->json(['send' => $posts,$ins_std_mail]);
+    }
 
     public function SendMailToInput(Request $request){
         // $send_data = DB::table('CA_RECLN_TBL')

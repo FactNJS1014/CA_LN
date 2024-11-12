@@ -9,31 +9,26 @@ if (!empty($_GET['username'])) {
     $_SESSION['sec'] = $_GET['sec'];
     $_SESSION['MSECT_ID'] = $_GET['MSECT_ID'];
     $per = $_GET['USE_PERMISSION'];
-    if($_SESSION['USE_PERMISSION'] == 8 || $_SESSION['USE_PERMISSION'] == 9){
-    // $check = $_GET['check_email'];
-    // if(!empty($check)) {
-    //     header('Location:http://web-server/41_calinecall/index.php/second');
-    // }
-?>
-<script>
-    // window.location.replace("http://web-server/37_linecall/index.php");
-    // window.location.replace("http://web-server/37_linecall/index.php/approve");
-</script>
-<?php
-header("location: http://" . $_SERVER['HTTP_HOST'] . "/41_calinecall/index.php/second");
-header("location: http://" . $_SERVER['HTTP_HOST'] . "/41_calinecall/index.php/third");
-exit(0);
-}else{
-    //header('Location: http://web-server/37_linecall/index.php');
-    header("location: http://" . $_SERVER['HTTP_HOST'] . "/41_calinecall/index.php");
-    exit(0);
+
+    if ($_SESSION['USE_PERMISSION'] == 8 || $_SESSION['USE_PERMISSION'] == 9) {
+        header("Location: http://" . $_SERVER['HTTP_HOST'] . "/41_calinecall/index.php/third");
+        exit;
+    } else if ($_SESSION['USE_PERMISSION'] == 1) {
+        header("Location: http://" . $_SERVER['HTTP_HOST'] . "/41_calinecall/index.php/second");
+        exit;
+    } else {
+        header("Location: http://" . $_SERVER['HTTP_HOST'] . "/41_calinecall/index.php");
+        exit;
+    }
 }
-}
+
+// Check if employee number is set
 if (empty($_SESSION['empno'])) {
     header('Location: http://web-server/menu.php');
-    exit(0);
+    exit;
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">

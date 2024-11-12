@@ -392,19 +392,19 @@
 
         })
 
-        SendMail()
-        function SendMail() {
-            $.ajax({
-                url: '{{route('send.email')}}',
-                method: 'GET',
-                success: (response) => {
-                    console.log(response.send);
-                },
-                error: (error) => {
-                    console.error(error);
-                }
-            })
-        }
+        // SendMail()
+        // function SendMail() {
+        //     $.ajax({
+        //         url: '{{route('send.email')}}',
+        //         method: 'GET',
+        //         success: (response) => {
+        //             console.log(response.send);
+        //         },
+        //         error: (error) => {
+        //             console.error(error);
+        //         }
+        //     })
+        // }
 
     </script>
 

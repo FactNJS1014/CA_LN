@@ -93,6 +93,8 @@ class ApprController extends Controller
     public function getAppr(Request $request) {
         $data_id = $request->id;
         $emp_no = $request->empno;
+        $tlskno = $request->tkno;
+        $tlskln = $request->tkln;
 
         // Get current tracking level for specific record
         $currentTracking = DB::table('CA_RECLN_TBL')
@@ -129,8 +131,9 @@ class ApprController extends Controller
                 ->update([
                     'CA_EMPID_APPR' => $emp_no,
                     'CA_RECAPP_STD' => 1,
-                    'CA_PROD_FAXCOMPLETE' => 1
+
                 ]);
+
         } else {
             // Update tracking level เฉพาะกรณีที่ยังไม่ถึงระดับ 3
             DB::table('CA_RECLN_TBL')
@@ -179,7 +182,19 @@ class ApprController extends Controller
                 Mail::to('j-natdanai@alpine-asia.com')->send(new LinkToAppr($linktoAppr));
                 break;
             default:
-            return response()->json(['error' => 'No loop Master Approve'], 400);
+                DB::table('CA_RECLN_TBL')
+                ->where('CA_LNREC_ID', $data_id)
+                ->update([
+                    'CA_PROD_FAXCOMPLETE' => 1,
+                ]);
+                DB::connection('second_sqlsrv')->table('TLSLOG_TBL')
+                ->where('TLSLOG_TSKNO' , $tlskno)
+                ->where('TLSLOG_TSKLN' , $tlskln)
+                ->where('TLSLOG_TTLMIN', '>', 10)
+                ->update([
+                    'TLSLOG_COMPLETE' => 1,
+
+                ]);
         }
 
         return response()->json(['appr' => [
