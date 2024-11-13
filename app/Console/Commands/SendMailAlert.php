@@ -60,7 +60,7 @@ class SendMailAlert extends Command
             ->where('TLSLOG_TBL.TLSLOG_LSNO', '=', 'NG001')
             ->where('TLSLOG_TBL.TLSLOG_TTLMIN', '>', 10)
             //->whereDate('TLSLOG_TBL.TLSLOG_ISSDT', '=', now()->toDateString())
-            ->where('TLSLOG_TBL.TLSLOG_SNDM' , null)
+            //->where('TLSLOG_TBL.TLSLOG_SNDM' , null)
             // ->where('TLSLOG_TBL.TLSLOG_FTIME' , '>=' , $currentTime)
             ->get();
 
@@ -68,16 +68,16 @@ class SendMailAlert extends Command
             Mail::to('j-natdanai@alpine-asia.com')->send(new TLSLOGAlert($posts));
         }
 
-        $ins_std_mail = [
-            'TLSLOG_SNDM' => 1
-        ];
+        // $ins_std_mail = [
+        //     'TLSLOG_SNDM' => 1
+        // ];
 
-        DB::connection('second_sqlsrv')->table('TLSLOG_TBL')
-        ->where('TLSLOG_LSNO', '=', 'NG001')
-        ->where('TLSLOG_TTLMIN', '>', 10)
-        ->whereDate('TLSLOG_ISSDT', '=', now()->toDateString())
-        ->update($ins_std_mail);
+        // DB::connection('second_sqlsrv')->table('TLSLOG_TBL')
+        // ->where('TLSLOG_LSNO', '=', 'NG001')
+        // ->where('TLSLOG_TTLMIN', '>', 10)
+        // ->whereDate('TLSLOG_ISSDT', '=', now()->toDateString())
+        // ->update($ins_std_mail);
 
-        return response()->json(['send' => $posts,$ins_std_mail]);
+        // return response()->json(['send' => $posts,$ins_std_mail]);
     }
 }

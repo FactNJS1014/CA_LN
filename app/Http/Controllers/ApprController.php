@@ -67,6 +67,49 @@ class ApprController extends Controller
             ->where('CA_LNREC_ID', $data_id)
             ->update($tracking);
 
+        $getID = DB::table('CA_HRECAPP_TBL')
+        ->where('CA_LNREC_ID', $data_id)
+        ->where('CA_RECAPP_LV' , 1)
+        ->get();
+
+        $_empno = explode(',', $getID[0]->CA_RECAPP_EMPAPP_ID);
+        // Corrected loop to iterate over the array
+        for($i = 0; $i < count($_empno); $i++){
+            // Collecting results instead of returning immediately
+            $results[] = $_empno[$i];
+            $person = DB::table('VUSER_DEPT')
+            ->select(
+                'MUSR_ID',
+                'MUSR_NAME',
+                'DEPT_S_NAME',
+                'DEPT_SEC',
+                'MSECT_ID',
+                'USE_PERMISSION',
+                'MUSR_COMPANY_EMAIL'
+            )
+            ->where('MUSR_ID',$_empno[$i])
+            ->get();
+
+            $empno = $person[0]->MUSR_ID;
+            $empname = $person[0]->MUSR_NAME;
+            $dept = $person[0]->DEPT_S_NAME;
+            $dept_sec = $person[0]->DEPT_SEC;
+            $sec_id = $person[0]->MSECT_ID;
+            $per = $person[0]->USE_PERMISSION;
+            $email_empno = $person[0]->MUSR_COMPANY_EMAIL;
+            if (isset($empname, $empno, $dept, $per, $dept_sec, $sec_id)) {
+                $web_link = url("http://web-server/41_calinecall/index.php/third?username={$empname}&empno={$empno}&department={$dept}&USE_PERMISSION={$per}&sec={$dept_sec}&MSECT_ID={$sec_id}");
+                $linktoAppr = [
+                    'link' => $web_link,
+                ];
+                Mail::to('j-natdanai@alpine-asia.com')->send(new LinkToAppr($linktoAppr));
+            }
+
+        }
+        //return response()->json($results); // Return the collected results
+
+
+
         return response()->json(['capr' => $ins_appr[0]['CA_RECAPP_ID'] ?? $capr]);
     }
 
@@ -169,33 +212,52 @@ class ApprController extends Controller
             'link' => $web_link,
         ];
 
-        Switch($tracking_up){
-            case "1":
-                //return response()->json([$empno,$empname,$dept,$dept_sec,$sec_id,$web_link]);
-                Mail::to('j-natdanai@alpine-asia.com')->send(new LinkToAppr($linktoAppr));
-
-                break;
-            case "2":
-                Mail::to('j-natdanai@alpine-asia.com')->send(new LinkToAppr($linktoAppr));
-                break;
-            case "3":
-                Mail::to('j-natdanai@alpine-asia.com')->send(new LinkToAppr($linktoAppr));
-                break;
-            default:
-                DB::table('CA_RECLN_TBL')
-                ->where('CA_LNREC_ID', $data_id)
-                ->update([
-                    'CA_PROD_FAXCOMPLETE' => 1,
-                ]);
-                DB::connection('second_sqlsrv')->table('TLSLOG_TBL')
-                ->where('TLSLOG_TSKNO' , $tlskno)
-                ->where('TLSLOG_TSKLN' , $tlskln)
-                ->where('TLSLOG_TTLMIN', '>', 10)
-                ->update([
-                    'TLSLOG_COMPLETE' => 1,
-
-                ]);
+        if ($tracking_up == 1) {
+            Mail::to('j-natdanai@alpine-asia.com')->send(new LinkToAppr($linktoAppr));
         }
+
+        else if ($tracking_up == 2) {
+            Mail::to('j-natdanai@alpine-asia.com')->send(new LinkToAppr($linktoAppr));
+        }
+
+        else if ($tracking_up == 3) {
+            Mail::to('j-natdanai@alpine-asia.com')->send(new LinkToAppr($linktoAppr));
+        }
+
+        else if ($tracking_up != 1 && $tracking_up != 2 && $tracking_up != 3) {
+            DB::connection('second_sqlsrv')->table('TLSLOG_TBL')
+                ->where('TLSLOG_TSKNO', $tlskno)
+                ->where('TLSLOG_TSKLN', $tlskln)
+                ->where('TLSLOG_TTLMIN', '>', 10)
+                ->update(['TLSLOG_COMPLETE' => 1]);
+        }
+        // Switch($tracking_up){
+        //     case "1":
+        //         //return response()->json([$empno,$empname,$dept,$dept_sec,$sec_id,$web_link]);
+        //         Mail::to('j-natdanai@alpine-asia.com')->send(new LinkToAppr($linktoAppr));
+
+        //         break;
+        //     case "2":
+        //         Mail::to('j-natdanai@alpine-asia.com')->send(new LinkToAppr($linktoAppr));
+        //         break;
+        //     case "3":
+        //         Mail::to('j-natdanai@alpine-asia.com')->send(new LinkToAppr($linktoAppr));
+        //         break;
+        //     default:
+        //         DB::table('CA_RECLN_TBL')
+        //         ->where('CA_LNREC_ID', $data_id)
+        //         ->update([
+        //             'CA_PROD_FAXCOMPLETE' => 1,
+        //         ]);
+        //         DB::connection('second_sqlsrv')->table('TLSLOG_TBL')
+        //         ->where('TLSLOG_TSKNO' , $tlskno)
+        //         ->where('TLSLOG_TSKLN' , $tlskln)
+        //         ->where('TLSLOG_TTLMIN', '>', 10)
+        //         ->update([
+        //             'TLSLOG_COMPLETE' => 1,
+
+        //         ]);
+        // }
 
         return response()->json(['appr' => [
             'CA_EMPID_APPR' => $emp_no,

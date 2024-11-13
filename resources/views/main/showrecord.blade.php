@@ -143,21 +143,13 @@
                                     <button type="button" class="btn btnaprlv" onclick="aprlvbtn('${res.CA_LNREC_ID}','${res.TLSLOG_TSKNO}','${res.TLSLOG_TSKLN}')">
                                         อนุมัติ<i class="bi bi-arrow-right-circle-fill ms-2"></i>
                                     </button>
-                                    <button type="button" class="btn btnedit" onclick="editbtn('${res.CA_LNREC_ID}','${res.CA_DOCS_ID}','${res.TLSLOG_TSKNO}','${res.TLSLOG_TSKLN}')">
-                                        <i class="bi bi-pencil-square mx-2"></i>แก้ไขข้อมูล
-                                    </button>
+
                                     <button type="button" class="btn btnrej" onclick="rejbtn('${res.CA_LNREC_ID}')">
                                         <i class="bi bi-arrow-left-circle-fill mx-2"></i>Reject
                                     </button>
                                 </div>
 
-                                <!-- Button on the right -->
-                                <div>
 
-                                    <button type="button" class="btn btndel" onclick="delbtn('${res.CA_LNREC_ID}')">
-                                        <i class="bi bi-trash3-fill mx-2"></i>Delete
-                                    </button>
-                                </div>
                             </div>
 
 
@@ -258,9 +250,7 @@
                                     <button type="button" class="btn btnedit" onclick="editbtn('${res.CA_LNREC_ID}','${res.CA_DOCS_ID}','${res.TLSLOG_TSKNO}','${res.TLSLOG_TSKLN}')">
                                         <i class="bi bi-pencil-square mx-2"></i>แก้ไขข้อมูล
                                     </button>
-                                    <button type="button" class="btn btnrej" onclick="rejbtn('${res.CA_LNREC_ID}')">
-                                        <i class="bi bi-arrow-left-circle-fill mx-2"></i>Reject
-                                    </button>
+
                                 </div>
 
                                 <!-- Button on the right -->
@@ -317,18 +307,18 @@
                 },
                 success: function(response) {
                     console.log(response);
-                    if (response.capr) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Send Approve Successfully',
-                            text: 'ส่งตรวจสอบเสร็จสิ้น',
-                            showConfirmButton: false,
-                            timer: 1500
-                        }).then(() => {
-                            location.reload();
-                        })
+                    // if (response.capr) {
+                    //     Swal.fire({
+                    //         icon: 'success',
+                    //         title: 'Send Approve Successfully',
+                    //         text: 'ส่งตรวจสอบเสร็จสิ้น',
+                    //         showConfirmButton: false,
+                    //         timer: 1500
+                    //     }).then(() => {
+                    //         location.reload();
+                    //     })
 
-                    }
+                    // }
 
                 },
             })
@@ -541,7 +531,7 @@
                     <div class="row mt-3">
                         <label for="case" class="col-sm-2" id="label-form">เปลี่ยนรูปภาพ:</label>
                         <div class="col-sm-6">
-                            <input type="file" id="image_prod" name="image_prod" accept="image/png,image/jpg">
+                            <input type="file" id="image_prod" name="image_prod" accept="image/jpg,image/png">
 
                         </div>
                     </div>

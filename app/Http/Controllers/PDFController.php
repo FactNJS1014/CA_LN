@@ -32,4 +32,12 @@ class PDFController extends Controller
         return $pdf->stream('report.pdf');
     }
 
+    public  function ViewDocument($filepdf){
+        $path = public_path('document/'. $filepdf);
+        if(!file_exists($path)){
+            abort(404);
+        }
+        return response()->file($path,['Content-Type' => 'application/pdf']);
+    }
+
 }

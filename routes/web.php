@@ -6,6 +6,8 @@ use App\Http\Controllers\InsertController;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\PDFController;
 use App\Http\Controllers\ApprController;
+use App\Http\Controllers\MailAlertController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -72,9 +74,14 @@ Route::post('/insert/reject', [ ApprController::class, 'InsertReject'])->name('r
 
 //Send Mail Notification
 Route::get('/send-email', [DataController::class, 'SendEmail'])->name('send.email');
+Route::get('/send/email', [MailAlertController::class, 'MailAlert'])->name('send.alert');
 
 //Send Mail to Input Case and Active
 Route::get('/send-email-input', [DataController::class, 'SendMailToInput'])->name('send.input');
+
+
+//View PDF
+Route::get('/view-pdf/{filepdf}', [PDFController::class,'ViewDocument'])->name('view.pdf');
 
 ?>
 

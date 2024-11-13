@@ -72,23 +72,28 @@ if (empty($_SESSION['empno'])) {
                     <div class="nav__list">
                         <a href="{{route('main')}}" class="nav__link" id="firstpage">
                         <i class='bi bi-1-square-fill' style="font-size: 19px;"></i>
-                            <span class="nav__name">Sheet Record</span>
+                            <span class="nav__name">บันทึกข้อมูลส่วนที่ 1</span>
                         </a>
 
                         <a href="{{route('second')}}" class="nav__link" id="secondpage">
                             <i class='bi bi-2-square-fill' style="font-size: 19px;"></i>
-                            <span class="nav__name">Case and Active</span>
+                            <span class="nav__name">บันทึกข้อมูลส่วนที่ 2</span>
                         </a>
 
                         <a href="{{route('third')}}" class="nav__link" id="thirdpage">
                             <i class='bi bi-3-square-fill' style="font-size: 19px;"></i>
-                            <span class="nav__name">Check Sheet Linecall</span>
+                            <span class="nav__name">ตรวจสอบข้อมูล</span>
                         </a>
 
                         <a href="{{route('four')}}" class="nav__link" id="fourthpage">
                             <i class='bi bi-4-square-fill' style="font-size: 19px;"></i>
                             <span class="nav__name">Reports</span>
                         </a>
+                        <a href="{{route('view.pdf',['filepdf' => 'Program Line Call CA.pdf'])}}" class="nav__link" id="fourthpage">
+                            <i class='bi bi-5-square-fill' style="font-size: 19px;"></i>
+                            <span class="nav__name">คู่มือการใช้งาน</span>
+                        </a>
+
 
                         {{-- <a href="#" class="nav__link">
                             <i class='bi bi-5-square-fill' style="font-size: 19px;"></i>

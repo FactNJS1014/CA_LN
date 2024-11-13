@@ -364,6 +364,7 @@
                                         timer: 1000
                                     }).then(function(){
                                         console.log(empno)
+
                                         $.ajax({
                                             url: '{{ route('send.input') }}',
                                             method: 'GET',
@@ -372,6 +373,7 @@
                                             },
                                             success: (response) => {
                                                 console.log(response);
+                                                location.reload()
                                             },
                                             error: (error) => {
                                                 console.error("Error:", error);
