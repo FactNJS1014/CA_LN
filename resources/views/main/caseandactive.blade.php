@@ -17,6 +17,7 @@
                             <th scope="col">รายละเอียดปัญหา</th>
                             <th scope="col">ผู้แจ้ง Linecall</th>
                             <th scope="col">Action</th>
+                            <th scope="col">การเกิด</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -100,6 +101,11 @@
                     html += '<td>' + item.CA_PROD_DTPROB + '</td>'
                     html += '<td>' + item.CA_PROD_INFMR + '</td>'
                     html += '<td><button type="button" class="btn btn-primary" onclick=\'ViewForm("' + item.CA_LNREC_ID + '","' + item.CA_DOCS_ID +'")\'><i class="bi bi-file-earmark-medical-fill mx-2"></i>เรียกฟอร์ม</button></td>'
+                    if(item.CA_PROD_OCCUR === "เกิดซ้ำ"){
+                        html += '<td><span class="badge bg-danger text-white" style="font-size: 14pt;">Old Line Call</span></td>'
+                    }else{
+                        html += '<td><span class="badge bg-success text-white" style="font-size: 14pt;">New Line Call</span></td>'
+                    }
                     html += '</tr>'
 
                     }

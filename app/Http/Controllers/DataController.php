@@ -107,7 +107,8 @@ class DataController extends Controller
             'CA_PROD_INFMR',
             'CA_PROD_PROBM',
             'CA_CASEREC_STD',
-            'CA_PROD_FAXCOMPLETE')
+            'CA_PROD_FAXCOMPLETE',
+            'CA_PROD_OCCUR')
         ->where('CA_CASEREC_STD', '=', 0)
         ->get();
         return response()->json(['data_form'=> $data_form]);
