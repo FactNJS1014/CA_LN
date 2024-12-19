@@ -12,6 +12,7 @@
                         <tr>
                             <th scope="col">วันที่บันทึก</th>
                             <th scope="col">Line</th>
+                            <th scope="col">หัวข้อปัญหาที่เกิด</th>
                             <th scope="col">Work Order</th>
                             <th scope="col">รายละเอียดปัญหา</th>
                             <th scope="col">ผู้แจ้ง Linecall</th>
@@ -58,7 +59,7 @@
                     <div class="row mt-3">
                         <label for="case" class="col-sm-2" id="label-form">เพิ่มรูปภาพ (ต้องเป็นไฟล์ .jpg เท่านั้น):</label>
                         <div class="col-sm-6">
-                            <input type="file" id="image_prod" name="image_prod" accept="image/jpg,image/png" onchange="previewImages(event)" required>
+                            <input type="file" id="image_prod" name="image_prod" accept="image/jpg,image/png" onchange="previewImages(event)">
                             <div class="d-flex justify-content-start mt-2">
                                 <div id="imageContainer" class="image-container"></div>
 
@@ -89,19 +90,36 @@
                 let data = response.data_form
                 let html = '';
                 data.map((item) => {
+                    if(item.CA_PROD_FAXCOMPLETE == 0){
 
                     html += '<tr>'
-                    html += '<td>' + item.CA_ISSUE_DATE + '</td>'
+                    html += '<td>' + moment(item.CA_ISSUE_DATE).format('DD-MM-YYYY') + '</td>'
                     html += '<td>' + item.CA_PROD_LINE + '</td>'
+                    html += '<td>' + item.CA_PROD_PROBM + '</td>'
                     html += '<td>' + item.CA_PROD_WON + '</td>'
                     html += '<td>' + item.CA_PROD_DTPROB + '</td>'
                     html += '<td>' + item.CA_PROD_INFMR + '</td>'
                     html += '<td><button type="button" class="btn btn-primary" onclick=\'ViewForm("' + item.CA_LNREC_ID + '","' + item.CA_DOCS_ID +'")\'><i class="bi bi-file-earmark-medical-fill mx-2"></i>เรียกฟอร์ม</button></td>'
                     html += '</tr>'
 
-
+                    }
                 })
+
+                if ($.fn.DataTable.isDataTable('table#lncall_data')) {
+                    $('#lncall_data').DataTable().destroy();
+                    $('#lncall_data').empty();
+                }
+
                 $("#lncall_data tbody").html(html);
+
+                let table = $('#lncall_data').DataTable({
+                    paging: false,
+                    searching: true,
+                    info: false,
+                    scrollX: false,
+                    scrollCollapse: false,
+                })
+
             }
         })
 

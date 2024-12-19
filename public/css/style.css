@@ -492,7 +492,7 @@ textarea{
     width: 100%;
     border-collapse: collapse;
     font-size: 14pt;
-    font-weight: bold;
+
 }
 
 .btnaprlv{
@@ -521,4 +521,52 @@ textarea{
 .btneditofrej:hover{
     background-color: #fff;
     color: #FF4545;
+}
+
+table.dataTable thead th,
+table.dataTable thead .search-row th {
+    text-align: center; /* Adjust text alignment as needed */
+}
+
+table.dataTable thead th input {
+    width: 100%; /* Make the input field take the full width of the cell */
+    box-sizing: border-box; /* Prevents the input field from overflowing */
+}
+
+.btnbypass{
+    background-color: #c1121f;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-decoration: none;
+    cursor: pointer;
+    font-weight: 700;
+}
+.btnbypass:hover{
+    background-color: #fff;
+    color: #c1121f;
+}
+
+#form_Table{
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14pt;
+}
+
+.btnExport{
+    background-color: #38b000;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-decoration: none;
+    cursor: pointer;
+    font-weight: 700;
+}
+.btnExport:hover{
+    background-color: #fff;
+    color: #38b000;
+}
+
+.btnViewDoc:hover{
+    text-decoration: underline;
 }

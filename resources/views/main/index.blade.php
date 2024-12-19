@@ -8,12 +8,13 @@
                 <table class="table table-bordered" id="dataln">
                     <thead class="table-info fs-6">
                         <tr>
+                            <th>Date Line Call</th>
                             <th>Work Order</th>
                             <th>Model Code</th>
-
                             <th>Line PROD.</th>
                             <th>Minutes of Linecall</th>
                             <th>Action</th>
+                            <th>NOT DO Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -204,6 +205,29 @@
                             <p id="txt" class="col-sm-1 mt-1">%</p>
                         </div>
 
+                        <div class="row mt-3">
+                            <p id="txt" class="col-sm-3">ประเภทการเกิด:</p>
+                            <div class="col-sm-4 mt-1">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="occur" id="occur" value="เกิดใหม่" required>
+                                    <label class="form-check-label" for="inlineRadio1">เกิดใหม่</label>
+                                  </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="occur" id="rank_rec" value="เกิดซ้ำ" required>
+                                    <label class="form-check-label" for="inlineRadio1">เกิดซ้ำ</label>
+                                  </div>
+
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <p id="txt" class="col-sm-3">จำนวน Case ในการเกิด: </p>
+                            <div class="col-sm-2">
+                                <input type="number" name="csnum" id="rate_prod" class="form-control" required>
+                            </div>
+
+                        </div>
+
                         <div class="d-flex justify-content-center mt-3">
                             <button type="submit" class="btn btn-success"><i class="bi bi-cloud-download-fill mx-3"></i>บันทึกข้อมูล</button>
                             {{-- <input type="submit" class="btn btn-success" value="บันทึกข้อมูล"> --}}
@@ -231,11 +255,15 @@
                 response.data.map((res)=>{
 
                     html +='<tr>';
+                    html += '<td>'+ moment(res.TLSLOG_ISSDT).format('DD-MM-YYYY') +'</td>';
                     html += '<td>'+ res.TSKH_WONO +'</td>';
                     html += '<td>'+ res.TWON_MDLCD +'</td>';
                     html += '<td>'+ res.TSKH_MCLN +'</td>';
                     html += '<td>'+ res.TLSLOG_TTLMIN +'</td>';
                     html += '<td><button class="btn btnInclude" onclick=\'btnInclude("' + res.TLSLOG_TSKNO + '","'+res.TLSLOG_TSKLN+'")\'><i class="bi bi-eye-fill mx-2"></i>เรียกข้อมูล</button></td>';
+                    if(empno == 5190002 || empno == 2240003){
+                        html += '<td><button class="btn btnbypass" onclick=\'btnByPass("' + res.TLSLOG_TSKNO + '","'+res.TLSLOG_TSKLN+'","'+ res.TLSLOG_LSLN +'")\'>By Pass</button></td>';
+                    }
                     html += '</tr>'
 
                 })
@@ -394,19 +422,73 @@
 
         })
 
-        // SendMail()
-        // function SendMail() {
-        //     $.ajax({
-        //         url: '{{route('send.email')}}',
-        //         method: 'GET',
-        //         success: (response) => {
-        //             console.log(response.send);
-        //         },
-        //         error: (error) => {
-        //             console.error(error);
-        //         }
-        //     })
-        // }
+        btnByPass = (id,lno,lsln) => {
+            console.log(lno)
+            console.log(lsln)
+            let byp = '';
+            byp += '<form method="post" id="form_bypass">';
+            byp += '@csrf';
+            byp += '<input type="text" class="form-control" name="bypass" id="bypass">';
+            byp += '</form>';
+            Swal.fire({
+                title: 'กรอกแสดงความคิดเห็นในการยกเลิก Line Call โมเดลนี้',
+                html: '<div style="text-align: left;" >' + byp + '</div>',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'ยกเลิก',
+                width: '60%',
+                showCloseButton: true,
+                preConfirm: () => {
+                    let form_byp = new FormData();
+                    form_byp.append('bypass_f', $('#form_bypass').serialize());
+                    form_byp.append('id', id);
+                    var _token = $('meta[name="csrf-token"]').attr('content');
+                    form_byp.append('_token', _token);
+                    form_byp.append('empno', empno);
+                    form_byp.append('lno', lno);
+                    form_byp.append('lsln', lsln);
+
+                    $.ajax({
+                        url: '{{ route('send.bypass') }}',
+                        type: 'POST',
+                        data: form_byp,
+                        contentType: false,
+                        processData: false,
+                        cache: false,
+                        beforeSend: function() {
+                            // Show a SweetAlert loading spinner
+                            Swal.fire({
+                                title: 'กำลังยกเลิกข้อมูล',
+                                text: 'โปรดรอสักครู่......',
+                                icon: 'info',
+                                allowOutsideClick: false, // Prevent closing on outside click
+                                showConfirmButton: false, // Hide the confirmation button
+                                didOpen: () => {
+                                    Swal.showLoading(); // Show the loading spinner
+                                }
+                            });
+                        },
+                        success: function(data) {
+                            Swal.close();
+                            console.log(data);
+                            if (data.byp) {
+                                Swal.fire({
+                                    title: 'ยกเลิกสำเร็จ',
+                                    icon: 'success',
+                                    showConfirmButton: false,
+                                    timer: 1000
+                                }).then(() => {
+                                    location.reload();
+                                })
+                            }
+                        }
+                    })
+                }
+            })
+        }
+
+
 
     </script>
 

@@ -58,7 +58,9 @@ class InsertController extends Controller
             'CA_PROD_TRACKING' => 0,
             'TLSLOG_TSKNO' => $rec['tskno'],
             'TLSLOG_TSKLN' => $rec['tskln'],
-            'CA_PROD_EMPREC' => $empno
+            'CA_PROD_EMPREC' => $empno,
+            'CA_PROD_OCCUR' => $rec['occur'],
+            'CA_PROD_CSNUM' => $rec['csnum']
 
 
         ];
@@ -159,7 +161,8 @@ class InsertController extends Controller
             'CA_PROD_ACCLOT' => $update['acc_prod'],
             'CA_PROD_NG' => $update['ng_prod'],
             'CA_PROD_RATE' => $update['rate_prod'],
-
+            'CA_PROD_OCCUR' => $update['occur'],
+            'CA_PROD_CSNUM' => $update['csnum']
 
         ];
 

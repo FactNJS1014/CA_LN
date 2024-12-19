@@ -10,10 +10,10 @@ if (!empty($_GET['username'])) {
     $_SESSION['MSECT_ID'] = $_GET['MSECT_ID'];
     $per = $_GET['USE_PERMISSION'];
 
-    if ($_SESSION['USE_PERMISSION'] == 8 || $_SESSION['USE_PERMISSION'] == 9) {
+    if ($_SESSION['USE_PERMISSION'] == 8) {
         header("Location: http://" . $_SERVER['HTTP_HOST'] . "/41_calinecall/index.php/third");
         exit;
-    } else if ($_SESSION['USE_PERMISSION'] == 1) {
+    } else if ($_SESSION['USE_PERMISSION'] == 2) {
         header("Location: http://" . $_SERVER['HTTP_HOST'] . "/41_calinecall/index.php/second");
         exit;
     } else {

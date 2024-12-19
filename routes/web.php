@@ -46,7 +46,12 @@ Route::get('/fetch/datarec',[DataController::class,'getDataFormFirst'])->name('g
 Route::get('/show/data',[DataController::class,'ShowRecord'])->name('show.data');
 Route::get('/show/edit',[DataController::class,'ShoweditRecord'])->name('show.edit');
 Route::get('/show/report',[DataController::class,'ShowReports'])->name('show.report');
+Route::get('/show/report2',[DataController::class,'ShowReports2'])->name('show.report2');
 Route::get('/show/data5',[DataController::class,'ShowData']);
+Route::get('/show/testdata',[DataController::class,'Testdata']);
+Route::get('/test',[DataController::class,'Test']);
+Route::get('/show/dataform01',[DataController::class,'ShowDataForm1'])->name('show.form1');
+
 
 
 //Method GET to Delete Data Record
@@ -61,6 +66,7 @@ Route::post('/fetch/insertcase',[InsertController::class,'AddCaseandActive'])->n
 Route::post('/fetch/add',[InsertController::class,'AddTLSLOG'])->name('post.addtlog');
 Route::post('/update/form',[InsertController::class,'UpdateForm'])->name('update.form');
 Route::post('/update/reject',[InsertController::class,'UpdateforReject'])->name('update.reject');
+Route::post('/data/bypass',[DataController::class,'ByPass'])->name('send.bypass');
 
 //Use PDF
 Route::get('/generate-pdf', [PDFController::class, 'generatePDF'])->name('generate.pdf');
@@ -68,6 +74,7 @@ Route::get('/generate-pdf', [PDFController::class, 'generatePDF'])->name('genera
 //Use Approval
 Route::get('/approve', [ ApprController::class, 'getAppr'])->name('approve.next');
 Route::get('/insert/approve', [ ApprController::class, 'InsertAppr'])->name('ins.appr');
+Route::get('/show/usertest', [ ApprController::class, 'UserApprTest']);
 
 //Use Reject
 Route::post('/insert/reject', [ ApprController::class, 'InsertReject'])->name('reject.data');
@@ -82,7 +89,12 @@ Route::get('/send-email-input', [DataController::class, 'SendMailToInput'])->nam
 
 //View PDF
 Route::get('/view-pdf/{filepdf}', [PDFController::class,'ViewDocument'])->name('view.pdf');
+Route::get('/check-file', [PDFController::class,'ViewPDF'])->name('view.upload');
 
+
+
+//upload PDF
+Route::post('/upload-pdf', [PDFController::class,'UploadPDF'])->name('upload.docs');
 ?>
 
 

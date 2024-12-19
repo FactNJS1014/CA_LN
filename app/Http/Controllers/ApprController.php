@@ -102,7 +102,7 @@ class ApprController extends Controller
                 $linktoAppr = [
                     'link' => $web_link,
                 ];
-                Mail::to('j-natdanai@alpine-asia.com')->send(new LinkToAppr($linktoAppr));
+                Mail::to($email_empno)->send(new LinkToAppr($linktoAppr));
             }
 
         }
@@ -126,8 +126,8 @@ class ApprController extends Controller
     private function getEmpAppIdForLevel($level) {
         $empAppIds = [
             1 => '2950044,5190002',
-            2 => '5120108,5130015',
-            3 => '2040008,2150007'
+            2 => '5120108,5130015,5120154',
+            3 => '2040008,2150007,2950112,5120057'
         ];
         return $empAppIds[$level] ?? '';
     }
@@ -184,45 +184,121 @@ class ApprController extends Controller
                 ->update(['CA_PROD_TRACKING' => $tracking_up]);
         }
 
-        $person = DB::table('VUSER_DEPT')
-        ->select(
-            'MUSR_ID',
-            'MUSR_NAME',
-            'DEPT_S_NAME',
-            'DEPT_SEC',
-            'MSECT_ID',
-            'USE_PERMISSION'
-        )
-        ->where('MUSR_ID',$emp_no)
-        ->get();
+        // $person = DB::table('VUSER_DEPT')
+        // ->select(
+        //     'MUSR_ID',
+        //     'MUSR_NAME',
+        //     'DEPT_S_NAME',
+        //     'DEPT_SEC',
+        //     'MSECT_ID',
+        //     'USE_PERMISSION'
+        // )
+        // ->where('MUSR_ID',$emp_no)
+        // ->get();
 
-        $empno = $person[0]->MUSR_ID;
-        $empname = $person[0]->MUSR_NAME;
-        $dept = $person[0]->DEPT_S_NAME;
-        $dept_sec = $person[0]->DEPT_SEC;
-        $sec_id = $person[0]->MSECT_ID;
-        $per = $person[0]->USE_PERMISSION;
-        if (isset($empname, $empno, $dept, $per, $dept_sec, $sec_id)) {
-            $web_link = url("http://web-server/41_calinecall/index.php/third?username={$empname}&empno={$empno}&department={$dept}&USE_PERMISSION={$per}&sec={$dept_sec}&MSECT_ID={$sec_id}");
-        } else {
-            // จัดการกรณีที่ค่าตัวแปรไม่ถูกต้อง
-            return response()->json(['error' => 'Missing required parameters'], 400);
-        }
-        $linktoAppr = [
-            'link' => $web_link,
-        ];
+        // $empno = $person[0]->MUSR_ID;
+        // $empname = $person[0]->MUSR_NAME;
+        // $dept = $person[0]->DEPT_S_NAME;
+        // $dept_sec = $person[0]->DEPT_SEC;
+        // $sec_id = $person[0]->MSECT_ID;
+        // $per = $person[0]->USE_PERMISSION;
+        // if (isset($empname, $empno, $dept, $per, $dept_sec, $sec_id)) {
+        //     $web_link = url("http://web-server/41_calinecall/index.php/third?username={$empname}&empno={$empno}&department={$dept}&USE_PERMISSION={$per}&sec={$dept_sec}&MSECT_ID={$sec_id}");
+        // } else {
+        //     // จัดการกรณีที่ค่าตัวแปรไม่ถูกต้อง
+        //     return response()->json(['error' => 'Missing required parameters'], 400);
+        // }
+        // $linktoAppr = [
+        //     'link' => $web_link,
+        // ];
 
-        if ($tracking_up == 1) {
-            Mail::to('j-natdanai@alpine-asia.com')->send(new LinkToAppr($linktoAppr));
+        if ($tracking_up == 2) {
+            $getID2 = DB::table('CA_HRECAPP_TBL')
+            ->where('CA_LNREC_ID', $data_id)
+            ->where('CA_RECAPP_LV' , 2)
+            ->get();
+
+            $_empno2 = explode(',', $getID2[0]->CA_RECAPP_EMPAPP_ID);
+            for($i = 0; $i < count($_empno2); $i++){
+                // Collecting results instead of returning immediately
+                $results[] = $_empno2[$i];
+                $person = DB::table('VUSER_DEPT')
+                ->select(
+                    'MUSR_ID',
+                    'MUSR_NAME',
+                    'DEPT_S_NAME',
+                    'DEPT_SEC',
+                    'MSECT_ID',
+                    'USE_PERMISSION',
+                    'MUSR_COMPANY_EMAIL'
+                )
+                ->where('MUSR_ID',$_empno2[$i])
+                ->get();
+
+                $empno = $person[0]->MUSR_ID;
+                $empname = $person[0]->MUSR_NAME;
+                $dept = $person[0]->DEPT_S_NAME;
+                $dept_sec = $person[0]->DEPT_SEC;
+                $sec_id = $person[0]->MSECT_ID;
+                $per = $person[0]->USE_PERMISSION;
+                $email_empno = $person[0]->MUSR_COMPANY_EMAIL;
+                if (isset($empname, $empno, $dept, $per, $dept_sec, $sec_id)) {
+                    $web_link = url("http://web-server/41_calinecall/index.php/third?username={$empname}&empno={$empno}&department={$dept}&USE_PERMISSION={$per}&sec={$dept_sec}&MSECT_ID={$sec_id}");
+                    $linktoAppr = [
+                        'link' => $web_link,
+                    ];
+                    Mail::to($email_empno)->send(new LinkToAppr($linktoAppr));
+                }
+
+            }
+            //Mail::to(['j-natdanai@alpine-asia.com','k-boonruang@alpine-asia.com','s-ratchaporn@alpine-asia.com'])->send(new LinkToAppr($linktoAppr));
         }
 
-        else if ($tracking_up == 2) {
-            Mail::to('j-natdanai@alpine-asia.com')->send(new LinkToAppr($linktoAppr));
-        }
 
         else if ($tracking_up == 3) {
-            Mail::to('j-natdanai@alpine-asia.com')->send(new LinkToAppr($linktoAppr));
+            $getID3 = DB::table('CA_HRECAPP_TBL')
+            ->where('CA_LNREC_ID', $data_id)
+            ->where('CA_RECAPP_LV' , 3)
+            ->get();
+
+            $_empno3 = explode(',', $getID3[0]->CA_RECAPP_EMPAPP_ID);
+
+            for($i = 0; $i < count($_empno3); $i++){
+                // Collecting results instead of returning immediately
+                $results[] = $_empno3[$i];
+                $person = DB::table('VUSER_DEPT')
+                ->select(
+                    'MUSR_ID',
+                    'MUSR_NAME',
+                    'DEPT_S_NAME',
+                    'DEPT_SEC',
+                    'MSECT_ID',
+                    'USE_PERMISSION',
+                    'MUSR_COMPANY_EMAIL'
+                )
+                ->where('MUSR_ID',$_empno3[$i])
+                ->get();
+
+                $empno = $person[0]->MUSR_ID;
+                $empname = $person[0]->MUSR_NAME;
+                $dept = $person[0]->DEPT_S_NAME;
+                $dept_sec = $person[0]->DEPT_SEC;
+                $sec_id = $person[0]->MSECT_ID;
+                $per = $person[0]->USE_PERMISSION;
+                $email_empno = $person[0]->MUSR_COMPANY_EMAIL;
+                if (isset($empname, $empno, $dept, $per, $dept_sec, $sec_id)) {
+                    $web_link = url("http://web-server/41_calinecall/index.php/third?username={$empname}&empno={$empno}&department={$dept}&USE_PERMISSION={$per}&sec={$dept_sec}&MSECT_ID={$sec_id}");
+                    $linktoAppr = [
+                        'link' => $web_link,
+                    ];
+                    Mail::to($email_empno)->send(new LinkToAppr($linktoAppr));
+                }
+
+            }
+            //Mail::to(['j-natdanai@alpine-asia.com','p-chaiwat@alpine-asia.com','l-morrakod@alpine-asia.com'])->send(new LinkToAppr($linktoAppr));
         }
+
+
 
         else if ($tracking_up != 1 && $tracking_up != 2 && $tracking_up != 3) {
             DB::connection('second_sqlsrv')->table('TLSLOG_TBL')
@@ -231,6 +307,7 @@ class ApprController extends Controller
                 ->where('TLSLOG_TTLMIN', '>', 10)
                 ->update(['TLSLOG_COMPLETE' => 1]);
         }
+
         // Switch($tracking_up){
         //     case "1":
         //         //return response()->json([$empno,$empname,$dept,$dept_sec,$sec_id,$web_link]);
@@ -258,6 +335,7 @@ class ApprController extends Controller
 
         //         ]);
         // }
+
 
         return response()->json(['appr' => [
             'CA_EMPID_APPR' => $emp_no,
@@ -319,4 +397,5 @@ class ApprController extends Controller
 
         return response()->json(['rejectform' => $update_comment]);
     }
+
 }

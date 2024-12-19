@@ -65,13 +65,14 @@
             font-weight: bold;
             background-color: #f2f2f2;
             width: 50%;
-            font-size: 20px;
+            font-size: 24px;
         }
 
         .value-cell {
-            color: red;
+            color: black;
             font-weight: bold;
             width: 100%;
+            font-size: 20px;
         }
 
         .header-container {
@@ -123,142 +124,65 @@
                     <tr>
                         <td class="label-cell">วันที่เกิด:</td>
                         <td class="value-cell">{{ date('d-M-Y', strtotime($item->CA_ISSUE_DATE)) }}</td>
+                        <td class="label-cell" rowspan="2">Issue No.</td>
+                        <td class="value-cell" rowspan="2">{{$item->CA_DOCS_ID}}</td>
+
                     </tr>
                     <tr>
                         <td class="label-cell">ประวัติ Line:</td>
                         <td class="value-cell">{{$item->CA_PROD_LINE}}</td>
                     </tr>
-                    {{-- <tr>
-                        <td class="label-cell">Issue No.</td>
-                        <td class="value-cell">{{$item->CA_DOCS_ID}}</td>
-                    </tr> --}}
-                </table>
-            </div>
-            <div class="col">
-                <div class="header-container">
-                    <h1 id="header-txt">LINE CALL</h1>
-                </div>
-                <p class="docs">Document No. &nbsp;<span>{{$item->CA_DOCS_ID}}</span></p>
-            </div>
-            {{-- <div class="col">
-                <table>
                     <tr>
-                        <td class="label-cell">Issue No.</td>
-                        <td class="value-cell" style="font-size: 16px;">{{$item->CA_DOCS_ID}}</td>
-                    </tr>
-                </table>
-            </div> --}}
-        </div>
-    </div>
-
-
-    <div class="container">
-        <p class="text-con">***สำหรับแผนกที่ออกเอกสาร***</p>
-        <div class="row">
-            <div class="col">
-                <table>
-                    <tr>
-                        {{-- <td rowspan="5"><span class="text-rotate">สำหรับแผนกที่ออกเอกสาร</span></td> --}}
-                        <td class="label-cell">Model Code</td>
-                        <td class="value-cell">{{$item->CA_PROD_MDLCD}}</td>
+                        <td class="label-cell" rowspan="5">สำหรับแผนกที่ออกเอกสาร</td>
+                        <td class="value-cell">Model:&nbsp;{{$item->CA_PROD_MDLCD}}</td>
+                        <td class="value-cell">Lot size:&nbsp;{{$item->CA_PROD_ACCLOT}}</td>
+                        <td class="value-cell">ผู้แจ้งปัญหา:&nbsp;{{$item->CA_PROD_INFMR}}</td>
                     </tr>
                     <tr>
-                        <td class="label-cell">Work Order</td>
-                        <td class="value-cell">{{$item->CA_PROD_WON}}</td>
+                        <td class="value-cell">Work Order:&nbsp;{{$item->CA_PROD_WON}}</td>
+                        <td class="value-cell">หัวข้อปัญหา:&nbsp;{{$item->CA_PROD_PROBM}}</td>
+                        <td class="value-cell">ระดับความรุนแรง:&nbsp;{{$item->CA_PROD_RANK}}</td>
                     </tr>
                     <tr>
-                        <td class="label-cell">เวลาที่ไลน์ Stop</td>
-                        <td class="value-cell">{{$item->CA_PROD_TMPBF}} - {{$item->CA_PROD_TMPBL}}</td>
-                    </tr>
-                    <tr>
-                        <td class="label-cell">NG QTY & NG Rate</td>
-                        <td class="value-cell">NG QTY = {{$item->CA_PROD_QTY}} pcs. & NG Rate = {{$item->CA_PROD_RATE}} %</td>
-                    </tr>
-                    <tr>
-                        <td class="label-cell">รายละเอียดความผิดปกติ</td>
-                        <td class="value-cell">{{$item->CA_PROD_DTPROB}}</td>
-                    </tr>
-                </table>
-            </div>
-
-
-        </div>
-    </div>
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                <table>
-                    {{-- <tr>
-                        <td class="label-cell">ระดับการแจ้งปัญหา</td>
-                        <td class="value-cell">ggg</td>
-                    </tr> --}}
-                    <tr>
-                        <td class="label-cell">หัวข้อปัญหาที่เกิด</td>
-                        <td class="value-cell">{{$item->CA_PROD_PROBM}}</td>
-                    </tr>
-                    <tr>
-                        <td class="label-cell">ผู้แจ้ง Line Call</td>
-                        <td class="value-cell">{{$item->CA_PROD_INFMR}}</td>
-                    </tr>
-
-                    <tr>
-                        <td class="label-cell" style="text-align: center;">รูปภาพ</td>
-                        <td class="value-cell">
-                            <img src="{{ asset('public/images_ca/' . $item->CA_PROD_IMAGE) }}" alt="Document Image" class="img-fluid" style="max-height: 200px; max-width: 100%;" accept="image/png,image/jpg,image/webp" />
-
+                        <td class="value-cell">เวลาที่ไลน์ stop:&nbsp;{{$item->CA_PROD_TMPBF}}-{{$item->CA_PROD_TMPBL}}</td>
+                        @if (!empty($item->CA_PROD_IMAGE))
+                        <td class="value-cell" rowspan="3" colspan="2"><img src="{{ asset('public/images_ca/' . $item->CA_PROD_IMAGE) }}" alt="Document Image" class="img-fluid" style="max-height: 200px; max-width: 100%;" accept="image/png,image/jpg,image/webp" />
                         </td>
-
-                    </tr>
-                </table>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="container">
-        <p class="text-con2">***สำหรับแผนกที่รับผิดชอบ***</p>
-        <div class="row">
-            <div class="col">
-                <table class="no-collapse">
-                    <tr>
-                        {{-- <td rowspan="4"><span class="text-rotate">สำหรับแผนกที่รับผิดชอบ</span></td> --}}
-                        <td class="label-cell">สาเหตุการเกิด</td>
-                        <td class="value-cell">{{$item->CA_PROD_CASE}}</td>
+                        @else
+                        <td class="value-cell" rowspan="3" colspan="2"><img src="{{ asset('public/image/No-image.jpg')}}" alt="Document Image" class="img-fluid" style="max-height: 200px; max-width: 100%;" accept="image/png,image/jpg,image/webp" />
+                        </td>
+                        @endif
                     </tr>
                     <tr>
-                        <td class="label-cell">การแก้ไขเบื้องต้น</td>
-                        <td class="value-cell">{{$item->CA_PROD_ACTIVE}}</td>
+                        <td class="value-cell">NG Q'ty / NG Rate :&nbsp;{{$item->CA_PROD_QTY}} / {{$item->CA_PROD_RATE}}</td>
                     </tr>
                     <tr>
-                        <td class="label-cell">PIC & Action Date</td>
-                        @foreach ($user as $name)
-                             @if ($item->CA_CASEREC_EMPID == $name->MUSR_ID)
-                                    <td class="value-cell">{{$name->MUSR_NAME}} ,&nbsp;{{ date('d-M-Y', strtotime($item->CA_CASEREC_LSTDT)) }}</td>
-                             @endif
-                        @endforeach
+                        <td class="value-cell">รายละเอียด:<br>{{$item->CA_PROD_DTPROB}}</td>
                     </tr>
                     <tr>
-                        <th class="label-cell">หมายเหตุ</th>
-                        <td class="value-cell">{{$item->CA_PROD_NOTE}}</td>
+                        <td class="label-cell" rowspan="2">สำหรับแผนกที่ผู้รับผิดชอบ</td>
+                        <td class="value-cell" >สาเหตุการเกิด:<br>{{$item->CA_PROD_CASE}}</td>
+                        <td class="value-cell" >การแก้ไขเบื้องต้น:<br>{{$item->CA_PROD_ACTIVE}}</td>
+                        <td class="value-cell" rowspan="2" style="font-size: 22px;">PIC Date:&nbsp;{{ date('d-M-Y', strtotime($item->CA_CASEREC_LSTDT)) }}</td>
                     </tr>
+                    <tr>
+                        <td class="value-cell">หมายเหตุ:<br>{{$item->CA_PROD_NOTE}}</td>
+                        @php
+                            // Find the user directly
+                            $matchedUser = $user->firstWhere('MUSR_ID', $item->CA_CASEREC_EMPID);
+                        @endphp
+                        @if ($matchedUser)
+                            <td class="value-cell">ผู้ทำการตรวจสอบ: {{$matchedUser->MUSR_NAME}}</td>
+                        @else
+                            <td class="value-cell">ผู้ทำการตรวจสอบ: ไม่พบข้อมูล</td>
+                        @endif
+                    </tr>
+                    <tr>
+                        <td class="label-cell" rowspan="2">รายชื่อผู้อนุมัติ</td>
+                        <td class="label-cell text-center">Production CA</td>
+                        <td class="label-cell text-center">PE</td>
+                        <td class="label-cell text-center">QA & QC</td>
 
-                </table>
-                {{-- <p class="txt-content">สาเหตุการเกิด:&nbsp;<span>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Amet facilis reiciendis voluptatem veniam quam pariatur tempora, dolore deserunt saepe aliquid! Ipsam dolore molestias nesciunt aliquid corporis odit culpa dolorum? Sit.</span></p> --}}
-            </div>
-        </div>
-    </div>
-
-    <div class="container" style="margin-top: 100px;">
-        <div class="row">
-            <div class="col">
-                <p class="text-con">***ผู้ทำการตรวจสอบ***</p>
-                <table>
-                    <tr>
-                        <th class="label-cell" style="text-align: center; padding-top: 2px;">Production</th>
-                        <th class="label-cell" style="text-align: center; padding-top: 2px;">PE</th>
-                        <th class="label-cell" style="text-align: center; padding-top: 2px;">QC / QA</th>
                     </tr>
                     <tr>
                         @foreach ($recapp as $app)
@@ -277,13 +201,19 @@
                         @if (!$name_status)
                             <td class="value-cell" style="text-align: center; color: #347928;">ไม่มีชื่อ</td>
                         @endif
-                    @endforeach
+                        @endforeach
+
                     </tr>
+
                 </table>
             </div>
+
         </div>
         @endforeach
     </div>
+
+
+
 
     <script src="{{ asset('public/js/app.js') }}"></script>
 </body>

@@ -94,7 +94,23 @@ $mail->Host = '10.10.10.3';
 $mail->Port = '25';
 $mail->setFrom("CA_Linecall@aoth.in.th",'Line Call CA');
 $mail->addAddress('j-natdanai@alpine-asia.com');
-// $mail->addAddress('s-yongyut@alpine-asia.com');
+$mail->addAddress('p-arjari@alpine-asia.com');
+$mail->addAddress('s-mongkol@alpine-asia.com');
+$mail->addAddress('k-boonruang@alpine-asia.com');
+$mail->addAddress('s-ratchaporn@alpine-asia.com');
+$mail->addAddress('p-chaiwat@alpine-asia.com');
+$mail->addAddress('l-morrakod@alpine-asia.com');
+$mail->addCC('s-panisa@alpine-asia.com');
+$mail->addCC('k-supawadee@alpine-asia.com');
+$mail->addCC('s-suchittra@alpine-asia.com');
+$mail->addCC('n-apichat@alpine-asia.com');
+$mail->addCC('v-sutthanon@alpine-asia.com');
+$mail->addCC('p-pitchakorn@alpine-asia.com');
+$mail->addCC('h-rattapol@alpine-asia.com');
+$mail->addCC('j-chanakarn@alpine-asia.com');
+$mail->addCC('c-pornthip@alpine-asia.com');
+$mail->addCC('k-uraiwan@alpine-asia.com');
+
 // $mail->addAddress('fareeda@aoth.in.th');
 // $mail->addAddress('somjeen@aoth.in.th');
 
@@ -117,7 +133,7 @@ $data_alert = "SELECT
     INNER JOIN TWON_TBL ON TSKH_TBL.TSKH_WONO = TWON_TBL.TWON_WONO
     WHERE TLSLOG_TBL.TLSLOG_LSNO = 'NG001'
     AND TLSLOG_TBL.TLSLOG_TTLMIN > 10
-    AND TLSLOG_TBL.TLSLOG_ISSDT > '2024-11-11'
+    AND TLSLOG_TBL.TLSLOG_ISSDT > '2024-11-14'
     AND TLSLOG_TBL.TLSLOG_SNDM IS NULL";
 $mDBConn->Query($data_alert);
 $data_mail = $mDBConn->FetchData();
@@ -126,6 +142,8 @@ print('<br>');
 print($data_mail[0]['TSKH_WONO']);
 $stringDate = $data_mail[0]['TLSLOG_ISSDT']->format('d/m/Y');
 //print('<br>');
+
+
 
 if(!empty($data_mail)){
     for($i=0;$i<count($data_mail);$i++){
@@ -149,6 +167,7 @@ if(!empty($data_mail)){
         $body.= '<td style="border: 1px solid black; text-align: center; padding: 8px;">'.$data_mail[$i]['TLSLOG_TTLMIN'].'</td>';
         $body.= '</tr>';
         $body.= '</table>';
+        $body.= '<p style="margin-top: 10px: font-size: 16px; color: #003049;">Link:&nbsp;</p><a href="http://web-server/menu.php" style="margin-top: 10px: font-size: 16px;">http://web-server/menu.php</a>';
         //print($body);
         $mail->Subject = 'Alert Line Call of CA';
         $mail->Body = $body;

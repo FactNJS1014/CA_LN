@@ -79,6 +79,8 @@
                                         <th scope="col">ACC/LOT</th>
                                         <th scope="col">NG</th>
                                         <th scope="col">RATE (%)</th>
+                                        <th scope="col">ประเภทการเกิด</th>
+                                        <th scope="col">จำนวน Case</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -98,6 +100,8 @@
                                         <td>${res.CA_PROD_ACCLOT}</td>
                                         <td>${res.CA_PROD_NG}</td>
                                         <td>${res.CA_PROD_RATE}</td>
+                                        <td>${res.CA_PROD_OCCUR}</td>
+                                        <td>${res.CA_PROD_CSNUM}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -147,6 +151,12 @@
                                     <button type="button" class="btn btnrej" onclick="rejbtn('${res.CA_LNREC_ID}')">
                                         <i class="bi bi-arrow-left-circle-fill mx-2"></i>Reject
                                     </button>
+                                    ${empno == '5190002' ?  `
+                                         <button type="button" class="btn btneditofrej" onclick="editofrejbtn('${res.CA_LNREC_ID}','${res.CA_DOCS_ID}','${res.TLSLOG_TSKNO}','${res.TLSLOG_TSKLN}')">
+                                            <i class="bi bi-pencil-square mx-2"></i>แก้ไขข้อมูล from reject
+                                        </button>
+                                    `: ''}
+
                                 </div>
 
 
@@ -193,6 +203,8 @@
                                         <th scope="col">ACC/LOT</th>
                                         <th scope="col">NG</th>
                                         <th scope="col">RATE (%)</th>
+                                        <th scope="col">ประเภทการเกิด</th>
+                                        <th scope="col">จำนวน Case</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -212,6 +224,8 @@
                                         <td>${res.CA_PROD_ACCLOT}</td>
                                         <td>${res.CA_PROD_NG}</td>
                                         <td>${res.CA_PROD_RATE}</td>
+                                        <td>${res.CA_PROD_OCCUR}</td>
+                                        <td>${res.CA_PROD_CSNUM}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -307,18 +321,18 @@
                 },
                 success: function(response) {
                     console.log(response);
-                    // if (response.capr) {
-                    //     Swal.fire({
-                    //         icon: 'success',
-                    //         title: 'Send Approve Successfully',
-                    //         text: 'ส่งตรวจสอบเสร็จสิ้น',
-                    //         showConfirmButton: false,
-                    //         timer: 1500
-                    //     }).then(() => {
-                    //         location.reload();
-                    //     })
+                    if (response.capr) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Send Approve Successfully',
+                            text: 'ส่งตรวจสอบเสร็จสิ้น',
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(() => {
+                            location.reload();
+                        })
 
-                    // }
+                    }
 
                 },
             })
@@ -504,6 +518,29 @@
                         <p id="txt" class="col-sm-1 mt-1">%</p>
                     </div>
 
+                    <div class="row mt-3">
+                            <p id="txt" class="col-sm-3">ประเภทการเกิด:</p>
+                            <div class="col-sm-4 mt-1">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="occur" id="occur" value="เกิดใหม่" required>
+                                    <label class="form-check-label" for="inlineRadio1">เกิดใหม่</label>
+                                  </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="occur" id="rank_rec" value="เกิดซ้ำ" required>
+                                    <label class="form-check-label" for="inlineRadio1">เกิดซ้ำ</label>
+                                  </div>
+
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <p id="txt" class="col-sm-3">จำนวน Case ในการเกิด: </p>
+                            <div class="col-sm-2">
+                                <input type="number" name="csnum" id="rate_prod" class="form-control" required>
+                            </div>
+
+                        </div>
+
                     <div class="row">
                         <label for="cas e" class="col-sm-2" id="label-form">สาเหตุการเกิด:</label>
                         <div class="col-sm-6">
@@ -527,6 +564,7 @@
                             <textarea name="note_prod" id="note_prod" rows="4" class="form-control" required></textarea>
                         </div>
                     </div>
+
 
                     <div class="row mt-3">
                         <label for="case" class="col-sm-2" id="label-form">เปลี่ยนรูปภาพ:</label>
@@ -633,11 +671,14 @@
                         $('#case_prod').val(data.CA_PROD_CASE)
                         $('#active_prod ').val(data.CA_PROD_ACTIVE)
                         $('#note_prod ').val(data.CA_PROD_NOTE)
+                        $('#csnum ').val(data.CA_PROD_CSNUM)
 
                         // Set the radio button value for rank_rec
                         $('input[name="rank_rec"]').filter('[value="' + data.CA_PROD_RANK + '"]')
                             .prop('checked', true);
                         $('input[name="hd_prob"]').filter('[value="' + data.CA_PROD_PROBM + '"]')
+                            .prop('checked', true);
+                        $('input[name="occur"]').filter('[value="' + data.CA_PROD_OCCUR + '"]')
                             .prop('checked', true);
 
                         let imagePath = `{{ asset('public/images_ca/${data.CA_PROD_IMAGE}') }}`;
