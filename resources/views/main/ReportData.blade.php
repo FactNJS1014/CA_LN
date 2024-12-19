@@ -67,13 +67,19 @@
             <table class="table table-bordered table-striped w-100 nowrap" id="exportTable">
                 <thead class="table-su text-center">
                     <tr>
+                        <th colspan="25" style="font-size: 22pt; color: red;">Leader Call Records</th>
+                    </tr>
+                    <tr>
+
                         <th rowspan="2">วันที่เกิด</th>
                         <th rowspan="2">Line No.</th>
+                        <th rowspan="2">จุดที่ทำให้เกิดปัญหา</th>
+                        <th rowspan="2">ความจำกัดความของคำว่าผิดปกติ</th>
                         <th rowspan="2">ประเภทการเกิด</th>
                         <th rowspan="2">จำนวน Case</th>
                         <th rowspan="2">Issue No.</th>
                         <th colspan="9">สำหรับแผนกที่ออกเอกสาร</th>
-                        <th colspan="5">สำหรับแผนกที่รับผิดชอบ</th>
+                        <th colspan="6">สำหรับแผนกที่รับผิดชอบ</th>
                         <th colspan="3">ผู้อนุมัติแต่ละแผนกที่รับผิดชอบ</th>
                     </tr>
                     <tr>
@@ -90,6 +96,7 @@
                         <th>สาเหตุ</th>
                         <th>การแก้ไขเบื้องต้น</th>
                         <th>หมายเหตุ</th>
+                        <th>เหตุผลที่ไม่จำเป็นจัดการกับงานจริง</th>
                         <th>ผู้ทำการตรวจสอบ</th>
                         <th>เวลา</th>
                         <th>แผนก Production CA</th>
@@ -436,6 +443,17 @@
                         }else{
                             exp += '<td>ไม่มีข้อมูล</td>';
                         }
+                        if(ex.CA_PROD_POINTPB !== null){
+                            exp += '<td>' + ex.CA_PROD_POINTPB + '</td>';
+                        }else{
+                            exp += '<td>ไม่มีข้อมูล</td>';
+                        }
+                        if(ex.CA_PROD_VCPB !== null){
+                            exp += '<td>' + ex.CA_PROD_VCPB + '</td>';
+                        }else{
+                            exp += '<td>ไม่มีข้อมูล</td>';
+                        }
+
                         exp += '<td>' + ex.CA_DOCS_ID + '</td>';
                         exp += '<td>' + ex.CA_PROD_MDLCD + '</td>';
                         exp += '<td>' + ex.CA_PROD_WON + '</td>';
@@ -467,6 +485,11 @@
                         exp += '<td>' + ex.CA_PROD_CASE + '</td>';
                         exp += '<td>' + ex.CA_PROD_ACTIVE + '</td>';
                         exp += '<td>' + ex.CA_PROD_NOTE + '</td>';
+                        if(ex.CA_PROD_WTHRSN !== null){
+                            exp += '<td>' + ex.CA_PROD_WTHRSN + '</td>';
+                        }else{
+                            exp += '<td>ไม่มีข้อมูล</td>';
+                        }
                         exp += '<td>' + musrName2 + '</td>';
                         exp += '<td>' + moment(ex.CA_CASEREC_LSTDT).format('DD-MM-YYYY') + '</td>';
                         exp += '<td>' + musrName3 + '</td>';
@@ -501,13 +524,13 @@
                             const formattedDate = date.toISOString().slice(0,
                                 10); // Format as YYYY-MM-DD
                             const dateFormat = moment(formattedDate).format('DD-MM-YYYY');
-                            return 'รายงาน Linecall ' + dateFormat;
+                            return 'Leader Call Records';
                         },
                         filename: function() {
                             const date = new Date();
                             const formattedDate = date.toISOString().slice(0,
                                 10); // Format as YYYY-MM-DD
-                            return 'รายงาน_Linecall_' + moment(formattedDate).format(
+                            return 'Leader Call Records Date: ' + moment(formattedDate).format(
                                 'DD-MM-YYYY');
                         }
                     }]

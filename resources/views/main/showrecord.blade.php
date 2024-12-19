@@ -124,6 +124,18 @@
                                 <p class="col-md-2" id="acttext">หมายเหตุ : </p>
                                 <p class="col-md-12 details3"><i class="bi bi-pen-fill mx-2"></i>${res.CA_PROD_NOTE}</p>
                             </div>
+                            <div class="row mt-3">
+                                <p class="col-md-2" id="prbtext">จุดที่ทำให้เกิดปัญหา: </p>
+                                <p class="col-md-12 details1"><i class="bi bi-file-text-fill mx-2"></i>${res.CA_PROD_POINTPB}</p>
+                            </div>
+                            <div class="row mt-3">
+                                <p class="col-md-2" id="prbtext">ความจำกัดความของคำว่าผิดปกติ : </p>
+                                <p class="col-md-12 details1"><i class="bi bi-file-text-fill mx-2"></i>${res.CA_PROD_VCPB}</p>
+                            </div>
+                            <div class="row mt-3">
+                                <p class="col-md-2" id="prbtext">เหตุผลที่ไม่จำเป็นจัดการกับงานจริง : </p>
+                                <p class="col-md-12 details1"><i class="bi bi-file-text-fill mx-2"></i>${res.CA_PROD_WTHRSN}</p>
+                            </div>
 
                             <div class="text-center mb-3">
                                  <p class="" id="imgtext">รูปภาพ : </p>
@@ -247,6 +259,18 @@
                             <div class="row mt-3">
                                 <p class="col-md-2" id="acttext">หมายเหตุ : </p>
                                 <p class="col-md-12 details3"><i class="bi bi-pen-fill mx-2"></i>${res.CA_PROD_NOTE}</p>
+                            </div>
+                            <div class="row mt-3">
+                                <p class="col-md-2" id="prbtext">จุดที่ทำให้เกิดปัญหา: </p>
+                                <p class="col-md-12 details1"><i class="bi bi-file-text-fill mx-2"></i>${res.CA_PROD_POINTPB}</p>
+                            </div>
+                            <div class="row mt-3">
+                                <p class="col-md-2" id="prbtext">ความจำกัดความของคำว่าผิดปกติ : </p>
+                                <p class="col-md-12 details1"><i class="bi bi-file-text-fill mx-2"></i>${res.CA_PROD_VCPB}</p>
+                            </div>
+                            <div class="row mt-3">
+                                <p class="col-md-2" id="prbtext">เหตุผลที่ไม่จำเป็นจัดการกับงานจริง : </p>
+                                <p class="col-md-12 details1"><i class="bi bi-file-text-fill mx-2"></i>${res.CA_PROD_WTHRSN}</p>
                             </div>
 
                             <div class="text-center mb-3">
@@ -541,6 +565,25 @@
 
                         </div>
 
+                    <div class="row mt-3">
+                            <p id="txt" class="col-sm-3">จุดที่ทำให้เกิดปัญหา:</p>
+                            <div class="col-md-8">
+                                <input type="text" name="pntpb" id="pntpb" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <p id="txt" class="col-sm-3">ความจำกัดความของคำว่าผิดปกติ:</p>
+                            <div class="col-md-8">
+                                <input type="text" name="vcpb" id="vcpb" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <p id="txt" class="col-sm-3">เหตุผลที่ไม่จำเป็นจัดการกับงานจริง:</p>
+                            <div class="col-md-8">
+                                <input type="text" name="noreas" id="noreas" class="form-control">
+                            </div>
+                        </div>
+
                     <div class="row">
                         <label for="cas e" class="col-sm-2" id="label-form">สาเหตุการเกิด:</label>
                         <div class="col-sm-6">
@@ -672,6 +715,9 @@
                         $('#active_prod ').val(data.CA_PROD_ACTIVE)
                         $('#note_prod ').val(data.CA_PROD_NOTE)
                         $('#csnum ').val(data.CA_PROD_CSNUM)
+                        $('#pntpb ').val(data.CA_PROD_POINTPB)
+                        $('#vcpb ').val(data.CA_PROD_VCPB)
+                        $('#noreas ').val(data.CA_PROD_WTHRSN)
 
                         // Set the radio button value for rank_rec
                         $('input[name="rank_rec"]').filter('[value="' + data.CA_PROD_RANK + '"]')

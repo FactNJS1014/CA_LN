@@ -228,6 +228,25 @@
 
                         </div>
 
+                        <div class="row mt-3">
+                            <p id="txt" class="col-sm-3">จุดที่ทำให้เกิดปัญหา:</p>
+                            <div class="col-md-8">
+                                <input type="text" name="pntpb" id="pntpb" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <p id="txt" class="col-sm-3">ความจำกัดความของคำว่าผิดปกติ:</p>
+                            <div class="col-md-8">
+                                <input type="text" name="vcpb" id="vcpb" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <p id="txt" class="col-sm-3">เหตุผลที่ไม่จำเป็นจัดการกับงานจริง:</p>
+                            <div class="col-md-8">
+                                <input type="text" name="noreas" id="noreas" class="form-control">
+                            </div>
+                        </div>
+
                         <div class="d-flex justify-content-center mt-3">
                             <button type="submit" class="btn btn-success"><i class="bi bi-cloud-download-fill mx-3"></i>บันทึกข้อมูล</button>
                             {{-- <input type="submit" class="btn btn-success" value="บันทึกข้อมูล"> --}}
