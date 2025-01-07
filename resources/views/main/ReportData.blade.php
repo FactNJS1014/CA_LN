@@ -74,29 +74,33 @@
                         <th rowspan="2">วันที่เกิด</th>
                         <th rowspan="2">Line No.</th>
                         <th rowspan="2">จุดที่ทำให้เกิดปัญหา</th>
-                        <th rowspan="2">ความจำกัดความของคำว่าผิดปกติ</th>
-                        <th rowspan="2">ประเภทการเกิด</th>
+                        <th rowspan="2">รายละเอียดปัญหา</th>
+                        <th rowspan="2">NG Q'ty</th>
+                        <th rowspan="2">ประเภทการเกิดของปัญหา เกิดใหม่/เกิดซ้ำ</th>
+                        <th rowspan="2">ประเภทที่ต้องเรียก call</th>
+                        <th colspan="3">สำหรับแผนกที่รับผิดชอบ</th>
                         <th rowspan="2">จำนวน Case</th>
                         <th rowspan="2">Issue No.</th>
-                        <th colspan="9">สำหรับแผนกที่ออกเอกสาร</th>
-                        <th colspan="6">สำหรับแผนกที่รับผิดชอบ</th>
+                        <th colspan="10">สำหรับแผนกที่ออกเอกสาร</th>
                         <th colspan="3">ผู้อนุมัติแต่ละแผนกที่รับผิดชอบ</th>
                     </tr>
                     <tr>
+                        <th>สาเหตุ</th>
+                        <th>การแก้ไขเบื้องต้น</th>
+                        <th>การจัดการงานที่ผลิตก่อนหน้า/เหตุผล</th>
                         <th>Model</th>
                         <th>Work Order</th>
                         <th>เวลาที่ไลน์ stop</th>
-                        <th>NG Q'ty</th>
+
                         <th>NG Rate</th>
-                        <th>รายละเอียดปัญหา</th>
+
                         <th>ระดับความรุนแรง</th>
                         <th>หัวข้อปัญหา</th>
                         {{-- <th>รูปภาพ</th> --}}
                         <th>ผู้แจ้งปัญหา</th>
-                        <th>สาเหตุ</th>
-                        <th>การแก้ไขเบื้องต้น</th>
+
                         <th>หมายเหตุ</th>
-                        <th>เหตุผลที่ไม่จำเป็นจัดการกับงานจริง</th>
+
                         <th>ผู้ทำการตรวจสอบ</th>
                         <th>เวลา</th>
                         <th>แผนก Production CA</th>
@@ -138,10 +142,11 @@
                         '")\'><i class="bi bi-file-earmark-richtext-fill mx-2"></i>ดูเอกสาร</button></td>';
                     show += '<td><button class="btn btnExport" onclick=\'btnUpload("' + report
                         .CA_LNREC_ID +
-                        '","'+ report.CA_DOCS_ID +'")\'><i class="bi bi-cloud-arrow-up-fill mx-2"></i>Upload File</button></td>';
-                    if(report.CA_UPLOAD_FILE === '' || report.CA_UPLOAD_FILE === null){
+                        '","' + report.CA_DOCS_ID +
+                        '")\'><i class="bi bi-cloud-arrow-up-fill mx-2"></i>Upload File</button></td>';
+                    if (report.CA_UPLOAD_FILE === '' || report.CA_UPLOAD_FILE === null) {
                         show += '<td>ยังไม่ได้อัพโหลด</td>'
-                    }else{
+                    } else {
                         show += '<td><button class="btn btnViewDoc" onclick=\'btnViewDocs("' + report
                             .CA_UPLOAD_FILE + '")\'>' + report.CA_UPLOAD_FILE + '</button></td>';
                     }
@@ -433,24 +438,33 @@
                         exp += '<tr>';
                         exp += '<td>' + moment(ex.CA_ISSUE_DATE).format('DD-MM-YYYY') + '</td>';
                         exp += '<td>' + ex.CA_PROD_LINE + '</td>';
-                        if(ex.CA_PROD_OCCUR !== null){
-                            exp += '<td>' + ex.CA_PROD_OCCUR + '</td>';
-                        }else{
-                            exp += '<td>ไม่มีข้อมูล</td>';
-                        }
-                        if(ex.CA_PROD_CSNUM !== null){
-                            exp += '<td>' + ex.CA_PROD_CSNUM + '</td>';
-                        }else{
-                            exp += '<td>ไม่มีข้อมูล</td>';
-                        }
-                        if(ex.CA_PROD_POINTPB !== null){
+                        if (ex.CA_PROD_POINTPB !== null) {
                             exp += '<td>' + ex.CA_PROD_POINTPB + '</td>';
-                        }else{
+                        } else {
                             exp += '<td>ไม่มีข้อมูล</td>';
                         }
-                        if(ex.CA_PROD_VCPB !== null){
+                        exp += '<td>' + ex.CA_PROD_DTPROB + '</td>';
+                        exp += '<td>' + ex.CA_PROD_QTY + '</td>';
+                        if (ex.CA_PROD_VCPB !== null) {
                             exp += '<td>' + ex.CA_PROD_VCPB + '</td>';
-                        }else{
+                        } else {
+                            exp += '<td>ไม่มีข้อมูล</td>';
+                        }
+                        if (ex.CA_PROD_OCCUR !== null) {
+                            exp += '<td>' + ex.CA_PROD_OCCUR + '</td>';
+                        } else {
+                            exp += '<td>ไม่มีข้อมูล</td>';
+                        }
+                        exp += '<td>' + ex.CA_PROD_CASE + '</td>';
+                        exp += '<td>' + ex.CA_PROD_ACTIVE + '</td>';
+                        if (ex.CA_PROD_WTHRSN !== null) {
+                            exp += '<td>' + ex.CA_PROD_WTHRSN + '</td>';
+                        } else {
+                            exp += '<td>ไม่มีข้อมูล</td>';
+                        }
+                        if (ex.CA_PROD_CSNUM !== null) {
+                            exp += '<td>' + ex.CA_PROD_CSNUM + '</td>';
+                        } else {
                             exp += '<td>ไม่มีข้อมูล</td>';
                         }
 
@@ -458,38 +472,13 @@
                         exp += '<td>' + ex.CA_PROD_MDLCD + '</td>';
                         exp += '<td>' + ex.CA_PROD_WON + '</td>';
                         exp += '<td>' + ex.CA_PROD_TMPBF + ' - ' + ex.CA_PROD_TMPBL + '</td>';
-                        exp += '<td>' + ex.CA_PROD_QTY + '</td>';
+
                         exp += '<td>' + ex.CA_PROD_RATE + '</td>';
-                        exp += '<td>' + ex.CA_PROD_DTPROB + '</td>';
+
                         exp += '<td>' + ex.CA_PROD_RANK + '</td>';
                         exp += '<td>' + ex.CA_PROD_PROBM + '</td>';
-                        // if (ex.CA_PROD_IMAGE !== null) {
-                        //     exp += '<td><img src="' + imagePath +
-                        //         '" alt="Document Image" class="img-fluid" style="max-height: 100%; max-width: 100%;" /></td>';
-                        //     dataForExport.push([moment(ex.CA_ISSUE_DATE).format('DD-MM-YYYY'), ex
-                        //         .CA_PROD_LINE, ex.CA_DOCS_ID, ex.CA_PROD_MDLCD, ex.CA_PROD_WON,
-                        //         ex.CA_PROD_TMPBF + ' - ' + ex.CA_PROD_TMPBL, ex.CA_PROD_QTY, ex
-                        //         .CA_PROD_RATE, ex.CA_PROD_DTPROB, ex.CA_PROD_RANK, ex
-                        //         .CA_PROD_PROBM, imagePath
-                        //     ]);
-                        // } else {
-                        //     exp += '<td>ไม่มีรูป</td>';
-                        //     dataForExport.push([moment(ex.CA_ISSUE_DATE).format('DD-MM-YYYY'), ex
-                        //         .CA_PROD_LINE, ex.CA_DOCS_ID, ex.CA_PROD_MDLCD, ex.CA_PROD_WON,
-                        //         ex.CA_PROD_TMPBF + ' - ' + ex.CA_PROD_TMPBL, ex.CA_PROD_QTY, ex
-                        //         .CA_PROD_RATE, ex.CA_PROD_DTPROB, ex.CA_PROD_RANK, ex
-                        //         .CA_PROD_PROBM, 'ไม่มีรูป'
-                        //     ]);
-                        // }
                         exp += '<td>' + ex.CA_PROD_INFMR + '</td>';
-                        exp += '<td>' + ex.CA_PROD_CASE + '</td>';
-                        exp += '<td>' + ex.CA_PROD_ACTIVE + '</td>';
                         exp += '<td>' + ex.CA_PROD_NOTE + '</td>';
-                        if(ex.CA_PROD_WTHRSN !== null){
-                            exp += '<td>' + ex.CA_PROD_WTHRSN + '</td>';
-                        }else{
-                            exp += '<td>ไม่มีข้อมูล</td>';
-                        }
                         exp += '<td>' + musrName2 + '</td>';
                         exp += '<td>' + moment(ex.CA_CASEREC_LSTDT).format('DD-MM-YYYY') + '</td>';
                         exp += '<td>' + musrName3 + '</td>';
@@ -530,8 +519,9 @@
                             const date = new Date();
                             const formattedDate = date.toISOString().slice(0,
                                 10); // Format as YYYY-MM-DD
-                            return 'Leader Call Records Date: ' + moment(formattedDate).format(
-                                'DD-MM-YYYY');
+                            return 'Leader Call Records Date: ' + moment(formattedDate)
+                                .format(
+                                    'DD-MM-YYYY');
                         }
                     }]
                 });
@@ -539,7 +529,7 @@
             }
         });
 
-        btnUpload = (id,docid) => {
+        btnUpload = (id, docid) => {
             console.log(id)
             console.log(docid)
 
