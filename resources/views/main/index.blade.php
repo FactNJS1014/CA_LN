@@ -228,7 +228,7 @@
                         </div>
 
                         <div class="row mt-3">
-                            <p id="txt" class="col-sm-3">ประเภทการเกิด:</p>
+                            <p id="txt" class="col-sm-3">ประเภทการเกิดของปัญหา:</p>
                             <div class="col-sm-4 mt-1">
                                 <div class="form-check form-check-inline">
                                     <input class="form-check-input" type="radio" name="occur" id="occur"
@@ -259,13 +259,13 @@
                             </div>
                         </div>
                         <div class="row mt-3">
-                            <p id="txt" class="col-sm-3">ความจำกัดความของคำว่าผิดปกติ:</p>
+                            <p id="txt" class="col-sm-3">ประเภทที่ต้องเรียก Line Call:</p>
                             <div class="col-md-8">
                                 <input type="text" name="vcpb" id="vcpb" class="form-control">
                             </div>
                         </div>
                         <div class="row mt-3">
-                            <p id="txt" class="col-sm-3">เหตุผลที่ไม่จำเป็นจัดการกับงานจริง:</p>
+                            <p id="txt" class="col-sm-3">การจัดการงานที่ผลิตก่อนหน้า/เหตุผล:</p>
                             <div class="col-md-8">
                                 <input type="text" name="noreas" id="noreas" class="form-control">
                             </div>

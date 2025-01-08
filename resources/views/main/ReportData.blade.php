@@ -77,7 +77,7 @@
                         <th rowspan="2">รายละเอียดปัญหา</th>
                         <th rowspan="2">NG Q'ty</th>
                         <th rowspan="2">ประเภทการเกิดของปัญหา เกิดใหม่/เกิดซ้ำ</th>
-                        <th rowspan="2">ประเภทที่ต้องเรียก call</th>
+                        <th rowspan="2">ประเภทที่ต้องเรียก Line Call</th>
                         <th colspan="3">สำหรับแผนกที่รับผิดชอบ</th>
                         <th rowspan="2">จำนวน Case</th>
                         <th rowspan="2">Issue No.</th>
