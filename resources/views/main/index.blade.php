@@ -23,7 +23,7 @@
                 </table>
             </div>
             <div class="card-title">
-                <p class="text-header-1">CA- Line Call Sheet</p>
+                <p class="text-header-1">CA-Leader Call</p>
             </div>
             <div class="card-body border border-warning">
                 <div class="sidebar" id="slidebar">
@@ -238,9 +238,24 @@
                                 <div class="form-check form-check-inline">
                                     <input class="form-check-input" type="radio" name="occur" id="rank_rec"
                                         value="เกิดซ้ำ" required>
-                                    <label class="form-check-label" for="inlineRadio1">เกิดซ้ำ</label>
+                                    <label class="form-check-label" for="inlineRadio1">เกิดซ้ำ (Line Call)</label>
                                 </div>
 
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <p id="txt" class="col-sm-3">การจัดการปัญหาของ Production:</p>
+                            <div class="col-sm-4 mt-1">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="manage" id="manage"
+                                        value="สามารถจัดการได้เอง" required>
+                                    <label class="form-check-label" for="inlineRadio1">สามารถจัดการได้เอง</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="manage" id="manage"
+                                        value="ไม่สามารถจัดการได้เอง" required>
+                                    <label class="form-check-label" for="inlineRadio1">ไม่สามารถจัดการได้เอง</label>
+                                </div>
                             </div>
                         </div>
 

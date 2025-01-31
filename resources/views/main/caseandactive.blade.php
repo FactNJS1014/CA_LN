@@ -18,6 +18,7 @@
                             <th scope="col">ผู้แจ้ง Linecall</th>
                             <th scope="col">Action</th>
                             <th scope="col">การเกิด</th>
+                            <th scope="col">Action Bypass</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -58,9 +59,11 @@
                         </div>
                     </div>
                     <div class="row mt-3">
-                        <label for="case" class="col-sm-2" id="label-form">เพิ่มรูปภาพ (ต้องเป็นไฟล์ .jpg เท่านั้น):</label>
+                        <label for="case" class="col-sm-2" id="label-form">เพิ่มรูปภาพ (ต้องเป็นไฟล์ .jpg
+                            เท่านั้น):</label>
                         <div class="col-sm-6">
-                            <input type="file" id="image_prod" name="image_prod" accept="image/jpg,image/png" onchange="previewImages(event)">
+                            <input type="file" id="image_prod" name="image_prod" accept="image/jpg,image/png"
+                                onchange="previewImages(event)">
                             <div class="d-flex justify-content-start mt-2">
                                 <div id="imageContainer" class="image-container"></div>
 
@@ -91,22 +94,34 @@
                 let data = response.data_form
                 let html = '';
                 data.map((item) => {
-                    if(item.CA_PROD_FAXCOMPLETE == 0){
+                    if (item.CA_PROD_FAXCOMPLETE == 0) {
 
-                    html += '<tr>'
-                    html += '<td>' + moment(item.CA_ISSUE_DATE).format('DD-MM-YYYY') + '</td>'
-                    html += '<td>' + item.CA_PROD_LINE + '</td>'
-                    html += '<td>' + item.CA_PROD_PROBM + '</td>'
-                    html += '<td>' + item.CA_PROD_WON + '</td>'
-                    html += '<td>' + item.CA_PROD_DTPROB + '</td>'
-                    html += '<td>' + item.CA_PROD_INFMR + '</td>'
-                    html += '<td><button type="button" class="btn btn-primary" onclick=\'ViewForm("' + item.CA_LNREC_ID + '","' + item.CA_DOCS_ID +'")\'><i class="bi bi-file-earmark-medical-fill mx-2"></i>เรียกฟอร์ม</button></td>'
-                    if(item.CA_PROD_OCCUR === "เกิดซ้ำ"){
-                        html += '<td><span class="badge bg-danger text-white" style="font-size: 14pt;">Old Line Call</span></td>'
-                    }else{
-                        html += '<td><span class="badge bg-success text-white" style="font-size: 14pt;">New Line Call</span></td>'
-                    }
-                    html += '</tr>'
+                        html += '<tr>'
+                        html += '<td>' + moment(item.CA_ISSUE_DATE).format('DD-MM-YYYY') + '</td>'
+                        html += '<td>' + item.CA_PROD_LINE + '</td>'
+                        html += '<td>' + item.CA_PROD_PROBM + '</td>'
+                        html += '<td>' + item.CA_PROD_WON + '</td>'
+                        html += '<td>' + item.CA_PROD_DTPROB + '</td>'
+                        html += '<td>' + item.CA_PROD_INFMR + '</td>'
+                        html +=
+                            '<td><button type="button" class="btn btn-primary" onclick=\'ViewForm("' +
+                            item.CA_LNREC_ID + '","' + item.CA_DOCS_ID +
+                            '")\'><i class="bi bi-file-earmark-medical-fill mx-2"></i>เรียกฟอร์ม</button></td>'
+                        if (item.CA_PROD_OCCUR === "เกิดซ้ำ") {
+                            html +=
+                                '<td><span class="badge bg-danger text-white" style="font-size: 14pt;">เกิดซ้ำ (Line Call)</span></td>'
+                        } else {
+                            html +=
+                                '<td><span class="badge bg-success text-white" style="font-size: 14pt;">เกิดใหม่</span></td>'
+                        }
+
+                        if (empno == '5190002') {
+                            html += '<td><button class="btn btnbypass" onclick=\'btnByPassData("' + item
+                                .CA_LNREC_ID + '")\'>By Pass</button></td>'
+                        } else {
+                            html += '<td>ไม่มีสิทธิใช้งาน</td>'
+                        }
+                        html += '</tr>'
 
                     }
                 })
@@ -166,8 +181,8 @@
                             //console.log(imageFile)
                             formCase.append('image', imageFile);
                             formCase.append('_token', _token);
-                            formCase.append('rec_id' , id)
-                            formCase.append('empno',empno);
+                            formCase.append('rec_id', id)
+                            formCase.append('empno', empno);
 
                             $.ajax({
                                 url: '{{ route('post.addcase') }}',
@@ -185,7 +200,8 @@
                                         allowOutsideClick: false, // Prevent closing on outside click
                                         showConfirmButton: false, // Hide the confirmation button
                                         didOpen: () => {
-                                            Swal.showLoading(); // Show the loading spinner
+                                            Swal
+                                                .showLoading(); // Show the loading spinner
                                         }
                                     });
                                 },
@@ -199,7 +215,7 @@
                                             showConfirmButton: false,
                                             timer: 1000
                                         }).then(function() {
-                                            var url = "{{route('third')}}"
+                                            var url = "{{ route('third') }}"
                                             window.location = url
                                         })
                                     }
@@ -276,6 +292,28 @@
                 };
                 reader.readAsDataURL(file);
             });
+        }
+
+        btnByPassData = (id) => {
+            //alert(id)
+            $.ajax({
+                url: '{{ route('post.byPassData') }}',
+                type: 'GET',
+                data: {
+                    id: id
+                },
+                success: function(response) {
+                    //console.log(response)
+                    Swal.fire({
+                        title: 'ByPass Data Success',
+                        icon: 'success',
+                        showConfirmButton: false,
+                        timer: 1000
+                    }).then(() => {
+                        location.reload();
+                    })
+                }
+            })
         }
     </script>
 @endpush

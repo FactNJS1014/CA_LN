@@ -142,15 +142,15 @@
                                 <img src="${imagePath}" alt="Document Image" class="img-fluid" style="max-height: 200px; max-width: 100%;" />
                             </div>
                             ${res.CA_LNRJ_STD == 1 ?  `
-                                        <div class="row mt-3">
-                                            <p class="col-md-3" id="acttext"> Comment จากการถูกส่งกลับ : </p>
-                                            <p class="col-md-12 details3"><i class="bi bi-chat-left-text-fill mx-2"></i>${res.CA_LNRJ_REMARK}</p>
-                                        </div>
-                                        ` : res.CA_PROD_TRACKING === 2 ? `
-                                        <div class="row mt-3">
-                                            <p class="col-md-12 details3"><i class="bi bi-chat-left-text-fill mx-2"></i>มีการแก้ไขแล้ว</p>
-                                        </div>
-                                        `: ''}
+                                                        <div class="row mt-3">
+                                                            <p class="col-md-3" id="acttext"> Comment จากการถูกส่งกลับ : </p>
+                                                            <p class="col-md-12 details3"><i class="bi bi-chat-left-text-fill mx-2"></i>${res.CA_LNRJ_REMARK}</p>
+                                                        </div>
+                                                        ` : res.CA_PROD_TRACKING === 2 ? `
+                                                        <div class="row mt-3">
+                                                            <p class="col-md-12 details3"><i class="bi bi-chat-left-text-fill mx-2"></i>มีการแก้ไขแล้ว</p>
+                                                        </div>
+                                                        `: ''}
                         </div>
                         <div class="card-footer p-2">
                             <div class="d-flex justify-content-between">
@@ -164,10 +164,10 @@
                                         <i class="bi bi-arrow-left-circle-fill mx-2"></i>Reject
                                     </button>
                                     ${empno == '5190002' ?  `
-                                         <button type="button" class="btn btneditofrej" onclick="editofrejbtn('${res.CA_LNREC_ID}','${res.CA_DOCS_ID}','${res.TLSLOG_TSKNO}','${res.TLSLOG_TSKLN}')">
-                                            <i class="bi bi-pencil-square mx-2"></i>แก้ไขข้อมูล from reject
+                                                       <button type="button" class="btn btnedit" onclick="editbtn('${res.CA_LNREC_ID}','${res.CA_DOCS_ID}','${res.TLSLOG_TSKNO}','${res.TLSLOG_TSKLN}')">
+                                            <i class="bi bi-pencil-square mx-2"></i>แก้ไขข้อมูล
                                         </button>
-                                    `: ''}
+                                                    `: ''}
 
                                 </div>
 
@@ -294,10 +294,10 @@
                                 <!-- Button on the right -->
                                 <div>
                                       ${res.CA_LNRJ_STD == 1 ?  `
-                                                 <button type="button" class="btn btneditofrej" onclick="editofrejbtn('${res.CA_LNREC_ID}','${res.CA_DOCS_ID}','${res.TLSLOG_TSKNO}','${res.TLSLOG_TSKLN}')">
-                                                    <i class="bi bi-pencil-square mx-2"></i>แก้ไขข้อมูล from reject
-                                                </button>
-                                                  `: ''}
+                                                                 <button type="button" class="btn btneditofrej" onclick="editofrejbtn('${res.CA_LNREC_ID}','${res.CA_DOCS_ID}','${res.TLSLOG_TSKNO}','${res.TLSLOG_TSKLN}')">
+                                                                    <i class="bi bi-pencil-square mx-2"></i>แก้ไขข้อมูล from reject
+                                                                </button>
+                                                                  `: ''}
                                     <button type="button" class="btn btndel" onclick="delbtn('${res.CA_LNREC_ID}')">
                                         <i class="bi bi-trash3-fill mx-2"></i>Delete
                                     </button>
@@ -542,17 +542,21 @@
                         <p id="txt" class="col-sm-1 mt-1">%</p>
                     </div>
 
-                    <div class="row mt-3">
-                            <p id="txt" class="col-sm-3">ประเภทการเกิด:</p>
+
+
+                        <div class="row mt-3">
+                            <p id="txt" class="col-sm-3">ประเภทการเกิดของปัญหา:</p>
                             <div class="col-sm-4 mt-1">
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="occur" id="occur" value="เกิดใหม่" required>
+                                    <input class="form-check-input" type="radio" name="occur" id="occur"
+                                        value="เกิดใหม่" required>
                                     <label class="form-check-label" for="inlineRadio1">เกิดใหม่</label>
-                                  </div>
+                                </div>
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="occur" id="rank_rec" value="เกิดซ้ำ" required>
+                                    <input class="form-check-input" type="radio" name="occur" id="occur"
+                                        value="เกิดซ้ำ" required>
                                     <label class="form-check-label" for="inlineRadio1">เกิดซ้ำ</label>
-                                  </div>
+                                </div>
 
                             </div>
                         </div>
@@ -565,20 +569,20 @@
 
                         </div>
 
-                    <div class="row mt-3">
+                        <div class="row mt-3">
                             <p id="txt" class="col-sm-3">จุดที่ทำให้เกิดปัญหา:</p>
                             <div class="col-md-8">
                                 <input type="text" name="pntpb" id="pntpb" class="form-control">
                             </div>
                         </div>
                         <div class="row mt-3">
-                            <p id="txt" class="col-sm-3">ความจำกัดความของคำว่าผิดปกติ:</p>
+                            <p id="txt" class="col-sm-3">ประเภทที่ต้องเรียก Line Call:</p>
                             <div class="col-md-8">
                                 <input type="text" name="vcpb" id="vcpb" class="form-control">
                             </div>
                         </div>
                         <div class="row mt-3">
-                            <p id="txt" class="col-sm-3">เหตุผลที่ไม่จำเป็นจัดการกับงานจริง:</p>
+                            <p id="txt" class="col-sm-3">การจัดการงานที่ผลิตก่อนหน้า/เหตุผล:</p>
                             <div class="col-md-8">
                                 <input type="text" name="noreas" id="noreas" class="form-control">
                             </div>
@@ -765,7 +769,7 @@
         }
 
         //click approve to next level
-        aprlvbtn = (id,tkno,tkln) => {
+        aprlvbtn = (id, tkno, tkln) => {
             console.log(id)
             console.log(empno)
             $.ajax({

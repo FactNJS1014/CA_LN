@@ -76,17 +76,19 @@
                         <th rowspan="2">จุดที่ทำให้เกิดปัญหา</th>
                         <th rowspan="2">รายละเอียดปัญหา</th>
                         <th rowspan="2">NG Q'ty</th>
-                        <th rowspan="2">ประเภทการเกิดของปัญหา เกิดใหม่/เกิดซ้ำ</th>
                         <th rowspan="2">ประเภทที่ต้องเรียก Line Call</th>
-                        <th colspan="3">สำหรับแผนกที่รับผิดชอบ</th>
+                        <th rowspan="2">ประเภทการเกิดของปัญหา เกิดใหม่/เกิดซ้ำ (Line Call)</th>
                         <th rowspan="2">จำนวน Case</th>
-                        <th rowspan="2">Issue No.</th>
+                        <th colspan="4">สำหรับแผนกที่รับผิดชอบ</th>
+                        <th rowspan="2">Issue Leader Call No.</th>
+                        <th rowspan="2">Issue Line Call No.</th>
                         <th colspan="10">สำหรับแผนกที่ออกเอกสาร</th>
-                        <th colspan="3">ผู้อนุมัติแต่ละแผนกที่รับผิดชอบ</th>
+                        <th colspan="1">ผู้อนุมัติแต่ละแผนกที่รับผิดชอบ</th>
                     </tr>
                     <tr>
                         <th>สาเหตุ</th>
                         <th>การแก้ไขเบื้องต้น</th>
+                        <th>การจัดการปัญหาของ Production</th>
                         <th>การจัดการงานที่ผลิตก่อนหน้า/เหตุผล</th>
                         <th>Model</th>
                         <th>Work Order</th>
@@ -104,8 +106,8 @@
                         <th>ผู้ทำการตรวจสอบ</th>
                         <th>เวลา</th>
                         <th>แผนก Production CA</th>
-                        <th>แผนก PE</th>
-                        <th>แผนก QA / QC</th>
+                        {{-- <th>แผนก PE</th>
+                        <th>แผนก QA / QC</th> --}}
                     </tr>
                 </thead>
                 <tbody>
@@ -444,22 +446,18 @@
                             exp += '<td>ไม่มีข้อมูล</td>';
                         }
                         exp += '<td>' + ex.CA_PROD_DTPROB + '</td>';
-                        exp += '<td>' + ex.CA_PROD_QTY + '</td>';
+                        exp += '<td>' + ex.CA_PROD_NG + '</td>';
+
                         if (ex.CA_PROD_VCPB !== null) {
                             exp += '<td>' + ex.CA_PROD_VCPB + '</td>';
                         } else {
                             exp += '<td>ไม่มีข้อมูล</td>';
                         }
-                        if (ex.CA_PROD_OCCUR !== null) {
-                            exp += '<td>' + ex.CA_PROD_OCCUR + '</td>';
-                        } else {
-                            exp += '<td>ไม่มีข้อมูล</td>';
-                        }
-                        exp += '<td>' + ex.CA_PROD_CASE + '</td>';
-                        exp += '<td>' + ex.CA_PROD_ACTIVE + '</td>';
-                        if (ex.CA_PROD_WTHRSN !== null) {
-                            exp += '<td>' + ex.CA_PROD_WTHRSN + '</td>';
-                        } else {
+                        if (ex.CA_PROD_OCCUR === 'เกิดซ้ำ') {
+                            exp += '<td>เกิดซ้ำ (Line Call)</td>';
+                        } else if (ex.CA_PROD_OCCUR === 'เกิดใหม่') {
+                            exp += '<td>เกิดใหม่</td>';
+                        } else if (ex.CA_PROD_OCCUR == null) {
                             exp += '<td>ไม่มีข้อมูล</td>';
                         }
                         if (ex.CA_PROD_CSNUM !== null) {
@@ -467,8 +465,22 @@
                         } else {
                             exp += '<td>ไม่มีข้อมูล</td>';
                         }
+                        exp += '<td>' + ex.CA_PROD_CASE + '</td>';
+                        exp += '<td>' + ex.CA_PROD_ACTIVE + '</td>';
+                        if (ex.CA_PROD_MANAGE != null) {
+                            exp += '<td>' + ex.CA_PROD_MANAGE + '</td>';
+                        } else {
+                            exp += '<td>ไม่มีข้อมูล</td>';
+                        }
+                        if (ex.CA_PROD_WTHRSN !== null) {
+                            exp += '<td>' + ex.CA_PROD_WTHRSN + '</td>';
+                        } else {
+                            exp += '<td>ไม่มีข้อมูล</td>';
+                        }
+
 
                         exp += '<td>' + ex.CA_DOCS_ID + '</td>';
+                        exp += '<td></td>';
                         exp += '<td>' + ex.CA_PROD_MDLCD + '</td>';
                         exp += '<td>' + ex.CA_PROD_WON + '</td>';
                         exp += '<td>' + ex.CA_PROD_TMPBF + ' - ' + ex.CA_PROD_TMPBL + '</td>';
@@ -482,8 +494,8 @@
                         exp += '<td>' + musrName2 + '</td>';
                         exp += '<td>' + moment(ex.CA_CASEREC_LSTDT).format('DD-MM-YYYY') + '</td>';
                         exp += '<td>' + musrName3 + '</td>';
-                        exp += '<td>' + musrName4 + '</td>';
-                        exp += '<td>' + musrName5 + '</td>';
+                        // exp += '<td>' + musrName4 + '</td>';
+                        // exp += '<td>' + musrName5 + '</td>';
                         exp += '</tr>';
                     }
                 });
@@ -512,7 +524,8 @@
                             const date = new Date();
                             const formattedDate = date.toISOString().slice(0,
                                 10); // Format as YYYY-MM-DD
-                            const dateFormat = moment(formattedDate).format('DD-MM-YYYY');
+                            const dateFormat = moment(formattedDate).format(
+                                'DD-MM-YYYY');
                             return 'Leader Call Records';
                         },
                         filename: function() {

@@ -9,9 +9,10 @@ use App\Models\DataTLSLOG;
 
 class InsertController extends Controller
 {
-    public function AddTLSLOG(Request $request){
+    public function AddTLSLOG(Request $request)
+    {
         $form_ins = $request->input('ca_linecall');
-        parse_str($form_ins,$rec);
+        parse_str($form_ins, $rec);
 
         //return response()->json($rec);
         $empno = $request->empno;
@@ -22,13 +23,13 @@ class InsertController extends Controller
         $currentDate = date('Y-m-d H:i:s');
 
         $findPrevious = DB::table('CA_RECLN_TBL')
-        ->select('CA_LNREC_ID')
-        ->orderBy('CA_LNREC_ID', 'DESC')
-        ->get();
+            ->select('CA_LNREC_ID')
+            ->orderBy('CA_LNREC_ID', 'DESC')
+            ->get();
 
-        if(empty($findPrevious[0])){
+        if (empty($findPrevious[0])) {
             $CA_ID = 'LCA-' . $YM . '-000001';
-        }else{
+        } else {
             $CA_ID = AutogenerateKey('LCA', $findPrevious[0]->CA_LNREC_ID);
         }
 
@@ -54,7 +55,7 @@ class InsertController extends Controller
             'CA_PROD_LSTDT' => $currentDate,
             'CA_PROD_FAXCOMPLETE' => 0,
             'CA_LNREC_ID' => $CA_ID,
-            'CA_CASEREC_STD'=> 0,
+            'CA_CASEREC_STD' => 0,
             'CA_PROD_TRACKING' => 0,
             'TLSLOG_TSKNO' => $rec['tskno'],
             'TLSLOG_TSKLN' => $rec['tskln'],
@@ -63,9 +64,8 @@ class InsertController extends Controller
             'CA_PROD_CSNUM' => $rec['csnum'],
             'CA_PROD_POINTPB' => $rec['pntpb'],
             'CA_PROD_VCPB' => $rec['vcpb'],
-            'CA_PROD_WTHRSN' => $rec['noreas']
-
-
+            'CA_PROD_WTHRSN' => $rec['noreas'],
+            'CA_PROD_MANAGE' => $rec['manage']
         ];
 
         DB::table('CA_RECLN_TBL')->insert($ins_ln);
@@ -73,12 +73,13 @@ class InsertController extends Controller
         return response()->json(['insdb' =>  $ins_ln]);
     }
 
-    public function AddCaseandActive(Request $request){
+    public function AddCaseandActive(Request $request)
+    {
         $rec_id = $request->rec_id;
         $empno = $request->empno;
 
         $ins_case = $request->input('caseactive');
-        parse_str($ins_case,$caac);
+        parse_str($ins_case, $caac);
 
 
         $YM = date('Ym');
@@ -88,13 +89,13 @@ class InsertController extends Controller
         $CASE = '';
 
         $findPrevious = DB::table('CA_CASEACTIVE_TBL')
-        ->select('CA_CASE_ID')
-        ->orderBy('CA_CASE_ID', 'DESC')
-        ->get();
+            ->select('CA_CASE_ID')
+            ->orderBy('CA_CASE_ID', 'DESC')
+            ->get();
 
-        if(empty($findPrevious[0])){
+        if (empty($findPrevious[0])) {
             $CASE = 'CAAC-' . $YM . '-000001';
-        }else{
+        } else {
             $CASE = AutogenerateKey('CAAC', $findPrevious[0]->CA_CASE_ID);
         }
 
@@ -113,7 +114,7 @@ class InsertController extends Controller
         DB::table('CA_CASEACTIVE_TBL')->insert($case_ins);
 
         $image_ins = $request->file('image');
-        if($request->hasFile('image')){
+        if ($request->hasFile('image')) {
             $extension = $image_ins->getClientOriginalExtension();
             $filename = 'CAPIC-' . $YM . '-' . rand(00000, 99999) . '.' . $extension;
             $location = 'public/images_ca/';
@@ -123,9 +124,8 @@ class InsertController extends Controller
                 'CA_PROD_IMAGE' => $filename
             ];
             DB::table('CA_CASEACTIVE_TBL')
-            ->where('CA_LNREC_ID', $rec_id)
-            ->update($ins_img);
-
+                ->where('CA_LNREC_ID', $rec_id)
+                ->update($ins_img);
         }
 
         $case_std = [
@@ -133,16 +133,17 @@ class InsertController extends Controller
         ];
 
         DB::table('CA_RECLN_TBL')
-        ->where('CA_LNREC_ID', $rec_id)
-        ->update($case_std);
+            ->where('CA_LNREC_ID', $rec_id)
+            ->update($case_std);
 
         return response()->json(['case_ins' => $case_ins]);
     }
 
-    public function UpdateForm(Request $request){
+    public function UpdateForm(Request $request)
+    {
         $update_id = $request->input('id');
         $form_update = $request->input('update_form');
-        parse_str($form_update,$update);
+        parse_str($form_update, $update);
 
         //return response()->json($update);
 
@@ -173,8 +174,8 @@ class InsertController extends Controller
         ];
 
         DB::table('CA_RECLN_TBL')
-        ->where('CA_LNREC_ID',$update_id)
-        ->update($update1);
+            ->where('CA_LNREC_ID', $update_id)
+            ->update($update1);
 
         $update2 = [
             'CA_PROD_CASE' => $update['case_prod'],
@@ -186,8 +187,8 @@ class InsertController extends Controller
 
 
         DB::table('CA_CASEACTIVE_TBL')
-        ->where('CA_LNREC_ID', $update_id)
-        ->update($update2);
+            ->where('CA_LNREC_ID', $update_id)
+            ->update($update2);
 
         $update3 = [
             'TLSLOG_DETAIL' => $update['desc_prob']
@@ -198,7 +199,7 @@ class InsertController extends Controller
             $extension = $image->getClientOriginalExtension();
             $location = 'public/images_ca/';
             $filename = 'CAPIC-' . $YM . '-' . rand(00000, 99999) . '.' . $extension;
-            $image->move($location,$filename);
+            $image->move($location, $filename);
 
 
 
@@ -211,35 +212,37 @@ class InsertController extends Controller
 
 
         DB::connection('second_sqlsrv')->table('TLSLOG_TBL')
-        ->where('TLSLOG_TSKNO', $update['tskno'])
-        ->where('TLSLOG_TSKLN', $update['tskln'])
-        ->where('TLSLOG_TTLMIN', '>' , 10)
-        ->update($update3) ;
+            ->where('TLSLOG_TSKNO', $update['tskno'])
+            ->where('TLSLOG_TSKLN', $update['tskln'])
+            ->where('TLSLOG_TTLMIN', '>', 10)
+            ->update($update3);
 
 
         return response()->json(['updateform' => $update1]);
     }
 
-    public function DeleteRecord(Request $request){
+    public function DeleteRecord(Request $request)
+    {
         $del_id = $request->id;
 
         DB::table('CA_HRECAPP_TBL')
-        ->where('CA_LNREC_ID', $del_id)
-        ->delete();
+            ->where('CA_LNREC_ID', $del_id)
+            ->delete();
 
         DB::table('CA_CASEACTIVE_TBL')
-        ->where('CA_LNREC_ID', $del_id)
-        ->delete();
+            ->where('CA_LNREC_ID', $del_id)
+            ->delete();
 
         DB::table('CA_RECLN_TBL')
-        ->where('CA_LNREC_ID', $del_id)
-        ->delete();
+            ->where('CA_LNREC_ID', $del_id)
+            ->delete();
     }
 
-    public function UpdateforReject(Request $request){
+    public function UpdateforReject(Request $request)
+    {
         $update_id = $request->input('id');
         $form_update = $request->input('update_form');
-        parse_str($form_update,$update);
+        parse_str($form_update, $update);
 
         //return response()->json($update);
 
@@ -266,8 +269,8 @@ class InsertController extends Controller
         ];
 
         DB::table('CA_RECLN_TBL')
-        ->where('CA_LNREC_ID',$update_id)
-        ->update($update2);
+            ->where('CA_LNREC_ID', $update_id)
+            ->update($update2);
 
         $update_rj = [
             'CA_PROD_CASE' => $update['case_prod'],
@@ -279,8 +282,8 @@ class InsertController extends Controller
 
 
         DB::table('CA_CASEACTIVE_TBL')
-        ->where('CA_LNREC_ID', $update_id)
-        ->update($update_rj);
+            ->where('CA_LNREC_ID', $update_id)
+            ->update($update_rj);
 
         $update3 = [
             'TLSLOG_DETAIL' => $update['desc_prob']
@@ -291,7 +294,7 @@ class InsertController extends Controller
             $extension = $image->getClientOriginalExtension();
             $location = 'public/images_ca/';
             $filename = 'CAPIC-' . $YM . '-' . rand(00000, 99999) . '.' . $extension;
-            $image->move($location,$filename);
+            $image->move($location, $filename);
 
 
 
@@ -304,14 +307,26 @@ class InsertController extends Controller
 
 
         DB::connection('second_sqlsrv')->table('TLSLOG_TBL')
-        ->where('TLSLOG_TSKNO', $update['tskno'])
-        ->where('TLSLOG_TSKLN', $update['tskln'])
-        ->where('TLSLOG_TTLMIN', '>' , 10)
-        ->update($update3) ;
+            ->where('TLSLOG_TSKNO', $update['tskno'])
+            ->where('TLSLOG_TSKLN', $update['tskln'])
+            ->where('TLSLOG_TTLMIN', '>', 10)
+            ->update($update3);
 
 
         return response()->json(['updateform' => $update2]);
     }
 
+    public function ByPassData(Request $request)
+    {
+        $id = $request->id;
+        //alert($id)
 
+        DB::table('CA_CASEACTIVE_TBL')
+            ->where('CA_LNREC_ID', $id)
+            ->delete();
+
+        DB::table('CA_RECLN_TBL')
+            ->where('CA_LNREC_ID', $id)
+            ->delete();
+    }
 }

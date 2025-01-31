@@ -10,13 +10,13 @@ use Carbon\Carbon;
  * TODO: Include Models
  */
 
- use App\Models\DataTLSLOG;
- use App\Models\DataWON;
+use App\Models\DataTLSLOG;
+use App\Models\DataWON;
 
- use Illuminate\Support\Facades\DB;
- use Illuminate\Support\Facades\Mail;
- use App\Mail\TLSLOGAlert;
- use App\Mail\LinkToInput;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\TLSLOGAlert;
+use App\Mail\LinkToInput;
 
 
 
@@ -46,22 +46,22 @@ class DataController extends Controller
             ->whereDate('TLSLOG_TBL.TLSLOG_ISSDT', '>', '2024-11-14')
             ->where('TLSLOG_TBL.TLSLOG_LSNO', '=', 'NG001')
             ->where('TLSLOG_TBL.TLSLOG_TTLMIN', '>', 10)
-            ->where('TLSLOG_TBL.TLSLOG_COMPLETE' , null)
+            ->where('TLSLOG_TBL.TLSLOG_COMPLETE', null)
             ->get();
 
 
 
         return response()->json(['data' => $posts]);
-
-
     }
 
-    public function FetchshowTLSLOG(Request $request){
+    public function FetchshowTLSLOG(Request $request)
+    {
 
         $getid = $request->id;
-        $showinput = DataWON::join('TLSLOG_TBL', 'TSKH_TBL.TSKH_TSKNO' , '=' , 'TLSLOG_TBL.TLSLOG_TSKNO')
-            ->join('TWON_TBL' , 'TSKH_TBL.TSKH_WONO','=','TWON_TBL.TWON_WONO')
-            ->select('TSKH_TBL.TSKH_MCLN',
+        $showinput = DataWON::join('TLSLOG_TBL', 'TSKH_TBL.TSKH_TSKNO', '=', 'TLSLOG_TBL.TLSLOG_TSKNO')
+            ->join('TWON_TBL', 'TSKH_TBL.TSKH_WONO', '=', 'TWON_TBL.TWON_WONO')
+            ->select(
+                'TSKH_TBL.TSKH_MCLN',
                 'TSKH_TBL.TSKH_WONO',
                 'TWON_TBL.TWON_MDLCD',
                 'TWON_TBL.TWON_WONQT',
@@ -71,69 +71,73 @@ class DataController extends Controller
                 'TLSLOG_TBL.TLSLOG_LSNO',
                 'TLSLOG_TBL.TLSLOG_FTIME',
                 'TLSLOG_TBL.TLSLOG_TTIME',
-                'TLSLOG_TBL.TLSLOG_TSKLN')
-            ->whereDate('TLSLOG_TBL.TLSLOG_ISSDT', '>' , '2024-11-14')
-            ->where('TLSLOG_TBL.TLSLOG_LSNO', '=' , 'NG001')
-            ->where('TLSLOG_TBL.TLSLOG_TSKNO', '=' , $getid)
-            ->where('TLSLOG_TBL.TLSLOG_TTLMIN', '>' , 10)
+                'TLSLOG_TBL.TLSLOG_TSKLN'
+            )
+            ->whereDate('TLSLOG_TBL.TLSLOG_ISSDT', '>', '2024-11-14')
+            ->where('TLSLOG_TBL.TLSLOG_LSNO', '=', 'NG001')
+            ->where('TLSLOG_TBL.TLSLOG_TSKNO', '=', $getid)
+            ->where('TLSLOG_TBL.TLSLOG_TTLMIN', '>', 10)
             ->get();
 
         $YM = date('Ym');
         $CA = '';
 
         $findPrevious = DB::table('CA_RECLN_TBL')
-        ->select('CA_DOCS_ID')
-        ->orderBy('CA_DOCS_ID', 'DESC')
-        ->get();
+            ->select('CA_DOCS_ID')
+            ->orderBy('CA_DOCS_ID', 'DESC')
+            ->get();
 
-        if(empty($findPrevious[0])){
+        if (empty($findPrevious[0])) {
             $CA = 'Prod-' . $YM . '-000001';
-        }else{
+        } else {
             $CA = AutogenerateKey('Prod', $findPrevious[0]->CA_DOCS_ID);
         }
 
-        return response()->json(['show'=> $showinput, 'doc'=>$CA]);
-
+        return response()->json(['show' => $showinput, 'doc' => $CA]);
     }
 
-    public function getDataFormFirst(){
+    public function getDataFormFirst()
+    {
         $data_form = DB::table('CA_RECLN_TBL')
-        ->select('CA_LNREC_ID',
-            'CA_ISSUE_DATE',
-            'CA_PROD_LINE',
-            'CA_PROD_WON',
-            'CA_PROD_DTPROB',
-            'CA_DOCS_ID',
-            'CA_PROD_INFMR',
-            'CA_PROD_PROBM',
-            'CA_CASEREC_STD',
-            'CA_PROD_FAXCOMPLETE',
-            'CA_PROD_OCCUR')
-        ->where('CA_CASEREC_STD', '=', 0)
-        ->get();
-        return response()->json(['data_form'=> $data_form]);
+            ->select(
+                'CA_LNREC_ID',
+                'CA_ISSUE_DATE',
+                'CA_PROD_LINE',
+                'CA_PROD_WON',
+                'CA_PROD_DTPROB',
+                'CA_DOCS_ID',
+                'CA_PROD_INFMR',
+                'CA_PROD_PROBM',
+                'CA_CASEREC_STD',
+                'CA_PROD_FAXCOMPLETE',
+                'CA_PROD_OCCUR'
+            )
+            ->where('CA_CASEREC_STD', '=', 0)
+            ->get();
+        return response()->json(['data_form' => $data_form]);
     }
 
-    public function ShowRecord(){
+    public function ShowRecord()
+    {
         $show_record = DB::table('CA_RECLN_TBL')
-        ->join('CA_CASEACTIVE_TBL', 'CA_RECLN_TBL.CA_LNREC_ID' , '=', 'CA_CASEACTIVE_TBL.CA_LNREC_ID')
-        ->join('CA_HRECAPP_TBL', 'CA_HRECAPP_TBL.CA_LNREC_ID' , '=', 'CA_RECLN_TBL.CA_LNREC_ID')
-        ->select(
-            'CA_RECLN_TBL.*',
-            'CA_CASEACTIVE_TBL.CA_PROD_CASE',
-            'CA_CASEACTIVE_TBL.CA_PROD_ACTIVE',
-            'CA_CASEACTIVE_TBL.CA_PROD_NOTE',
-            'CA_CASEACTIVE_TBL.CA_PROD_IMAGE',
-            'CA_HRECAPP_TBL.CA_RECAPP_ID',
-            'CA_HRECAPP_TBL.CA_RECAPP_LV',
-            'CA_HRECAPP_TBL.CA_RECAPP_SEC',
-            'CA_HRECAPP_TBL.CA_RECAPP_EMPAPP_ID',
-            'CA_HRECAPP_TBL.CA_EMPID_APPR',
-            'CA_HRECAPP_TBL.CA_RECAPP_STD',
+            ->join('CA_CASEACTIVE_TBL', 'CA_RECLN_TBL.CA_LNREC_ID', '=', 'CA_CASEACTIVE_TBL.CA_LNREC_ID')
+            ->join('CA_HRECAPP_TBL', 'CA_HRECAPP_TBL.CA_LNREC_ID', '=', 'CA_RECLN_TBL.CA_LNREC_ID')
+            ->select(
+                'CA_RECLN_TBL.*',
+                'CA_CASEACTIVE_TBL.CA_PROD_CASE',
+                'CA_CASEACTIVE_TBL.CA_PROD_ACTIVE',
+                'CA_CASEACTIVE_TBL.CA_PROD_NOTE',
+                'CA_CASEACTIVE_TBL.CA_PROD_IMAGE',
+                'CA_HRECAPP_TBL.CA_RECAPP_ID',
+                'CA_HRECAPP_TBL.CA_RECAPP_LV',
+                'CA_HRECAPP_TBL.CA_RECAPP_SEC',
+                'CA_HRECAPP_TBL.CA_RECAPP_EMPAPP_ID',
+                'CA_HRECAPP_TBL.CA_EMPID_APPR',
+                'CA_HRECAPP_TBL.CA_RECAPP_STD',
 
             )
-        ->where('CA_RECLN_TBL.CA_PROD_FAXCOMPLETE',0)
-        ->get();
+            ->where('CA_RECLN_TBL.CA_PROD_FAXCOMPLETE', 0)
+            ->get();
 
 
         // $level2 = DB::table('CA_RECLN_TBL')
@@ -142,41 +146,44 @@ class DataController extends Controller
         // ->get();
 
         $level2 = DB::table('CA_RECLN_TBL')
-        ->join('CA_CASEACTIVE_TBL', 'CA_RECLN_TBL.CA_LNREC_ID' , '=', 'CA_CASEACTIVE_TBL.CA_LNREC_ID')
-        ->select(
-            'CA_RECLN_TBL.*',
-            'CA_CASEACTIVE_TBL.CA_PROD_CASE',
-            'CA_CASEACTIVE_TBL.CA_PROD_ACTIVE',
-            'CA_CASEACTIVE_TBL.CA_PROD_NOTE',
-            'CA_PROD_IMAGE',
+            ->join('CA_CASEACTIVE_TBL', 'CA_RECLN_TBL.CA_LNREC_ID', '=', 'CA_CASEACTIVE_TBL.CA_LNREC_ID')
+            ->select(
+                'CA_RECLN_TBL.*',
+                'CA_CASEACTIVE_TBL.CA_PROD_CASE',
+                'CA_CASEACTIVE_TBL.CA_PROD_ACTIVE',
+                'CA_CASEACTIVE_TBL.CA_PROD_NOTE',
+                'CA_PROD_IMAGE',
 
             )
-        ->where('CA_RECLN_TBL.CA_PROD_FAXCOMPLETE','=',0)
-        ->get();
+            ->where('CA_RECLN_TBL.CA_PROD_FAXCOMPLETE', '=', 0)
+            ->get();
 
-        return response()->json(['show_record'=> $show_record , 'match' => $level2]);
+        return response()->json(['show_record' => $show_record, 'match' => $level2]);
     }
 
-    public function ShoweditRecord(Request $request){
+    public function ShoweditRecord(Request $request)
+    {
         $id = $request->id;
 
         $show_edit = DB::table('CA_RECLN_TBL')
-        ->join('CA_CASEACTIVE_TBL', 'CA_RECLN_TBL.CA_LNREC_ID' , '=', 'CA_CASEACTIVE_TBL.CA_LNREC_ID')
-        ->select('CA_RECLN_TBL.*','CA_CASEACTIVE_TBL.CA_PROD_CASE','CA_CASEACTIVE_TBL.CA_PROD_ACTIVE','CA_CASEACTIVE_TBL.CA_PROD_NOTE')
-        ->where('CA_RECLN_TBL.CA_LNREC_ID', $id)
-        ->get();
-        return response()->json(['show_edit'=> $show_edit]);
+            ->join('CA_CASEACTIVE_TBL', 'CA_RECLN_TBL.CA_LNREC_ID', '=', 'CA_CASEACTIVE_TBL.CA_LNREC_ID')
+            ->select('CA_RECLN_TBL.*', 'CA_CASEACTIVE_TBL.CA_PROD_CASE', 'CA_CASEACTIVE_TBL.CA_PROD_ACTIVE', 'CA_CASEACTIVE_TBL.CA_PROD_NOTE')
+            ->where('CA_RECLN_TBL.CA_LNREC_ID', $id)
+            ->get();
+        return response()->json(['show_edit' => $show_edit]);
     }
 
-    public function ShowReports(){
+    public function ShowReports()
+    {
         $show_report = DB::table('CA_RECLN_TBL')
-        ->join('CA_CASEACTIVE_TBL', 'CA_RECLN_TBL.CA_LNREC_ID' , '=', 'CA_CASEACTIVE_TBL.CA_LNREC_ID')
-        ->select('CA_RECLN_TBL.*','CA_CASEACTIVE_TBL.CA_PROD_CASE','CA_CASEACTIVE_TBL.CA_PROD_ACTIVE','CA_CASEACTIVE_TBL.CA_PROD_NOTE','CA_PROD_IMAGE')
-        ->get();
-        return response()->json(['rep'=> $show_report]);
+            ->join('CA_CASEACTIVE_TBL', 'CA_RECLN_TBL.CA_LNREC_ID', '=', 'CA_CASEACTIVE_TBL.CA_LNREC_ID')
+            ->select('CA_RECLN_TBL.*', 'CA_CASEACTIVE_TBL.CA_PROD_CASE', 'CA_CASEACTIVE_TBL.CA_PROD_ACTIVE', 'CA_CASEACTIVE_TBL.CA_PROD_NOTE', 'CA_PROD_IMAGE')
+            ->get();
+        return response()->json(['rep' => $show_report]);
     }
 
-    public function ShowReports2(Request $request){
+    public function ShowReports2(Request $request)
+    {
         // $id = $request->id;
 
         // $show_report2 = DB::table('CA_RECLN_TBL')
@@ -187,22 +194,22 @@ class DataController extends Controller
         // ->get();
 
         $show_report2 = DB::table('CA_RECLN_TBL as CA_R')
-        ->join('CA_CASEACTIVE_TBL as CA_C', 'CA_R.CA_LNREC_ID', '=', 'CA_C.CA_LNREC_ID')
-        ->join('CA_HRECAPP_TBL as CA_H', 'CA_R.CA_LNREC_ID', '=', 'CA_H.CA_LNREC_ID')
-        ->select(
-            'CA_H.CA_RECAPP_LV',
-            'CA_H.CA_EMPID_APPR',
-            'CA_R.*',
-            'CA_C.CA_PROD_CASE',
-            'CA_C.CA_PROD_ACTIVE',
-            'CA_C.CA_PROD_NOTE',
-            'CA_C.CA_PROD_IMAGE',
-            'CA_C.CA_CASEREC_EMPID',
-            'CA_C.CA_CASEREC_LSTDT'
-        )
-        ->orderBy('CA_R.CA_LNREC_ID', 'asc')
-        ->orderBy('CA_H.CA_RECAPP_LV', 'asc')
-        ->get();
+            ->join('CA_CASEACTIVE_TBL as CA_C', 'CA_R.CA_LNREC_ID', '=', 'CA_C.CA_LNREC_ID')
+            ->join('CA_HRECAPP_TBL as CA_H', 'CA_R.CA_LNREC_ID', '=', 'CA_H.CA_LNREC_ID')
+            ->select(
+                'CA_H.CA_RECAPP_LV',
+                'CA_H.CA_EMPID_APPR',
+                'CA_R.*',
+                'CA_C.CA_PROD_CASE',
+                'CA_C.CA_PROD_ACTIVE',
+                'CA_C.CA_PROD_NOTE',
+                'CA_C.CA_PROD_IMAGE',
+                'CA_C.CA_CASEREC_EMPID',
+                'CA_C.CA_CASEREC_LSTDT'
+            )
+            ->orderBy('CA_R.CA_LNREC_ID', 'DESC')
+            //->orderBy('CA_H.CA_RECAPP_LV', 'asc')
+            ->get();
 
         $get_masterID2 = DB::connection('third_sqlsrv')->table('MUSR_TBL')->get();
 
@@ -231,10 +238,11 @@ class DataController extends Controller
             // }
         }
         // return response()->json(['rep2'=> $show_report2, 'masterID2'=> $get_masterID2, 'arrResult'=> $arrResult]);
-        return response()->json(['rep2'=> $show_report2, 'masterID2'=> $get_masterID2]);
+        return response()->json(['rep2' => $show_report2, 'masterID2' => $get_masterID2]);
     }
 
-    public function ShowDataForm1(){
+    public function ShowDataForm1()
+    {
         $show_data = DB::table('CA_RECLN_TBL')->get();
         $get_masterID = DB::connection('third_sqlsrv')->table('MUSR_TBL')->get();
 
@@ -252,54 +260,53 @@ class DataController extends Controller
         }
 
         return response()->json(['data' => $show_data, 'masterID' => $get_masterID]);
-
     }
-     // // Step 1: Get data from the first database (primary connection)
-        // $caReclnData = DB::table('CA_RECLN_TBL')
-        //                  ->select('CA_RECLN_TBL.*')
-        //                  ->get()
-        //                  ->keyBy('TLSLOG_TSKNO'); // Assuming TLSLOG_TSKNO is the join key
+    // // Step 1: Get data from the first database (primary connection)
+    // $caReclnData = DB::table('CA_RECLN_TBL')
+    //                  ->select('CA_RECLN_TBL.*')
+    //                  ->get()
+    //                  ->keyBy('TLSLOG_TSKNO'); // Assuming TLSLOG_TSKNO is the join key
 
-        // // Step 2: Get data from the second database (second_sqlsrv connection)
-        // $tlslogData = DB::connection('second_sqlsrv')
-        //                 ->table('TLSLOG_TBL')
-        //                 ->select('TLSLOG_TBL.TLSLOG_TSKNO')
-        //                 ->get()
-        //                 ->keyBy('TLSLOG_TSKNO'); // Use keyBy for easy lookup
+    // // Step 2: Get data from the second database (second_sqlsrv connection)
+    // $tlslogData = DB::connection('second_sqlsrv')
+    //                 ->table('TLSLOG_TBL')
+    //                 ->select('TLSLOG_TBL.TLSLOG_TSKNO')
+    //                 ->get()
+    //                 ->keyBy('TLSLOG_TSKNO'); // Use keyBy for easy lookup
 
-        // // Step 3: Merge the data based on TLSLOG_TSKNO
-        // $mergedData = $caReclnData->map(function ($record) use ($tlslogData) {
-        //     // Check if the TLSLOG_TSKNO exists in the second dataset
-        //     if (isset($tlslogData[$record->TLSLOG_TSKNO])) {
-        //         // Add the TLSLOG_TSKNO to the record from the second database
-        //         $record->TLSLOG_TSKNO = $tlslogData[$record->TLSLOG_TSKNO]->TLSLOG_TSKNO;
-        //     } else {
-        //         // If no match found, set TLSLOG_TSKNO to null or handle as needed
-        //         $record->TLSLOG_TSKNO = null;
-        //     }
-        //     return $record;
-        // });
+    // // Step 3: Merge the data based on TLSLOG_TSKNO
+    // $mergedData = $caReclnData->map(function ($record) use ($tlslogData) {
+    //     // Check if the TLSLOG_TSKNO exists in the second dataset
+    //     if (isset($tlslogData[$record->TLSLOG_TSKNO])) {
+    //         // Add the TLSLOG_TSKNO to the record from the second database
+    //         $record->TLSLOG_TSKNO = $tlslogData[$record->TLSLOG_TSKNO]->TLSLOG_TSKNO;
+    //     } else {
+    //         // If no match found, set TLSLOG_TSKNO to null or handle as needed
+    //         $record->TLSLOG_TSKNO = null;
+    //     }
+    //     return $record;
+    // });
 
     public function ShowData()
     {
 
         // Step 1: Get data from the first database (primary connection)
         $caReclnData = DB::table('CA_RECLN_TBL')
-                         ->select('CA_RECLN_TBL.*')
-                         ->get()
-                         ->keyBy('TLSLOG_TSKNO','TLSLOG_TSKLN'); // Assuming TLSLOG_TSKNO is the join key
+            ->select('CA_RECLN_TBL.*')
+            ->get()
+            ->keyBy('TLSLOG_TSKNO', 'TLSLOG_TSKLN'); // Assuming TLSLOG_TSKNO is the join key
 
         // Step 2: Get data from the second database (second_sqlsrv connection)
         $tlslogData = DB::connection('second_sqlsrv')
-                        ->table('TLSLOG_TBL')
-                        ->select('TLSLOG_TBL.TLSLOG_TSKNO')
-                        ->get()
-                        ->keyBy('TLSLOG_TSKNO','TLSLOG_TSKLN'); // Use keyBy for easy lookup
+            ->table('TLSLOG_TBL')
+            ->select('TLSLOG_TBL.TLSLOG_TSKNO')
+            ->get()
+            ->keyBy('TLSLOG_TSKNO', 'TLSLOG_TSKLN'); // Use keyBy for easy lookup
 
         // Step 3: Merge the data based on TLSLOG_TSKNO
         $mergedData = $caReclnData->map(function ($record) use ($tlslogData) {
             // Check if the TLSLOG_TSKNO exists in the second dataset
-            if (isset($tlslogData[$record->TLSLOG_TSKNO])&& isset($tlslogData[$record->TLSLOG_TSKLN])) {
+            if (isset($tlslogData[$record->TLSLOG_TSKNO]) && isset($tlslogData[$record->TLSLOG_TSKLN])) {
                 // Add the TLSLOG_TSKNO to the record from the second database
                 $record->TLSLOG_TSKNO = $tlslogData[$record->TLSLOG_TSKNO]->TLSLOG_TSKNO;
                 $record->TLSLOG_TSKLN = $tlslogData[$record->TLSLOG_TSKLN]->TLSLOG_TSKLN;
@@ -315,7 +322,8 @@ class DataController extends Controller
         return response()->json($mergedData); // Return the merged data as JSON
     }
 
-    public function SendEmail(){
+    public function SendEmail()
+    {
         $currentTime = Carbon::now();
 
         $posts = DataWON::join('TLSLOG_TBL', 'TSKH_TBL.TSKH_TSKNO', '=', 'TLSLOG_TBL.TLSLOG_TSKNO')
@@ -358,32 +366,33 @@ class DataController extends Controller
         return response()->json(['send' => $posts,]);
     }
 
-    public function SendMailToInput(Request $request){
+    public function SendMailToInput(Request $request)
+    {
         // $send_data = DB::table('CA_RECLN_TBL')
         // ->select( 'CA_PROD_RECSTD','CA_LNREC_ID')
         // ->where('CA_PROD_RECSTD', 1)
         // ->get();
         //$emp_id = $request->empno;
-        $id_user = ['5120154,5210002,5210007,5240006','5240007','5120057'];
+        $id_user = ['5120154,5210002,5210007,5240006', '5240007', '5120057'];
 
         $_empid = explode(',', $id_user[0]);
 
-        $result = [];// เตรียม array เก็บผลลัพธ์
+        $result = []; // เตรียม array เก็บผลลัพธ์
         //$_link = []; //link email
         for ($i = 0; $i < sizeof($_empid); $i++) {
             $result[] = $_empid[$i]; // เพิ่มค่าลง array
             $person = DB::table('VUSER_DEPT')
-            ->select(
-                'MUSR_ID',
-                'MUSR_NAME',
-                'DEPT_S_NAME',
-                'DEPT_SEC',
-                'MSECT_ID',
-                'USE_PERMISSION',
-                'MUSR_COMPANY_EMAIL'
-            )
-            ->where('MUSR_ID',$_empid[$i])
-            ->get();
+                ->select(
+                    'MUSR_ID',
+                    'MUSR_NAME',
+                    'DEPT_S_NAME',
+                    'DEPT_SEC',
+                    'MSECT_ID',
+                    'USE_PERMISSION',
+                    'MUSR_COMPANY_EMAIL'
+                )
+                ->where('MUSR_ID', $_empid[$i])
+                ->get();
             $empno = $person[0]->MUSR_ID;
             $empname = $person[0]->MUSR_NAME;
             $dept = $person[0]->DEPT_S_NAME;
@@ -397,22 +406,18 @@ class DataController extends Controller
                 $linktoInput = [
                     'link' => $web_link,
                 ];
-                Mail::to([ $email_empno])->send(new LinkToInput($linktoInput));
-
+                Mail::to([$email_empno])->send(new LinkToInput($linktoInput));
             }
-
         }
 
         return response()->json($linktoInput);
-
-
-
     }
 
-    public function Testdata(){
+    public function Testdata()
+    {
         $posts = DataWON::join('TLSLOG_TBL', 'TSKH_TBL.TSKH_TSKNO', '=', 'TLSLOG_TBL.TLSLOG_TSKNO')
             ->join('TWON_TBL', 'TSKH_TBL.TSKH_WONO', '=', 'TWON_TBL.TWON_WONO')
-            ->join('MLSTOPIC_TBL','TLSLOG_TBL.TLSLOG_LSNO','=','MLSTOPIC_TBL.MLSTOPIC_LSNO')
+            ->join('MLSTOPIC_TBL', 'TLSLOG_TBL.TLSLOG_LSNO', '=', 'MLSTOPIC_TBL.MLSTOPIC_LSNO')
             ->select(
                 'TSKH_TBL.TSKH_MCLN',
                 'TSKH_TBL.TSKH_WONO',
@@ -431,7 +436,7 @@ class DataController extends Controller
             ->whereDate('TLSLOG_TBL.TLSLOG_ISSDT', '>', '2024-11-14')
             ->where('TLSLOG_TBL.TLSLOG_LSNO', '=', 'NG001')
             ->where('TLSLOG_TBL.TLSLOG_TTLMIN', '>', 10)
-            ->where('TLSLOG_TBL.TLSLOG_COMPLETE' , null)
+            ->where('TLSLOG_TBL.TLSLOG_COMPLETE', null)
             ->get();
 
 
@@ -451,7 +456,8 @@ class DataController extends Controller
     }
 
 
-    public function ByPass(Request $request){
+    public function ByPass(Request $request)
+    {
         //$byp = DB::connection('second_sqlsrv')->table('TLSLOG_TBL')->get();
         $empno = $request->empno;
         $tskno = $request->id;
@@ -459,7 +465,7 @@ class DataController extends Controller
         $lsln = $request->lsln;
 
         $byp_data = $request->bypass_f;
-        parse_str( $byp_data,$fbyp);
+        parse_str($byp_data, $fbyp);
         $data_byp = [
             'TLSLOG_COMPLETE' => 1,
             'TLSLOG_EMPNO_BYPASS' => $empno,
@@ -467,23 +473,20 @@ class DataController extends Controller
         ];
 
         DB::connection('second_sqlsrv')->table('TLSLOG_TBL')
-        ->where('TLSLOG_TSKNO',$tskno)
-        ->where('TLSLOG_TSKLN',$tskln)
-        ->where('TLSLOG_LSLN',$lsln)
-        ->update($data_byp);
+            ->where('TLSLOG_TSKNO', $tskno)
+            ->where('TLSLOG_TSKLN', $tskln)
+            ->where('TLSLOG_LSLN', $lsln)
+            ->update($data_byp);
 
         $data_02 = [
             'CA_PROD_FAXCOMPLETE' => 1,
         ];
 
         DB::table('CA_RECLN_TBL')
-        ->where('TLSLOG_TSKNO',$tskno)
-        ->where('TLSLOG_TSKLN',$tskln)
-        ->update($data_02);
+            ->where('TLSLOG_TSKNO', $tskno)
+            ->where('TLSLOG_TSKLN', $tskln)
+            ->update($data_02);
 
         return response()->json(['byp' => $data_byp]);
     }
-
-
-
 }
