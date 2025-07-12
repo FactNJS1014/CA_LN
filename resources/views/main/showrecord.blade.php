@@ -15,22 +15,34 @@
             url: '{{ route('show.data') }}',
             type: 'GET',
             success: function(response) {
-                console.log(response);
+                // console.log(response.match);
                 let card = '';
                 let data = response.match;
                 let LNREC_ID = [];
                 let APP_LV = [];
                 let empArr = [];
-
+                // let show_rec = response.show_record;
                 response.show_record.map((_sr) => {
-                    let splitEmpId = _sr.CA_RECAPP_EMPAPP_ID.split(',')
+                    // console.log(_sr)
+                    // console.log(_sr.CA_RECAPP_LV)
+                    // console.log(_sr.CA_RECAPP_EMPAPP_ID)
+                    let splitEmpId = _sr.CA_RECAPP_EMPAPP_ID.includes(',') ?
+                        _sr.CA_RECAPP_EMPAPP_ID.split(',') : [_sr.CA_RECAPP_EMPAPP_ID];
+
+                    // console.log(splitEmpId);
+
                     // console.log(splitEmpId)
                     if (splitEmpId.includes(empno)) {
+
                         // console.log('yes')
                         // console.log(_sr)
+                        // console.log('yes')
+
                         LNREC_ID.push(_sr.CA_LNREC_ID)
                         APP_LV.push(_sr.CA_RECAPP_LV)
+
                     }
+
                     splitEmpId.map((_emp) => {
                         // console.log(_emp)
                         if (!empArr.includes(_emp)) {
@@ -38,21 +50,32 @@
                         }
                     })
 
+                    // console.log(splitEmpId)
+
 
                 })
                 // console.log(LNREC_ID)
-                console.log(empArr)
+                // console.log(empArr)
+                // console.log(department)
+                // console.log(Ashow_recordV)
+                // console.log(APP_LV)
+                data.map((res) => {
+                    // console.log(res);
 
-
-                data.map((res, indexRes) => {
-                    console.log(res.CA_PROD_TRACKING)
-                    console.log(APP_LV[indexRes])
+                    // Find the index where LNREC_ID matches res.CA_LNREC_ID
+                    let index = LNREC_ID.indexOf(res.CA_LNREC_ID);
+                    // console.log(index)
+                    // if (index !== -1 && res.CA_PROD_TRACKING == APP_LV[index]) {
+                    //     console.log("Match found:", res);
+                    // }
+                    // console.log(res.CA_PROD_TRACKING)
+                    console.log(APP_LV[index])
 
                     // const matchdata = String(response.match)
                     // const matcharray = matchdata.split(',')
                     // console.log(matcharray)
                     // if(matcharray.includes(empno)){
-                    if (res.CA_PROD_TRACKING == APP_LV[indexRes]) {
+                    if (index !== -1 && res.CA_PROD_TRACKING == APP_LV[index]) {
                         let uniqueTableId = `table-data-${res.CA_DOCS_ID}`;
                         let imagePath = `{{ asset('public/images_ca/${res.CA_PROD_IMAGE}') }}`;
                         card += `
@@ -142,15 +165,15 @@
                                 <img src="${imagePath}" alt="Document Image" class="img-fluid" style="max-height: 200px; max-width: 100%;" />
                             </div>
                             ${res.CA_LNRJ_STD == 1 ?  `
-                                                        <div class="row mt-3">
-                                                            <p class="col-md-3" id="acttext"> Comment จากการถูกส่งกลับ : </p>
-                                                            <p class="col-md-12 details3"><i class="bi bi-chat-left-text-fill mx-2"></i>${res.CA_LNRJ_REMARK}</p>
-                                                        </div>
-                                                        ` : res.CA_PROD_TRACKING === 2 ? `
-                                                        <div class="row mt-3">
-                                                            <p class="col-md-12 details3"><i class="bi bi-chat-left-text-fill mx-2"></i>มีการแก้ไขแล้ว</p>
-                                                        </div>
-                                                        `: ''}
+                                                                    <div class="row mt-3">
+                                                                        <p class="col-md-3" id="acttext"> Comment จากการถูกส่งกลับ : </p>
+                                                                        <p class="col-md-12 details3"><i class="bi bi-chat-left-text-fill mx-2"></i>${res.CA_LNRJ_REMARK}</p>
+                                                                    </div>
+                                                                    ` : res.CA_PROD_TRACKING === 2 ? `
+                                                                    <div class="row mt-3">
+                                                                        <p class="col-md-12 details3"><i class="bi bi-chat-left-text-fill mx-2"></i>มีการแก้ไขแล้ว</p>
+                                                                    </div>
+                                                                    `: ''}
                         </div>
                         <div class="card-footer p-2">
                             <div class="d-flex justify-content-between">
@@ -164,10 +187,10 @@
                                         <i class="bi bi-arrow-left-circle-fill mx-2"></i>Reject
                                     </button>
                                     ${empno == '5190002' ?  `
-                                                       <button type="button" class="btn btnedit" onclick="editbtn('${res.CA_LNREC_ID}','${res.CA_DOCS_ID}','${res.TLSLOG_TSKNO}','${res.TLSLOG_TSKLN}')">
-                                            <i class="bi bi-pencil-square mx-2"></i>แก้ไขข้อมูล
-                                        </button>
-                                                    `: ''}
+                                                                   <button type="button" class="btn btnedit" onclick="editbtn('${res.CA_LNREC_ID}','${res.CA_DOCS_ID}','${res.TLSLOG_TSKNO}','${res.TLSLOG_TSKLN}')">
+                                                        <i class="bi bi-pencil-square mx-2"></i>แก้ไขข้อมูล
+                                                    </button>
+                                                                `: ''}
 
                                 </div>
 
@@ -294,10 +317,10 @@
                                 <!-- Button on the right -->
                                 <div>
                                       ${res.CA_LNRJ_STD == 1 ?  `
-                                                                 <button type="button" class="btn btneditofrej" onclick="editofrejbtn('${res.CA_LNREC_ID}','${res.CA_DOCS_ID}','${res.TLSLOG_TSKNO}','${res.TLSLOG_TSKLN}')">
-                                                                    <i class="bi bi-pencil-square mx-2"></i>แก้ไขข้อมูล from reject
-                                                                </button>
-                                                                  `: ''}
+                                                                             <button type="button" class="btn btneditofrej" onclick="editofrejbtn('${res.CA_LNREC_ID}','${res.CA_DOCS_ID}','${res.TLSLOG_TSKNO}','${res.TLSLOG_TSKLN}')">
+                                                                                <i class="bi bi-pencil-square mx-2"></i>แก้ไขข้อมูล from reject
+                                                                            </button>
+                                                                              `: ''}
                                     <button type="button" class="btn btndel" onclick="delbtn('${res.CA_LNREC_ID}')">
                                         <i class="bi bi-trash3-fill mx-2"></i>Delete
                                     </button>

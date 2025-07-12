@@ -7,6 +7,8 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\PDFController;
 use App\Http\Controllers\ApprController;
 use App\Http\Controllers\MailAlertController;
+use App\Http\Controllers\StatController;
+use SebastianBergmann\Type\StaticType;
 
 /*
 |--------------------------------------------------------------------------
@@ -97,3 +99,9 @@ Route::get('/check-file', [PDFController::class, 'ViewPDF'])->name('view.upload'
 
 //upload PDF
 Route::post('/upload-pdf', [PDFController::class, 'UploadPDF'])->name('upload.docs');
+
+//Test
+Route::get('/test', [ApprController::class, 'Test'])->name('test');
+
+//Change Status Data Report 3 
+Route::get('/clrstd',[StatController::class, 'clearData'])->name('clr.data');

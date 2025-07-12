@@ -156,6 +156,7 @@ class DataController extends Controller
 
             )
             ->where('CA_RECLN_TBL.CA_PROD_FAXCOMPLETE', '=', 0)
+            ->orderby('CA_RECLN_TBL.CA_LNREC_ID', 'ASC')
             ->get();
 
         return response()->json(['show_record' => $show_record, 'match' => $level2]);
@@ -209,6 +210,7 @@ class DataController extends Controller
             )
             ->orderBy('CA_R.CA_LNREC_ID', 'DESC')
             //->orderBy('CA_H.CA_RECAPP_LV', 'asc')
+            ->where('CA_R.CA_CLR_STD' , null)
             ->get();
 
         $get_masterID2 = DB::connection('third_sqlsrv')->table('MUSR_TBL')->get();

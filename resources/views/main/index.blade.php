@@ -248,12 +248,12 @@
                             <div class="col-sm-4 mt-1">
                                 <div class="form-check form-check-inline">
                                     <input class="form-check-input" type="radio" name="manage" id="manage"
-                                        value="สามารถจัดการได้เอง" required>
+                                        value="can" required>
                                     <label class="form-check-label" for="inlineRadio1">สามารถจัดการได้เอง</label>
                                 </div>
                                 <div class="form-check form-check-inline">
                                     <input class="form-check-input" type="radio" name="manage" id="manage"
-                                        value="ไม่สามารถจัดการได้เอง" required>
+                                        value="cannot" required>
                                     <label class="form-check-label" for="inlineRadio1">ไม่สามารถจัดการได้เอง</label>
                                 </div>
                             </div>

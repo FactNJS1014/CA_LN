@@ -67,10 +67,11 @@
             <table class="table table-bordered table-striped w-100 nowrap" id="exportTable">
                 <thead class="table-su text-center">
                     <tr>
-                        <th colspan="25" style="font-size: 22pt; color: red;">Leader Call Records</th>
+                        <th colspan="26" style="font-size: 22pt; color: red;">Leader Call Records</th>
                     </tr>
                     <tr>
 
+                        <th rowspan="2"></th>
                         <th rowspan="2">วันที่เกิด</th>
                         <th rowspan="2">Line No.</th>
                         <th rowspan="2">จุดที่ทำให้เกิดปัญหา</th>
@@ -79,16 +80,16 @@
                         <th rowspan="2">ประเภทที่ต้องเรียก Line Call</th>
                         <th rowspan="2">ประเภทการเกิดของปัญหา เกิดใหม่/เกิดซ้ำ (Line Call)</th>
                         <th rowspan="2">จำนวน Case</th>
-                        <th colspan="4">สำหรับแผนกที่รับผิดชอบ</th>
+                        <th colspan="2">สำหรับแผนกที่รับผิดชอบ</th>
                         <th rowspan="2">Issue Leader Call No.</th>
+                        <th rowspan="2">การแก้ไขเบื้องต้น.</th>
+                        <th rowspan="2">การจัดการปัญหาของ Production (ในกรณีที่ไม่สามารถจัดการเองได้ (Line Call))</th>
                         <th rowspan="2">Issue Line Call No.</th>
                         <th colspan="10">สำหรับแผนกที่ออกเอกสาร</th>
                         <th colspan="1">ผู้อนุมัติแต่ละแผนกที่รับผิดชอบ</th>
                     </tr>
                     <tr>
                         <th>สาเหตุ</th>
-                        <th>การแก้ไขเบื้องต้น</th>
-                        <th>การจัดการปัญหาของ Production</th>
                         <th>การจัดการงานที่ผลิตก่อนหน้า/เหตุผล</th>
                         <th>Model</th>
                         <th>Work Order</th>
@@ -384,7 +385,7 @@
                 success: function(response) {
                     var blob = new Blob([response], {
                         type: 'application/pdf'
-                    });
+                    }); 
                     var url = window.URL.createObjectURL(blob);
                     // Open the PDF in a new tab by setting the URL directly
                     var newWindow = window.open(url, '_blank');
@@ -405,7 +406,7 @@
             url: '{{ route('show.report2') }}',
             type: 'GET',
             success: function(response) {
-                console.log(response);
+                //console.log(response);
                 let exp = '';
                 let dataForExport = [];
                 let arrId = [];
@@ -438,6 +439,9 @@
                             'N/A';
                         let imagePath = `{{ asset('public/images_ca/${ex.CA_PROD_IMAGE}') }}`;
                         exp += '<tr>';
+                        exp += '<td><button class="btn btn-warning" onclick=\'btnClearData("' + ex
+                            .CA_LNREC_ID +
+                            '")\'>By Pass</button></td>';
                         exp += '<td>' + moment(ex.CA_ISSUE_DATE).format('DD-MM-YYYY') + '</td>';
                         exp += '<td>' + ex.CA_PROD_LINE + '</td>';
                         if (ex.CA_PROD_POINTPB !== null) {
@@ -466,12 +470,7 @@
                             exp += '<td>ไม่มีข้อมูล</td>';
                         }
                         exp += '<td>' + ex.CA_PROD_CASE + '</td>';
-                        exp += '<td>' + ex.CA_PROD_ACTIVE + '</td>';
-                        if (ex.CA_PROD_MANAGE != null) {
-                            exp += '<td>' + ex.CA_PROD_MANAGE + '</td>';
-                        } else {
-                            exp += '<td>ไม่มีข้อมูล</td>';
-                        }
+
                         if (ex.CA_PROD_WTHRSN !== null) {
                             exp += '<td>' + ex.CA_PROD_WTHRSN + '</td>';
                         } else {
@@ -480,6 +479,14 @@
 
 
                         exp += '<td>' + ex.CA_DOCS_ID + '</td>';
+                        exp += '<td>' + ex.CA_PROD_ACTIVE + '</td>';
+                        if (ex.CA_PROD_MANAGE === 'can') {
+                            exp += '<td>สามารถจัดการได้เอง< /td>';
+                        } else if (ex.CA_PROD_MANAGE === 'cannot') {
+                            exp += '<td>ไม่สามารถจัดการได้เอง (Line Call)</td>';
+                        } else {
+                            exp += '<td>ไม่มีข้อมูล</td>';
+                        }
                         exp += '<td></td>';
                         exp += '<td>' + ex.CA_PROD_MDLCD + '</td>';
                         exp += '<td>' + ex.CA_PROD_WON + '</td>';
@@ -636,5 +643,25 @@
                 }
             });
         };
+
+        btnClearData = (id) =>{
+            //console.log(id)
+            $.ajax({
+                url: '{{ route('clr.data') }}',
+                type: 'GET',
+                data: {
+                    id: id,
+
+                },
+                success: function(response) {
+                    console.log(response)
+                    //location.reload()
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error clearing data:', error);
+
+                }
+            })
+        }
     </script>
 @endpush

@@ -134,6 +134,16 @@ class ApprController extends Controller
         return $empAppIds[$level] ?? '';
     }
 
+    public function Test()
+    {
+        $empAppIds = [
+            1 => '5120046',
+            2 => '5190002',
+            3 => '2950044'
+        ];
+        return response()->json($empAppIds);
+    }
+
 
     public function getAppr(Request $request)
     {
